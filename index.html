@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()" style="margin: 0px;">
+<script>
+
+    var car1
+
+    function startGame() {
+        car1 = new car(window.innerWidth/2,window.innerHeight/2);
+        gameWindow.start();
+    }
+
+    var gameWindow = {
+        canvas : document.createElement("canvas"),
+        start : function() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight - 5;
+            this.canvas.border = 0;
+            this.context = this.canvas.getContext("2d");
+            document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+            this.interval = setInterval(updateGameWindow, 20);
+        },
+        clear : function() {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+
+    function car(x, y) {
+        console.debug(gameWindow.canvas.width)
+        this.x = x - (25/2);
+        this.y = y - (100/2);
+        this.update = function() {
+            canvas = gameWindow.context;
+            canvas.fillStyle = "skyblue";
+            canvas.fillRect(this.x, this.y, 25, 100);
+        }
+    }
+
+    function updateGameWindow() {
+        gameWindow.clear();
+        car1.update();
+    }
+
+</script>
+
+</body>
+</html>
+ 
