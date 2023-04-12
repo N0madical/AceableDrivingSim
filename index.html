@@ -1,56 +1,123 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    background-color: #f1f1f1;
-}
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+    canvas {
+        background-color: #f1f1f1;
+    }
+    </style>
 </head>
 <body onload="startGame()" style="margin: 0px;">
 <script>
 
-    var car1
+// --------------------------------------------------------------
+// Code Starts Here
 
-    function startGame() {
-        car1 = new car(window.innerWidth/2,window.innerHeight/2);
-        gameWindow.start();
+// Defining Variables
+var car1
+
+// Launch The Game
+function startGame() {
+    car1 = new car(window.innerWidth/2,window.innerHeight/2,0);
+    gameWindow.start();
+}
+
+var gameWindow = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+
+        // Starting Variables For Canvas
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight - 5;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+
+        // Start Refresh
+        this.interval = setInterval(updateGameWindow, 5);
+
+        // Keyboard Listeners
+        window.addEventListener('keydown', function (e) {
+            e.preventDefault();
+            gameWindow.keys = (gameWindow.keys || []);
+            gameWindow.keys[e.keyCode] = (e.type == "keydown");
+        })
+        window.addEventListener('keyup', function (e) {
+            gameWindow.keys[e.keyCode] = (e.type == "keydown");
+        })
+    },
+
+    // Wipe Canvas To Create Refresh Effect
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+}
 
-    var gameWindow = {
-        canvas : document.createElement("canvas"),
-        start : function() {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight - 5;
-            this.canvas.border = 0;
-            this.context = this.canvas.getContext("2d");
-            document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-            this.interval = setInterval(updateGameWindow, 20);
-        },
-        clear : function() {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+function car(x, y, angle) {
+    // Config For The Car
+    this.deceleration = 0.1
+    this.turnback = 0.1
+
+    // Defining Starting Variables On Creation
+    this.x = x - (25/2);
+    this.y = y - (100/2);
+    this.width = 25;
+    this.height = 100;
+    this.angle = angle;
+    this.speed = 0;
+    this.rotation = 0;
+
+    // Move The Sprite When Update Is Called
+    this.update = function() {
+        // Update Positions
+        if (this.speed > 0) {
+            this.angle += this.rotation * Math.PI / 180;
         }
-    }
-
-    function car(x, y) {
-        console.debug(gameWindow.canvas.width)
-        this.x = x - (25/2);
-        this.y = y - (100/2);
-        this.update = function() {
-            canvas = gameWindow.context;
-            canvas.fillStyle = "skyblue";
-            canvas.fillRect(this.x, this.y, 25, 100);
+        if (this.speed < 0) {
+            this.angle -= this.rotation * Math.PI / 180;
         }
-    }
+        if (!((this.x + (this.speed * Math.sin(this.angle)) > gameWindow.canvas.width) || (this.x + (this.speed * Math.sin(this.angle)) < 0))) {
+            this.x += this.speed * Math.sin(this.angle);
+        }
+        if (!((this.y - (this.speed * Math.cos(this.angle)) > gameWindow.canvas.width) || (this.y - (this.speed * Math.cos(this.angle)) < 0))) {
+            this.y -= this.speed * Math.cos(this.angle);
+        }
+        
 
-    function updateGameWindow() {
-        gameWindow.clear();
-        car1.update();
+        // Physics
+        if (this.speed > 0) {this.speed -= this.deceleration} 
+        else if (this.speed < 0) {this.speed += this.deceleration}
+        else {this.speed = 0}
+
+        if (this.rotation > 0) {this.rotation -= this.turnback} 
+        else if (this.rotation < 0) {this.rotation += this.turnback}
+        else {this.rotation = 0}
+
+        // Update Visuals
+        canvas = gameWindow.context;
+        canvas.save();
+        canvas.translate(this.x, this.y);        
+        canvas.rotate(this.angle);
+        canvas.fillStyle = "purple";
+        canvas.fillRect(this.width / -2, this.height / -2, this.width, this.height);
+        canvas.restore();
     }
+}
+
+// Refresh The Canvas (50x per second)
+function updateGameWindow() {
+    gameWindow.clear();
+    if (gameWindow.keys && gameWindow.keys[37] && (car1.rotation > -5)) {car1.rotation = -2; }
+    if (gameWindow.keys && gameWindow.keys[39] && (car1.rotation < 5)) {car1.rotation = 2; }
+    if (gameWindow.keys && gameWindow.keys[38] && (car1.speed < 5)) {car1.speed += 10; }
+    if (gameWindow.keys && gameWindow.keys[40] && (car1.speed > -5)) {car1.speed += -10; }
+    car1.update();
+    console.debug(car1.angle)
+}
+
+// --------------------------------------------------------------
 
 </script>
-
 </body>
 </html>
  
