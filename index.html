@@ -14,27 +14,39 @@
 // --------------------------------------------------------------
 // Code Starts Here
 
+// Config
+var fps = 60
+
+
 // Defining Variables
-var car1
+var lasttime = 0;
+var fpsrec = 0
 
 // Launch The Game
 function startGame() {
-    car1 = new car(window.innerWidth/2,window.innerHeight/2,0);
     gameWindow.start();
+    car1 = new player();
+    car2 = new car(100, 100, 0, 25, 100);
+    fpscount = new displaytext(100, 100, "FPS: Error", "30px")
+    speedometer = new displaytext(100, 150, "Speed: Error", "30px")
+    posdebug = new displaytext(100, 200, "Position: Error", "30px")
+
+    updatelist = [car1, car2, fpscount, speedometer, posdebug]
 }
 
 var gameWindow = {
     canvas : document.createElement("canvas"),
-    start : function() {
+    start : function(x=0, y=0, angle=0, zoom=100) {
 
         // Starting Variables For Canvas
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight - 5;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        camera.start(x,y,angle,zoom);
 
         // Start Refresh
-        this.interval = setInterval(updateGameWindow, 5);
+        this.interval = setInterval(updateGameWindow, (1000/fps));
 
         // Keyboard Listeners
         window.addEventListener('keydown', function (e) {
@@ -53,17 +65,36 @@ var gameWindow = {
     }
 }
 
-function car(x, y, angle) {
+var camera = {
+    start : function(x, y, angle, zoom) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.zoom = zoom;
+    },
+
+    update : function() {
+        this.angle = (this.angle % 360)
+    },
+
+    position : function(x, y, angle) {
+        distance = Math.sqrt(Math.pow((x - this.x), 2) + Math.pow((y - this.y), 2)) * (this.zoom/100);
+        tempangle = degrees(Math.atan((y - this.y) / (x - this.x))) + this.angle;
+        tempx = (Math.cos(radians(tempangle)) * distance) + gameWindow.canvas.width/2
+        tempy = (Math.sin(radians(tempangle)) * distance) + gameWindow.canvas.height/2
+        returnangle = this.angle + angle
+        return [tempx, tempy, returnangle];
+    }
+}
+
+function player() {
     // Config For The Car
     this.deceleration = 0.1
     this.turnback = 0.1
 
     // Defining Starting Variables On Creation
-    this.x = x - (25/2);
-    this.y = y - (100/2);
     this.width = 25;
     this.height = 100;
-    this.angle = angle;
     this.speed = 0;
     this.rotation = 0;
 
@@ -71,49 +102,93 @@ function car(x, y, angle) {
     this.update = function() {
         // Update Positions
         if (this.speed > 0) {
-            this.angle += this.rotation * Math.PI / 180;
+            camera.angle += this.rotation;
         }
         if (this.speed < 0) {
-            this.angle -= this.rotation * Math.PI / 180;
+            camera.angle -= this.rotation;
         }
-        if (!((this.x + (this.speed * Math.sin(this.angle)) > gameWindow.canvas.width) || (this.x + (this.speed * Math.sin(this.angle)) < 0))) {
-            this.x += this.speed * Math.sin(this.angle);
-        }
-        if (!((this.y - (this.speed * Math.cos(this.angle)) > gameWindow.canvas.width) || (this.y - (this.speed * Math.cos(this.angle)) < 0))) {
-            this.y -= this.speed * Math.cos(this.angle);
-        }
+        camera.x += this.speed * Math.sin(camera.angle);
+        camera.y -= this.speed * Math.cos(camera.angle);
         
 
         // Physics
-        if (this.speed > 0) {this.speed -= this.deceleration} 
-        else if (this.speed < 0) {this.speed += this.deceleration}
-        else {this.speed = 0}
-
-        if (this.rotation > 0) {this.rotation -= this.turnback} 
-        else if (this.rotation < 0) {this.rotation += this.turnback}
+        if (gameWindow.keys && (!gameWindow.keys[37] && !gameWindow.keys[37])) {
+            if (this.speed > 0.1) {this.speed -= this.deceleration} 
+            else if (this.speed < -0.1) {this.speed += this.deceleration}
+            else {this.speed = 0}
+        }
+        
+        if (this.rotation > 0.1) {this.rotation -= this.turnback} 
+        else if (this.rotation < -0.1) {this.rotation += this.turnback}
         else {this.rotation = 0}
 
         // Update Visuals
         canvas = gameWindow.context;
-        canvas.save();
-        canvas.translate(this.x, this.y);        
-        canvas.rotate(this.angle);
         canvas.fillStyle = "purple";
+        canvas.fillRect(0-this.width/2, 0-this.height/2, this.width, this.height);
+    }
+}
+
+function car(x, y, angle, width, height) {
+    this.x = x;
+    this.y = y;
+    this.angle = angle;
+    this.width = width;
+    this.height = height;
+
+    this.update = function() {
+        console.debug(camera.position(this.x,this.y,this.angle))
+        canvas = gameWindow.context;
+        canvas.save();
+        canvas.translate(camera.position(this.x,this.y,this.angle)[0], camera.position(this.x,this.y,this.angle)[1]);
+        canvas.rotate(radians(camera.position(this.x,this.y,this.angle)[2]));
+        canvas.fillStyle = "black";
         canvas.fillRect(this.width / -2, this.height / -2, this.width, this.height);
         canvas.restore();
     }
 }
 
+function displaytext(x, y, text, size, font="Arial") {
+    this.x = x;
+    this.y = y;
+    this.text = text;
+    this.size = size;
+    this.font = font;
+
+    this.update = function() {
+        canvas = gameWindow.context;
+        canvas.font = (`${this.size} ${this.font}`);
+        canvas.fillText(this.text, this.x, this.y);
+    }
+}
+
 // Refresh The Canvas (50x per second)
 function updateGameWindow() {
+    const d = new Date();
+    fpsrec += 1
+    if (lasttime + 250 <= d.getTime()) {
+        lasttime = d.getTime();
+        fpscount.text = `FPS: ${fpsrec * 4} / ${fps}`;
+        speedometer.text = `Speed: ${car1.speed}`
+        posdebug.text = `Position: ${camera.x}, ${camera.y}, ${camera.angle}`
+        fpsrec = 0;
+    }
+
     gameWindow.clear();
-    if (gameWindow.keys && gameWindow.keys[37] && (car1.rotation > -5)) {car1.rotation = -2; }
-    if (gameWindow.keys && gameWindow.keys[39] && (car1.rotation < 5)) {car1.rotation = 2; }
-    if (gameWindow.keys && gameWindow.keys[38] && (car1.speed < 5)) {car1.speed += 10; }
-    if (gameWindow.keys && gameWindow.keys[40] && (car1.speed > -5)) {car1.speed += -10; }
-    car1.update();
-    console.debug(car1.angle)
+    if (gameWindow.keys && gameWindow.keys[37] && (car1.rotation > -2)) {car1.rotation += -0.2; }
+    if (gameWindow.keys && gameWindow.keys[39] && (car1.rotation < 2)) {car1.rotation += 0.2; }
+    if (gameWindow.keys && gameWindow.keys[38] && (car1.speed < 5)) {car1.speed += 0.2; }
+    if (gameWindow.keys && gameWindow.keys[40] && (car1.speed > -5)) {car1.speed += -0.2; }
+    
+    for(i = 0; i < updatelist.length; i++) {
+        updatelist[i].update();
+    }
+
+    camera.update();
 }
+
+function degrees(radians) {return (radians * (180/Math.PI)) % 360}
+function radians(degrees) {return degrees * (Math.PI/180)}
 
 // --------------------------------------------------------------
 
