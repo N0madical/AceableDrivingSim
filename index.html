@@ -16,6 +16,7 @@
 
 // Config
 var fps = 60
+var zoom = 100
 
 
 // Defining Variables
@@ -24,14 +25,53 @@ var fpsrec = 0
 
 // Launch The Game
 function startGame() {
-    gameWindow.start();
-    car1 = new player();
-    car2 = new car(100, 100, 0, 25, 100);
+    gameWindow.start(0, 0, 0, zoom);
+    player.start();
+    test = new testdot();
     fpscount = new displaytext(100, 100, "FPS: Error", "30px")
     speedometer = new displaytext(100, 150, "Speed: Error", "30px")
     posdebug = new displaytext(100, 200, "Position: Error", "30px")
 
-    updatelist = [car1, car2, fpscount, speedometer, posdebug]
+    spritelist = [player, fpscount, speedometer, posdebug]
+
+    terrain = [
+        new rect(0, 0, 0, 1000, 5000, "darkgreen"), 
+        new rect(0, 0, 0, 300, 800, "darkgray"),
+        new rect(150, 500, 30, 100, 200, "darkgray"),
+
+        new rect(-150, 500, -30, 100, 200, "darkgray"),
+        new rect(0, 460, 0, 300, 300, "darkgray"),
+        new rect(0, 700, 0, 1000, 300, "darkgray"),
+        new rect(0, 550, 0, 1000, 10, "dimgray"),
+        new rect(0, 850, 0, 1000, 10, "dimgray"),
+
+        new rect(-400, 700, 0, 100, 10, "yellow"),
+        new rect(-200, 700, 0, 100, 10, "yellow"),
+        new rect(0, 700, 0, 100, 10, "yellow"),
+        new rect(200, 700, 0, 100, 10, "yellow"),
+        new rect(400, 700, 0, 100, 10, "yellow"),
+
+        new rect(115, -300, 45, 10, 100, "yellow"), 
+        new rect(115, -200, 45, 10, 100, "yellow"),
+        new rect(115, -100, 45, 10, 100, "yellow"), 
+        new rect(115, 0, 45, 10, 100, "yellow"),
+        new rect(115, 100, 45, 10, 100, "yellow"), 
+        new rect(115, 200, 45, 10, 100, "yellow"),
+        new rect(115, 300, 45, 10, 100, "yellow"),
+
+        new rect(-115, -300, -45, 10, 100, "yellow"), 
+        new rect(-115, -200, -45, 10, 100, "yellow"),
+        new rect(-115, -100, -45, 10, 100, "yellow"), 
+        new rect(-115, 0, -45, 10, 100, "yellow"),
+        new rect(-115, 100, -45, 10, 100, "yellow"), 
+        new rect(-115, 200, -45, 10, 100, "yellow"),
+        new rect(-115, 300, -45, 10, 100, "yellow"),
+
+        new rect(-160, 0, 0, 20, 800, "dimgray"),
+        new rect(160, 0, 0, 20, 800, "dimgray"),
+    ]
+    
+    updatelist = terrain.concat(spritelist);
 }
 
 var gameWindow = {
@@ -67,48 +107,46 @@ var gameWindow = {
 
 var camera = {
     start : function(x, y, angle, zoom) {
-        this.x = x;
-        this.y = y;
-        this.angle = angle;
-        this.zoom = zoom;
+        this.cx = x;
+        this.cy = y;
+        this.cangle = angle;
+        this.czoom = zoom;
     },
 
-    update : function() {
-        this.angle = (this.angle % 360)
-    },
-
-    position : function(x, y, angle) {
-        distance = Math.sqrt(Math.pow((x - this.x), 2) + Math.pow((y - this.y), 2)) * (this.zoom/100);
-        tempangle = degrees(Math.atan((y - this.y) / (x - this.x))) + this.angle;
-        tempx = (Math.cos(radians(tempangle)) * distance) + gameWindow.canvas.width/2
-        tempy = (Math.sin(radians(tempangle)) * distance) + gameWindow.canvas.height/2
-        returnangle = this.angle + angle
-        return [tempx, tempy, returnangle];
+    position : function(x, y, rot) {
+        distance = Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2))*(this.czoom/100)
+        angle = degrees(Math.atan2((y-this.cy),(x-this.cx)))+this.cangle
+        x2 = (Math.cos(radians(angle))*distance)
+        y2 = (Math.sin(radians(angle))*distance)
+        angle2 = rot - this.cangle
+        return [x2, y2, angle2, angle]
     }
 }
 
-function player() {
-    // Config For The Car
-    this.deceleration = 0.1
-    this.turnback = 0.1
+var player = {
+    start : function(x, y, angle, zoom) {
+        // Config For The Car
+        this.deceleration = 0.1
+        this.turnback = 0.1
 
-    // Defining Starting Variables On Creation
-    this.width = 25;
-    this.height = 100;
-    this.speed = 0;
-    this.rotation = 0;
+        // Defining Starting Variables On Creation
+        this.width = 25;
+        this.height = 100;
+        this.speed = 0;
+        this.rotation = 0;
+    },
 
     // Move The Sprite When Update Is Called
-    this.update = function() {
+    update : function() {
         // Update Positions
         if (this.speed > 0) {
-            camera.angle += this.rotation;
+            camera.cangle += this.rotation;
         }
         if (this.speed < 0) {
-            camera.angle -= this.rotation;
+            camera.cangle -= this.rotation;
         }
-        camera.x += this.speed * Math.sin(camera.angle);
-        camera.y -= this.speed * Math.cos(camera.angle);
+        camera.cx += this.speed * Math.sin(radians(camera.cangle));
+        camera.cy += this.speed * Math.cos(radians(camera.cangle));
         
 
         // Physics
@@ -125,26 +163,42 @@ function player() {
         // Update Visuals
         canvas = gameWindow.context;
         canvas.fillStyle = "purple";
-        canvas.fillRect(0-this.width/2, 0-this.height/2, this.width, this.height);
+        canvas.fillRect(gameWindow.canvas.width/2-(this.width/2*(camera.czoom/100)), gameWindow.canvas.height/2-(this.height/2*(camera.czoom/100)), this.width*(camera.czoom/100), this.height*(camera.czoom/100));
     }
 }
 
-function car(x, y, angle, width, height) {
+function rect(x, y, angle, width, height, color="black") {
     this.x = x;
     this.y = y;
     this.angle = angle;
     this.width = width;
     this.height = height;
+    this.color = color;
 
     this.update = function() {
-        console.debug(camera.position(this.x,this.y,this.angle))
         canvas = gameWindow.context;
         canvas.save();
-        canvas.translate(camera.position(this.x,this.y,this.angle)[0], camera.position(this.x,this.y,this.angle)[1]);
-        canvas.rotate(radians(camera.position(this.x,this.y,this.angle)[2]));
-        canvas.fillStyle = "black";
-        canvas.fillRect(this.width / -2, this.height / -2, this.width, this.height);
+        pos = camera.position(this.x,this.y,this.angle)
+        console.debug(pos)
+        canvas.translate(((gameWindow.canvas.width/2 + pos[0])), ((gameWindow.canvas.height/2 - pos[1])));
+        canvas.rotate(radians(pos[2]));
+        canvas.fillStyle = this.color;
+        canvas.fillRect((this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height)*(camera.czoom/100);
         canvas.restore();
+    }
+}
+
+function testdot() {
+    this.x = 100
+    this.y = 100
+    this.width = 50
+    this.height = 50
+    this.angle = 0
+
+    this.update = function() {
+        canvas = gameWindow.context;
+        canvas.fillStyle = "purple";
+        canvas.fillRect(camera.position(this.x,this.y,this.angle)[0], camera.position(this.x,this.y,this.angle)[1], this.width, this.height);
     }
 }
 
@@ -169,22 +223,20 @@ function updateGameWindow() {
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
         fpscount.text = `FPS: ${fpsrec * 4} / ${fps}`;
-        speedometer.text = `Speed: ${car1.speed}`
-        posdebug.text = `Position: ${camera.x}, ${camera.y}, ${camera.angle}`
+        speedometer.text = `Speed: ${player.speed}`
+        posdebug.text = `Position: ${camera.cx}, ${camera.cy}, ${camera.cangle}`
         fpsrec = 0;
     }
 
     gameWindow.clear();
-    if (gameWindow.keys && gameWindow.keys[37] && (car1.rotation > -2)) {car1.rotation += -0.2; }
-    if (gameWindow.keys && gameWindow.keys[39] && (car1.rotation < 2)) {car1.rotation += 0.2; }
-    if (gameWindow.keys && gameWindow.keys[38] && (car1.speed < 5)) {car1.speed += 0.2; }
-    if (gameWindow.keys && gameWindow.keys[40] && (car1.speed > -5)) {car1.speed += -0.2; }
+    if (gameWindow.keys && gameWindow.keys[37] && (player.rotation > -2)) {player.rotation += -0.2; }
+    if (gameWindow.keys && gameWindow.keys[39] && (player.rotation < 2)) {player.rotation += 0.2; }
+    if (gameWindow.keys && gameWindow.keys[38] && (player.speed < 5)) {player.speed += 0.2; }
+    if (gameWindow.keys && gameWindow.keys[40] && (player.speed > -5)) {player.speed += -0.2; }
     
     for(i = 0; i < updatelist.length; i++) {
         updatelist[i].update();
     }
-
-    camera.update();
 }
 
 function degrees(radians) {return (radians * (180/Math.PI)) % 360}
