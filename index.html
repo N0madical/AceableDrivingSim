@@ -21,7 +21,12 @@ var zoom = 100
 
 // Defining Variables
 var lasttime = 0;
-var fpsrec = 0
+var fpsrec = 0;
+
+let left = new Boolean(false);
+let right = new Boolean(false);
+let up = new Boolean(false);
+let down = new Boolean(false);
 
 // Launch The Game
 function startGame() {
@@ -35,7 +40,7 @@ function startGame() {
     spritelist = [player, fpscount, speedometer, posdebug]
 
     terrain = [
-        new rect(0, 0, 0, 1000, 5000, "darkgreen"), 
+        new rect(0, 0, 0, 5000, 5000, "darkgreen"), 
         new rect(0, 0, 0, 300, 800, "darkgray"),
         new rect(150, 500, 30, 100, 200, "darkgray"),
 
@@ -130,12 +135,12 @@ var player = {
         this.turnback = 0.1
 
         // Defining Starting Variables On Creation
-        this.width = 50;
-        this.height = 100;
+        this.width = 100;
+        this.height = 200;
         this.speed = 0;
         this.rotation = 0;
-        this.image = new Image();
-        this.image.src = "car.png";
+        this.carimage = new Image();
+        this.carimage.src = "car.png";
     },
 
     // Move The Sprite When Update Is Called
@@ -158,14 +163,30 @@ var player = {
             else {this.speed = 0}
         }
         
-        if (this.rotation > 0.1) {this.rotation -= this.turnback} 
-        else if (this.rotation < -0.1) {this.rotation += this.turnback}
+        if (this.rotation > 0.1 && !(gameWindow.keys && gameWindow.keys[37]) && !(gameWindow.keys && gameWindow.keys[39])) {this.rotation -= this.turnback * this.speed} 
+        else if (this.rotation < -0.1 && !(gameWindow.keys && gameWindow.keys[39]) && !(gameWindow.keys && gameWindow.keys[37])) {this.rotation += this.turnback * this.speed}
         else {this.rotation = 0}
 
         // Update Visuals
-        canvas = gameWindow.context;
-        canvas.fillStyle = "purple";
-        canvas.drawImage(this.image, gameWindow.canvas.width/2-(this.width/2*(camera.czoom/100)), gameWindow.canvas.height/2-(this.height/2*(camera.czoom/100)), this.width*(camera.czoom/100), this.height*(camera.czoom/100));
+        wheelL = gameWindow.context;
+        wheelL.save();
+        wheelL.translate(((gameWindow.canvas.width/2 - 30)), ((gameWindow.canvas.height/2 - 55)));
+        wheelL.rotate(radians(this.rotation*20));
+        wheelL.fillStyle = "black";
+        wheelL.fillRect((10*(camera.czoom/100)) / -2, (30*(camera.czoom/100)) / -2, 10*(camera.czoom/100), 30*(camera.czoom/100));
+        wheelL.restore();
+
+        wheelR = gameWindow.context;
+        wheelR.save();
+        wheelR.translate(((gameWindow.canvas.width/2 + 30)), ((gameWindow.canvas.height/2 - 55)));
+        wheelR.rotate(radians(this.rotation*20));
+        wheelR.fillStyle = "black";
+        wheelR.fillRect((10*(camera.czoom/100)) / -2, (30*(camera.czoom/100)) / -2, 10*(camera.czoom/100), 30*(camera.czoom/100));
+        wheelR.restore();
+
+        car = gameWindow.context;
+        car.fillStyle = "purple";
+        car.drawImage(this.carimage, gameWindow.canvas.width/2-(this.width/2*(camera.czoom/100)), gameWindow.canvas.height/2-(this.height/2*(camera.czoom/100)), this.width*(camera.czoom/100), this.height*(camera.czoom/100));
     }
 }
 
@@ -181,7 +202,6 @@ function rect(x, y, angle, width, height, color="black") {
         canvas = gameWindow.context;
         canvas.save();
         pos = camera.position(this.x,this.y,this.angle)
-        console.debug(pos)
         canvas.translate(((gameWindow.canvas.width/2 + pos[0])), ((gameWindow.canvas.height/2 - pos[1])));
         canvas.rotate(radians(pos[2]));
         canvas.fillStyle = this.color;
@@ -229,6 +249,8 @@ function updateGameWindow() {
         posdebug.text = `Position: ${camera.cx}, ${camera.cy}, ${camera.cangle}`
         fpsrec = 0;
     }
+
+    if (gameWindow.keys && gameWindow.keys[37]) {left = }
 
     gameWindow.clear();
     if (gameWindow.keys && gameWindow.keys[37] && (player.rotation > -2)) {player.rotation += -0.2; }
