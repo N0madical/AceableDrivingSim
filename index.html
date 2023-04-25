@@ -3,12 +3,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style>
-    canvas {
-        background-color: #f1f1f1;
+    #gamescreen {
+        background-color: black;
     }
     </style>
 </head>
-<body onload="startGame()" style="margin: 0px;">
+<body onload="startGame()" style="margin: 0px; overflow: hidden;">
 <script>
 
 // --------------------------------------------------------------
@@ -28,6 +28,8 @@ let right = false;
 let up = false;
 let down = false;
 
+var upcount = 0;
+
 // Launch The Game
 function startGame() {
     gameWindow.start(0, 0, 0, zoom);
@@ -40,36 +42,37 @@ function startGame() {
     spritelist = [player, fpscount, speedometer, posdebug]
 
     terrain = [
-        new rect(0, 0, 0, 5000, 5000, "darkgreen"), 
-        new rect(0, 0, 0, 600, 800, "darkgray"),
-        new rect(150, 500, 30, 100, 200, "darkgray"),
+        new terrain(0, 0, 0, 5000, 5000, "grass.png", 400, 400),
+        new terrain(0, 0, 0, 600, 800, "asphalt.png", 400, 400),
 
-        new rect(-150, 500, -30, 100, 200, "darkgray"),
-        new rect(0, 460, 0, 300, 300, "darkgray"),
-        new rect(0, 700, 0, 1000, 300, "darkgray"),
-        new rect(0, 550, 0, 1000, 10, "dimgray"),
-        new rect(0, 850, 0, 1000, 10, "dimgray"),
+        new shape("rect", 150, 500, 30, 100, 200, "darkgray"),
 
-        new rect(-400, 700, 0, 100, 10, "yellow"),
-        new rect(-200, 700, 0, 100, 10, "yellow"),
-        new rect(0, 700, 0, 100, 10, "yellow"),
-        new rect(200, 700, 0, 100, 10, "yellow"),
-        new rect(400, 700, 0, 100, 10, "yellow"),
+        new shape("rect", -150, 500, -30, 100, 200, "darkgray"),
+        new shape("rect", 0, 460, 0, 300, 300, "darkgray"),
+        new shape("rect", 0, 700, 0, 1000, 300, "darkgray"),
+        new shape("rect", 0, 550, 0, 1000, 10, "dimgray"),
+        new shape("rect", 0, 850, 0, 1000, 10, "dimgray"),
 
-        new rect(225, -300, 45, 10, 200, "yellow"), 
-        new rect(225, -150, 45, 10, 200, "yellow"),
-        new rect(225, 0, 45, 10, 200, "yellow"), 
-        new rect(225, 150, 45, 10, 200, "yellow"),
-        new rect(225, 300, 45, 10, 200, "yellow"),
+        new shape("rect", -400, 700, 0, 100, 10, "yellow"),
+        new shape("rect", -200, 700, 0, 100, 10, "yellow"),
+        new shape("rect", 0, 700, 0, 100, 10, "yellow"),
+        new shape("rect", 200, 700, 0, 100, 10, "yellow"),
+        new shape("rect", 400, 700, 0, 100, 10, "yellow"),
 
-        new rect(-225, -300, -45, 10, 200, "yellow"), 
-        new rect(-225, -150, -45, 10, 200, "yellow"),
-        new rect(-225, 0, -45, 10, 200, "yellow"), 
-        new rect(-225, 150, -45, 10, 200, "yellow"),
-        new rect(-225, 300, -45, 10, 200, "yellow"),
+        new shape("rect", 225, -300, 45, 10, 200, "yellow"), 
+        new shape("rect", 225, -150, 45, 10, 200, "yellow"),
+        new shape("rect", 225, 0, 45, 10, 200, "yellow"), 
+        new shape("rect", 225, 150, 45, 10, 200, "yellow"),
+        new shape("rect", 225, 300, 45, 10, 200, "yellow"),
 
-        new rect(-300, 0, 0, 20, 800, "dimgray"),
-        new rect(300, 0, 0, 20, 800, "dimgray"),
+        new shape("rect", -225, -300, -45, 10, 200, "yellow"), 
+        new shape("rect", -225, -150, -45, 10, 200, "yellow"),
+        new shape("rect", -225, 0, -45, 10, 200, "yellow"), 
+        new shape("rect", -225, 150, -45, 10, 200, "yellow"),
+        new shape("rect", -225, 300, -45, 10, 200, "yellow"),
+
+        new shape("rect", -300, 0, 0, 20, 800, "dimgray"),
+        new shape("rect", 300, 0, 0, 20, 800, "dimgray"),
     ]
     
     updatelist = terrain.concat(spritelist);
@@ -81,7 +84,8 @@ var gameWindow = {
 
         // Starting Variables For Canvas
         this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight - 5;
+        this.canvas.height = window.innerHeight;
+        this.canvas.id = "gamescreen"
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         camera.start(x,y,angle,zoom);
@@ -103,7 +107,7 @@ var gameWindow = {
     // Wipe Canvas To Create Refresh Effect
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+    },
 }
 
 var camera = {
@@ -115,12 +119,12 @@ var camera = {
     },
 
     position : function(x, y, rot) {
-        distance = Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2))*(this.czoom/100)
-        angle = degrees(Math.atan2((y-this.cy),(x-this.cx)))+this.cangle
-        x2 = (Math.cos(radians(angle))*distance)
-        y2 = (Math.sin(radians(angle))*distance)
-        angle2 = rot - this.cangle
-        return [x2, y2, angle2, angle]
+        this.distance = Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2))*(this.czoom/100)
+        this.angle = degrees(Math.atan2((y-this.cy),(x-this.cx)))+this.cangle
+        this.x2 = (Math.cos(radians(this.angle))*this.distance)
+        this.y2 = (Math.sin(radians(this.angle))*this.distance) - (player.height/3)
+        this.angle2 = rot - this.cangle
+        return [this.x2, this.y2, this.angle2, this.angle]
     }
 }
 
@@ -128,7 +132,7 @@ var player = {
     start : function(x, y, angle, zoom) {
         // Config For The Car
         this.deceleration = 0.1
-        this.turnback = 0.1
+        this.turnback = 0.02
 
         // Defining Starting Variables On Creation
         this.width = 100;
@@ -183,26 +187,76 @@ var player = {
         car = gameWindow.context;
         car.fillStyle = "purple";
         car.drawImage(this.carimage, gameWindow.canvas.width/2-(this.width/2*(camera.czoom/100)), gameWindow.canvas.height/2-(this.height/2*(camera.czoom/100)), this.width*(camera.czoom/100), this.height*(camera.czoom/100));
+
+        upcount++
     }
 }
 
-function rect(x, y, angle, width, height, color="black") {
+function shape(type, x, y, angle, width, height, fill="black") {
+    if(type = "image"){this.type=0}
+    else if(type = "rect"){this.type=1}
+    else if(type = "rectangle"){this.type=1}
+    else{this.type=1}
     this.x = x;
     this.y = y;
     this.angle = angle;
     this.width = width;
     this.height = height;
-    this.color = color;
+    this.fill = fill;
 
     this.update = function() {
         canvas = gameWindow.context;
         canvas.save();
-        pos = camera.position(this.x,this.y,this.angle)
-        canvas.translate(((gameWindow.canvas.width/2 + pos[0])), ((gameWindow.canvas.height/2 - pos[1])));
-        canvas.rotate(radians(pos[2]));
-        canvas.fillStyle = this.color;
-        canvas.fillRect((this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height)*(camera.czoom/100);
+        this.pos = camera.position(this.x,this.y,this.angle)
+        canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
+        canvas.rotate(radians(this.pos[2]));
+        if(this.type = 0) {
+            this.image = new Image();
+            this.image.src = this.fill;
+            canvas.drawImage(this.image, (this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height)*(camera.czoom/100);
+        }
+        else if(this.type = 1) {
+            canvas.fillStyle = this.fill; 
+            canvas.fillRect((this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height)*(camera.czoom/100);
+        }
         canvas.restore();
+        upcount++
+    }
+}
+
+function terrain(x, y, angle, width, height, image, iwidth, iheight) {
+    this.x = x;
+    this.y = y;
+    this.angle = angle;
+    this.width = width;
+    this.height = height;
+    this.image = new Image();
+    this.image.src = image;
+    this.iwidth = iwidth;
+    this.iheight = iheight;
+
+    this.tilex = Math.ceil(this.width/this.iwidth)
+    this.tiley = Math.ceil(this.height/this.iheight)
+
+    console.debug(this.tiley)
+
+    this.update = function() {
+        for(i = 0; i < this.tiley; i++) {
+            for(f = 0; f < this.tilex; f++) {
+                canvas = gameWindow.context;
+                canvas.save();
+                this.x2 = this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*f)
+                this.y2 = this.y - (this.height/2 - this.iheight/2) + (this.iheight*i)
+                this.pos = camera.position(this.x2,this.y2,this.angle);
+                canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
+                canvas.rotate(radians(this.pos[2]));
+                if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = ((this.x + (this.width/2)) - (this.x2 + this.iwidth/2))} else {this.trimx = 0}
+                if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
+                canvas.drawImage(this.image, 0, 0 - this.trimy, this.iwidth + this.trimx, this.iheight + this.trimy, (this.iwidth*(camera.czoom/100)) / -2, (this.iheight*(camera.czoom/100)) / -2 - this.trimy, this.iwidth*(camera.czoom/100)+this.trimx, this.iheight*(camera.czoom/100)+this.trimy);
+                canvas.restore();
+            }
+        }
+        upcount++
     }
 }
 
@@ -231,11 +285,13 @@ function displaytext(x, y, text, size, font="Arial") {
         canvas = gameWindow.context;
         canvas.font = (`${this.size} ${this.font}`);
         canvas.fillText(this.text, this.x, this.y);
+        upcount++
     }
 }
 
 // Refresh The Canvas (50x per second)
 function updateGameWindow() {
+    upcount = 0
     const d = new Date();
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
@@ -267,9 +323,12 @@ function updateGameWindow() {
     if (up && (player.speed < 5)) {player.speed += 0.1; }
     if (down && (player.speed > -5)) {player.speed += -0.1; }
     
-    for(i = 0; i < updatelist.length; i++) {
-        updatelist[i].update();
+    while(upcount < updatelist.length) {
+        updatelist[upcount].update();
+        console.debug(upcount)
     }
+
+
 }
 
 function degrees(radians) {return (radians * (180/Math.PI)) % 360}
