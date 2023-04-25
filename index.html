@@ -16,7 +16,7 @@
 
 // Config
 var fps = 60
-var zoom = 100
+var zoom = 200
 
 
 // Defining Variables
@@ -42,8 +42,8 @@ function startGame() {
     spritelist = [player, fpscount, speedometer, posdebug]
 
     terrain = [
-        new terrain(0, 0, 0, 5000, 5000, "grass.png", 400, 400),
-        new terrain(0, 0, 0, 600, 800, "asphalt.png", 400, 400),
+        new terrain(0, 0, 0, 5000, 5000, "grass.png"),
+        new terrain(0, 0, 0, 600, 800, "asphalt.png"),
 
         new shape("rect", 150, 500, 30, 100, 200, "darkgray"),
 
@@ -213,18 +213,18 @@ function shape(type, x, y, angle, width, height, fill="black") {
         if(this.type = 0) {
             this.image = new Image();
             this.image.src = this.fill;
-            canvas.drawImage(this.image, (this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height)*(camera.czoom/100);
+            canvas.drawImage(this.image, (this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height*(camera.czoom/100));
         }
         else if(this.type = 1) {
             canvas.fillStyle = this.fill; 
-            canvas.fillRect((this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height)*(camera.czoom/100);
+            canvas.fillRect((this.width*(camera.czoom/100)) / -2, (this.height*(camera.czoom/100)) / -2, this.width*(camera.czoom/100), this.height*(camera.czoom/100));
         }
         canvas.restore();
         upcount++
     }
 }
 
-function terrain(x, y, angle, width, height, image, iwidth, iheight) {
+function terrain(x, y, angle, width, height, image, scalex=100, scaley=100) {
     this.x = x;
     this.y = y;
     this.angle = angle;
@@ -232,25 +232,24 @@ function terrain(x, y, angle, width, height, image, iwidth, iheight) {
     this.height = height;
     this.image = new Image();
     this.image.src = image;
-    this.iwidth = iwidth;
-    this.iheight = iheight;
+    if (scalex <= 100) {this.iwidth = this.image.width * (scalex/100);} else {this.iwidth = this.image.width}
+    if (scaley <= 100) {this.iheight = this.image.height * (scaley/100);} else {this.iheight = this.image.height}
 
     this.tilex = Math.ceil(this.width/this.iwidth)
     this.tiley = Math.ceil(this.height/this.iheight)
-
-    console.debug(this.tiley)
+    console.debug(this.width, this.iheight)
 
     this.update = function() {
         for(i = 0; i < this.tiley; i++) {
             for(f = 0; f < this.tilex; f++) {
                 canvas = gameWindow.context;
                 canvas.save();
-                this.x2 = this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*f)
-                this.y2 = this.y - (this.height/2 - this.iheight/2) + (this.iheight*i)
+                this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*f))
+                this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*i))
                 this.pos = camera.position(this.x2,this.y2,this.angle);
                 canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
                 canvas.rotate(radians(this.pos[2]));
-                if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = ((this.x + (this.width/2)) - (this.x2 + this.iwidth/2))} else {this.trimx = 0}
+                if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
                 if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
                 canvas.drawImage(this.image, 0, 0 - this.trimy, this.iwidth + this.trimx, this.iheight + this.trimy, (this.iwidth*(camera.czoom/100)) / -2, (this.iheight*(camera.czoom/100)) / -2 - this.trimy, this.iwidth*(camera.czoom/100)+this.trimx, this.iheight*(camera.czoom/100)+this.trimy);
                 canvas.restore();
@@ -325,7 +324,6 @@ function updateGameWindow() {
     
     while(upcount < updatelist.length) {
         updatelist[upcount].update();
-        console.debug(upcount)
     }
 
 
