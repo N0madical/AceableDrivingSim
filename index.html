@@ -15,8 +15,8 @@
 // Code Starts Here
 
 // Config
-var fps = 60
-var zoom = 200
+var fps = 60;
+var zoom = 100;
 
 
 // Defining Variables
@@ -27,23 +27,25 @@ let left = false;
 let right = false;
 let up = false;
 let down = false;
+let esc = false;
 
 var upcount = 0;
 
 // Launch The Game
 function startGame() {
     gameWindow.start(0, 0, 0, zoom);
+    pausemenu.start();
     player.start();
     test = new testdot();
     fpscount = new displaytext(100, 100, "FPS: Error", "30px")
     speedometer = new displaytext(100, 150, "Speed: Error", "30px")
     posdebug = new displaytext(100, 200, "Position: Error", "30px")
 
-    spritelist = [player, fpscount, speedometer, posdebug]
+    spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
 
     terrain = [
-        new terrain(0, 0, 0, 5000, 5000, "grass.png"),
         new terrain(0, 0, 0, 600, 800, "asphalt.png"),
+        new terrain(0, 0, 0, 5000, 5000, "grass.png"),
 
         new shape("rect", 150, 500, 30, 100, 200, "darkgray"),
 
@@ -87,6 +89,7 @@ var gameWindow = {
         this.canvas.height = window.innerHeight;
         this.canvas.id = "gamescreen"
         this.context = this.canvas.getContext("2d");
+        //this.context.filter = "blur(10px)";
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         camera.start(x,y,angle,zoom);
 
@@ -126,6 +129,39 @@ var camera = {
         this.angle2 = rot - this.cangle
         return [this.x2, this.y2, this.angle2, this.angle]
     }
+}
+
+var pausemenu = {
+    start : function() {
+        this.paused = false;
+        this.blur = 0;
+        this.maxblur = 80;
+        this.blurstep = 2;
+    },
+
+    toggle : function() {
+        if (this.blur == 0) {
+            this.paused = true;
+        }
+        if (this.blur == this.maxblur) {
+            this.paused = false;
+        }
+    },
+
+    update : function() {
+        if ((this.blur > 0) && (this.paused == false)) {
+            this.blur -= this.blurstep;
+        }
+        if ((this.blur < this.maxblur) && (this.paused == true)) {
+            this.blur += this.blurstep;
+        }
+        bg = gameWindow.context;
+        bg.fillStyle = "black";
+        bg.globalAlpha = (this.blur/100);
+        bg.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
+        bg.globalAlpha = 1.0;
+        upcount++;
+    },
 }
 
 var player = {
@@ -244,6 +280,7 @@ function terrain(x, y, angle, width, height, image, scalex=100, scaley=100) {
             for(f = 0; f < this.tilex; f++) {
                 canvas = gameWindow.context;
                 canvas.save();
+                canvas.globalCompositeOperation='destination-over';
                 this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*f))
                 this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*i))
                 this.pos = camera.position(this.x2,this.y2,this.angle);
@@ -306,8 +343,9 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[39] || gameWindow.keys[68])) {right = true} else {right = false}
     if (gameWindow.keys && (gameWindow.keys[38] || gameWindow.keys[87])) {up = true} else {up = false}
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
+    if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
 
-    // ############# Keycode Finder ############
+    //############# Keycode Finder ############
     // if (gameWindow.keys) {
     //     for(i = 0; i < gameWindow.keys.length; i++) {
     //         if (gameWindow.keys[i])
@@ -321,6 +359,8 @@ function updateGameWindow() {
     if (right && (player.rotation < 2)) {player.rotation += 0.1; }
     if (up && (player.speed < 5)) {player.speed += 0.1; }
     if (down && (player.speed > -5)) {player.speed += -0.1; }
+
+    if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
     
     while(upcount < updatelist.length) {
         updatelist[upcount].update();
