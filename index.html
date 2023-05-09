@@ -31,21 +31,26 @@ let esc = false;
 
 var upcount = 0;
 
+this.asphaltpreload = new Image();
+this.asphaltpreload.src = "crasphalt.jpg";
+
+this.grasspreload = new Image();
+this.grasspreload.src = "grass.png";
+
 // Launch The Game
 function startGame() {
     gameWindow.start(0, 0, 0, zoom);
-    pausemenu.start();
     player.start();
     test = new testdot();
-    fpscount = new displaytext(100, 100, "FPS: Error", "30px")
-    speedometer = new displaytext(100, 150, "Speed: Error", "30px")
-    posdebug = new displaytext(100, 200, "Position: Error", "30px")
+    fpscount = new displaytext(100, 100, "FPS: Error", "left", size=30)
+    speedometer = new displaytext(100, 150, "Speed: Error", "left", size=30)
+    posdebug = new displaytext(100, 200, "Position: Error", "left", size=30)
 
     spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
 
     terrain = [
-        new terrain(0, 0, 0, 600, 800, "asphalt.png"),
-        new terrain(0, 0, 0, 5000, 5000, "grass.png"),
+        new terrain(0, 0, 0, 600, 800, asphaltpreload),
+        new terrain(0, 0, 0, 5000, 5000, grasspreload),
 
         new shape("rect", 150, 500, 30, 100, 200, "darkgray"),
 
@@ -78,6 +83,8 @@ function startGame() {
     ]
     
     updatelist = terrain.concat(spritelist);
+
+    pausemenu.start();
 }
 
 var gameWindow = {
@@ -137,6 +144,15 @@ var pausemenu = {
         this.blur = 0;
         this.maxblur = 80;
         this.blurstep = 2;
+
+        this.title = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*2, text="Paused", "center", size=100, font="Arial", color="white")
+        this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "center", size=50, font="Arial", color="white")
+        this.restart = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "center", size=50, font="Arial", color="white")
+        this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "center", size=50, font="Arial", color="white")
+        this.settings = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "center", size=50, font="Arial", color="white")
+        
+        this.menutext = [this.title, this.resume, this.restart, this.ability, this.settings]
+        updatelist = updatelist.concat(this.menutext)
     },
 
     toggle : function() {
@@ -160,6 +176,11 @@ var pausemenu = {
         bg.globalAlpha = (this.blur/100);
         bg.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
         bg.globalAlpha = 1.0;
+
+        for(i = 0; i < this.menutext.length; i++) {
+            this.menutext[i].alpha = this.blur*1.25;
+        }
+
         upcount++;
     },
 }
@@ -168,7 +189,7 @@ var player = {
     start : function(x, y, angle, zoom) {
         // Config For The Car
         this.deceleration = 0.1
-        this.turnback = 0.02
+        this.turnback = 0.01
 
         // Defining Starting Variables On Creation
         this.width = 100;
@@ -183,10 +204,10 @@ var player = {
     update : function() {
         // Update Positions
         if (this.speed > 0) {
-            camera.cangle += this.rotation * (this.speed/5);
+            camera.cangle += this.rotation * this.speed/5;
         }
         if (this.speed < 0) {
-            camera.cangle += this.rotation * (this.speed/5);
+            camera.cangle += this.rotation * this.speed/5;
         }
         camera.cx += this.speed * Math.sin(radians(camera.cangle));
         camera.cy += this.speed * Math.cos(radians(camera.cangle));
@@ -266,10 +287,10 @@ function terrain(x, y, angle, width, height, image, scalex=100, scaley=100) {
     this.angle = angle;
     this.width = width;
     this.height = height;
-    this.image = new Image();
-    this.image.src = image;
+    this.image = image;
     if (scalex <= 100) {this.iwidth = this.image.width * (scalex/100);} else {this.iwidth = this.image.width}
     if (scaley <= 100) {this.iheight = this.image.height * (scaley/100);} else {this.iheight = this.image.height}
+    this.radlength = Math.sqrt(Math.pow(this.iwidth/2, 2) + Math.pow(this.iheight/2, 2))
 
     this.tilex = Math.ceil(this.width/this.iwidth)
     this.tiley = Math.ceil(this.height/this.iheight)
@@ -278,18 +299,20 @@ function terrain(x, y, angle, width, height, image, scalex=100, scaley=100) {
     this.update = function() {
         for(i = 0; i < this.tiley; i++) {
             for(f = 0; f < this.tilex; f++) {
-                canvas = gameWindow.context;
-                canvas.save();
-                canvas.globalCompositeOperation='destination-over';
                 this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*f))
                 this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*i))
                 this.pos = camera.position(this.x2,this.y2,this.angle);
-                canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
-                canvas.rotate(radians(this.pos[2]));
-                if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
-                if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
-                canvas.drawImage(this.image, 0, 0 - this.trimy, this.iwidth + this.trimx, this.iheight + this.trimy, (this.iwidth*(camera.czoom/100)) / -2, (this.iheight*(camera.czoom/100)) / -2 - this.trimy, this.iwidth*(camera.czoom/100)+this.trimx, this.iheight*(camera.czoom/100)+this.trimy);
-                canvas.restore();
+                if(((this.pos[0] - this.radlength) <= gameWindow.canvas.width/2) && ((this.pos[0] + this.radlength) >= gameWindow.canvas.width/-2) && ((this.pos[1] - this.radlength) <= gameWindow.canvas.height/2) && ((this.pos[1] + this.radlength) >= gameWindow.canvas.height/-2)) {
+                    canvas = gameWindow.context;
+                    canvas.save();
+                    canvas.globalCompositeOperation='destination-over';
+                    canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
+                    canvas.rotate(radians(this.pos[2]));
+                    if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
+                    if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
+                    canvas.drawImage(this.image, 0, 0 - this.trimy, this.iwidth + this.trimx, this.iheight + this.trimy, (this.iwidth*(camera.czoom/100)) / -2, (this.iheight*(camera.czoom/100)) / -2 - this.trimy, this.iwidth*(camera.czoom/100)+this.trimx, this.iheight*(camera.czoom/100)+this.trimy);
+                    canvas.restore();
+                } 
             }
         }
         upcount++
@@ -310,17 +333,30 @@ function testdot() {
     }
 }
 
-function displaytext(x, y, text, size, font="Arial") {
+function displaytext(x, y, text, justify, size, font="Arial", color="white") {
     this.x = x;
     this.y = y;
     this.text = text;
+    this.justify = justify;
     this.size = size;
     this.font = font;
+    this.color = color;
+    this.alpha = 100;
 
     this.update = function() {
         canvas = gameWindow.context;
-        canvas.font = (`${this.size} ${this.font}`);
-        canvas.fillText(this.text, this.x, this.y);
+        canvas.font = (`${this.size}px ${this.font}`);
+        canvas.fillStyle = this.color;
+        if (this.justify == "center") {
+            this.jpos = canvas.measureText(this.text).width/2;
+        } else if (this.justify == "right") {
+            this.jpos = canvas.measureText(this.text).width;
+        } else {
+            this.jpos = 0;
+        }
+        canvas.globalAlpha = (this.alpha/100);
+        canvas.fillText(this.text, this.x - this.jpos, this.y + this.size/3);
+        canvas.globalAlpha = 1;
         upcount++
     }
 }
@@ -330,11 +366,11 @@ function updateGameWindow() {
     upcount = 0
     const d = new Date();
     fpsrec += 1
-    if (lasttime + 250 <= d.getTime()) {
+    if (lasttime + 125 <= d.getTime()) {
         lasttime = d.getTime();
-        fpscount.text = `FPS: ${fpsrec * 4} / ${fps}`;
-        speedometer.text = `Speed: ${player.speed}, Rotation: ${player.rotation}`
-        posdebug.text = `Position: ${camera.cx}, ${camera.cy}, ${camera.cangle}`
+        fpscount.text = `FPS: ${fpsrec * 8} / ${fps}`;
+        speedometer.text = `Speed: ${round(player.speed,3)}, Rotation: ${round(player.rotation,3)}`
+        posdebug.text = `Position: ${round(camera.cx,3)}, ${round(camera.cy,3)}, ${round(camera.cangle,3)}`
         fpsrec = 0;
     }
 
@@ -344,6 +380,8 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[38] || gameWindow.keys[87])) {up = true} else {up = false}
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
     if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
+
+    if(pausemenu.paused){left=false; right=false; up=false; down=false;}
 
     //############# Keycode Finder ############
     // if (gameWindow.keys) {
@@ -355,11 +393,14 @@ function updateGameWindow() {
     
     // Movement
     gameWindow.clear();
-    if (left && (player.rotation > -2)) {player.rotation += -0.1; }
-    if (right && (player.rotation < 2)) {player.rotation += 0.1; }
-    if (up && (player.speed < 5)) {player.speed += 0.1; }
-    if (down && (player.speed > -5)) {player.speed += -0.1; }
 
+    if(!pausemenu.paused) {
+        if (left && (player.rotation > -2)) {player.rotation += -0.1; }
+        if (right && (player.rotation < 2)) {player.rotation += 0.1; }
+        if (up && (player.speed < 10)) {if(player.speed > 0) {player.speed += 0.1} else {player.speed += 0.3}}
+        if (down && (player.speed > -10)) {if(player.speed < 0) {player.speed -= 0.1} else {player.speed -= 0.3}}
+    }
+    
     if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
     
     while(upcount < updatelist.length) {
@@ -371,6 +412,7 @@ function updateGameWindow() {
 
 function degrees(radians) {return (radians * (180/Math.PI)) % 360}
 function radians(degrees) {return degrees * (Math.PI/180)}
+function round(number, points) {return (Math.round(number * Math.pow(10,points))/Math.pow(10,points))}
 
 // --------------------------------------------------------------
 
