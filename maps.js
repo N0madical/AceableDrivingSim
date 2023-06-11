@@ -10,19 +10,10 @@ this.lightpole.src = "textures/lightpole.png";
 
 // Maps
 maps = [
+    // Parking lot map
     parkinglot = [
-        //new shape("rect", 0, 0, 0, 5, 5, "darkgray"),
-
         new terrain(0, 0, 0, 15, 20, asphaltpreload),
         new terrain(0, 0, 0, 100, 100, grasspreload),
-
-        //new shape("rect", 150, 500, 30, 100, 200, "darkgray"),
-
-        // new shape("rect", -150, 500, -30, 100, 200, "darkgray"),
-        // new shape("rect", 0, 460, 0, 300, 300, "darkgray"),
-        // new shape("rect", 0, 700, 0, 1000, 300, "darkgray"),
-        // new shape("rect", 0, 550, 0, 1000, 10, "dimgray"),
-        // new shape("rect", 0, 850, 0, 1000, 10, "dimgray"),
 
         new shape("rect", -10, 17.5, 0, 2.5, 0.25, "yellow"),
         new shape("rect", -5, 17.5, 0, 2.5, 0.25, "yellow"),
@@ -44,9 +35,8 @@ maps = [
 
         new shape("rect", -7.5, 0, 0, 0.5, 20, "dimgray"),
         new shape("rect", 7.5, 0, 0, 0.5, 20, "dimgray"),
+    ],
 
-        // new shape("image", 300, 0, 90, 50, 200, lightpole),
-        // new shape("image", 300, 150, 90, 50, 200, lightpole),
-        // new shape("image", 300, -150, 90, 50, 200, lightpole),
-    ] 
+    // Road map (WIP)
+    road = [],
 ]
