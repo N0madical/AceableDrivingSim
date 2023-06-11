@@ -219,9 +219,9 @@ var player = {
         this.xmov = this.turnrad - (Math.cos(this.speed/this.turnrad)*this.turnrad)
         this.ymov = (Math.sin(this.speed/this.turnrad)*this.turnrad)
         this.tandeg = degrees(Math.atan(this.xmov/this.ymov))
-        console.debug((((this.speed * Math.sin(radians(this.tandeg))) * (Math.sin(radians(camera.cangle))))/fps))
+        console.debug((this.speed * Math.sin(radians(this.tandeg))))
         camera.cangle += (this.speed/this.turnrad * (180/Math.PI))/fps
-        if(this.turndeg != 0) {
+        if(this.turndeg != 0 && this.speed != 0) {
             camera.cx += (((this.speed * Math.sin(radians(this.tandeg))) * (Math.sin(radians(camera.cangle))))/fps)
             camera.cy += (((this.speed * Math.cos(radians(this.tandeg))) * (Math.cos(radians(camera.cangle))))/fps)
         } else {
@@ -239,15 +239,15 @@ var player = {
         // }
 
         // Slow-Down
-        if (!up && !down) {
-            if (this.speed > 0) {this.speed -= this.deceleration; if(this.speed <=0){this.speed=0}} 
-            else if (this.speed < 0) {this.speed += this.deceleration; if(this.speed >=0){this.speed=0}}
-            else {this.speed = 0}
-        }
+        // if (!up && !down) {
+        //     if (this.speed > 0) {this.speed -= this.deceleration; if(this.speed <=0){this.speed=0}} 
+        //     else if (this.speed < 0) {this.speed += this.deceleration; if(this.speed >=0){this.speed=0}}
+        //     else {this.speed = 0}
+        // }
         
-        if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/60); if(this.turndeg <=0){this.turndeg=0}} 
-        else if (this.turndeg < 0 && !(left || right)) {this.turndeg += this.turnback * Math.abs(this.speed/60); if(this.turndeg >=0){this.turndeg=0}}
-        else if (!(left || right)) {this.rotation = 0}
+        // if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/60); if(this.turndeg <=0){this.turndeg=0}} 
+        // else if (this.turndeg < 0 && !(left || right)) {this.turndeg += this.turnback * Math.abs(this.speed/60); if(this.turndeg >=0){this.turndeg=0}}
+        // else if (!(left || right)) {this.rotation = 0}
 
         // Update Visuals
         wheelL = gameWindow.context;
@@ -345,7 +345,6 @@ function terrain(x, y, angle, width, height, image, scalex=100, scaley=100) {
 }
 
 function testcirc() {
-    this.x = 5.2
     this.y = 0
     this.radius = 5.2
     this.angle = 0
@@ -353,7 +352,12 @@ function testcirc() {
     this.update = function() {
         canvas = gameWindow.context;
         canvas.beginPath();
-        canvas.arc((gameWindow.canvas.width/2)+camera.position(this.x,this.y,this.angle)[0], (gameWindow.canvas.height/2)-camera.position(this.x,this.y,this.angle)[1], this.radius*scalar, 0, 2*Math.PI);
+        if(player.turnrad > 0) {
+            this.x = player.turnrad
+        } else {
+            this.x = -player.turnrad
+        }
+        canvas.arc((gameWindow.canvas.width/2)+camera.position(player.turnrad,this.y,this.angle)[0], (gameWindow.canvas.height/2)-camera.position(player.turnrad,this.y,this.angle)[1], Math.abs(player.turnrad)*scalar, 0, 2*Math.PI);
         canvas.stroke();
         upcount++
     }
@@ -423,8 +427,9 @@ function updateGameWindow() {
     if(!pausemenu.paused) {
         if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (1); }
         if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (1); }
-        if (up && (player.speed < 10)) {if(player.speed > 0) {player.speed += 0.1} else {player.speed += 0.3}}
-        if (down && (player.speed > -10)) {if(player.speed < 0) {player.speed -= 0.1} else {player.speed -= 0.3}}
+        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += 10} else {player.speed += 0}}
+        //if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= 10} else {player.speed -= 0}}
+        if (down) {player.speed = 0}
     }
     
     if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
