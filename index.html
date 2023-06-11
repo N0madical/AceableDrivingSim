@@ -427,9 +427,11 @@ function updateGameWindow() {
     if(!pausemenu.paused) {
         if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (1); }
         if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (1); }
-        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += 10} else {player.speed += 0}}
+        //if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += 10} else {player.speed += 0}}
         //if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= 10} else {player.speed -= 0}}
-        if (down) {player.speed = 0}
+        if (up) {player.speed = 10
+        } else if (down) {player.speed = -10
+        } else {player.speed = 0}
     }
     
     if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
