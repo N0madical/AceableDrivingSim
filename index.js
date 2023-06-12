@@ -165,13 +165,13 @@ var player = {
     update : function() {
         // Update Camera Position (WIP)
         this.turnrad = this.wheelbase/tan(this.turndeg)
-        this.xmov = this.turnrad - (cos(this.speed/this.turnrad)*this.turnrad)
-        this.ymov = (sin(this.speed/this.turnrad)*this.turnrad)
-        this.tandeg = invtan(this.xmov/this.ymov)
+        this.arcdeg = degrees(this.speed/this.turnrad)
+        this.theta = 90 - ((180-this.arcdeg)/2)
+        this.angularspeed = sin(this.arcdeg)/(sin((180-this.arcdeg)/2)/this.turnrad)
         camera.cangle += (this.speed/radians(this.turnrad))/fps
         if(this.turndeg != 0 && this.speed != 0) {
-            camera.cx += (((this.speed * sin(this.tandeg))) * (sin(camera.cangle)))/fps
-            camera.cy += (((this.speed * cos(this.tandeg))) * (cos(camera.cangle)))/fps
+            camera.cx += (this.angularspeed * (sin(camera.cangle)))/fps
+            camera.cy += (this.angularspeed * (cos(camera.cangle)))/fps
         } else {
             camera.cx += ((this.speed * (sin(camera.cangle))))/fps
             camera.cy += ((this.speed * (cos(camera.cangle))))/fps

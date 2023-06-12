@@ -1,4 +1,4 @@
-// Textures
+//Loading Textures
 this.asphaltpreload = new Image();
 this.asphaltpreload.src = "textures/crasphalt.jpg";
 
