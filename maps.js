@@ -1,19 +1,32 @@
 //Loading Textures
-this.asphaltpreload = new Image();
-this.asphaltpreload.src = "textures/crasphalt.jpg";
+textures = [
+    global = [
+        ["asphalt", "textures/crasphalt.jpg"],
+        ["grass", "textures/grass.png"],
+    ],
+    
+    parkinglot = [
+        ["lightpole", "textures/lightpole.png"],
+        ["tree", "textures/tree.png"],
+    ],
+]
 
-this.grasspreload = new Image();
-this.grasspreload.src = "textures/grass.png";
-
-this.lightpole = new Image();
-this.lightpole.src = "textures/lightpole.png";
 
 // Maps
 maps = [
     // Parking lot map
     parkinglot = [
-        new terrain(0, 0, 0, 15, 20, asphaltpreload),
-        new terrain(0, 0, 0, 100, 100, grasspreload),
+        //new testcirc(),
+        new terrain(0, 0, 0, 15, 20, "asphalt"),
+        new terrain(0, 0, 0, 100, 100, "grass"),
+
+        new shape("image", -10, 8, 0, 8, 8, "tree", 5),
+        new shape("image", -10, 0, 0, 8, 8, "tree", 5),
+        new shape("image", -10, -8, 0, 8, 8, "tree", 5),
+
+        // new shape("rect", -10, 8, 0, 8, 8, "red", 4),
+        // new shape("rect", -10, 0, 0, 8, 8, "red", 4),
+        // new shape("rect", -10, -8, 0, 8, 8, "red", 4),
 
         new shape("rect", -10, 17.5, 0, 2.5, 0.25, "yellow"),
         new shape("rect", -5, 17.5, 0, 2.5, 0.25, "yellow"),
@@ -33,8 +46,8 @@ maps = [
         new shape("rect", -5.625, 3.75, -45, 0.25, 5, "yellow"),
         new shape("rect", -5.625, 7.5, -45, 0.25, 5, "yellow"),
 
-        new shape("rect", -7.5, 0, 0, 0.5, 20, "dimgray"),
-        new shape("rect", 7.5, 0, 0, 0.5, 20, "dimgray"),
+        new shape("rect", -7.5, 0, 0, 0.5, 20, "dimgray", 3),
+        new shape("rect", 7.5, 0, 0, 0.5, 20, "dimgray", 3),
     ],
 
     // Road map (WIP)

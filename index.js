@@ -17,42 +17,51 @@ let right = false;
 let up = false;
 let down = false;
 let esc = false;
+let loadedtextures = {}
 
 // Debug Timer
 var upcount = 0;
 
 // Launch The Game On Window Load
 window.onload = function() {
+
     gameWindow.start(0, 0, 0, zoom);
     player.start();
-    turnradius = new testcirc();
     fpscount = new displaytext(50, 50, "FPS: Error", "left", size=30);
     speedometer = new displaytext(50, 100, "Speed: Error", "left", size=30);
     posdebug = new displaytext(50, 150, "Position: Error", "left", size=30);
+    border = new carborder();
 
     // Sprides to be loaded on all maps
-    spritelist = [player, turnradius, fpscount, speedometer, posdebug, pausemenu]
+    spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
     
     // Import selected map
     updatelist = maps[map-1].concat(spritelist);
 
+    loadsprites(map, maps)
+
     // Initiate pause menu
     pausemenu.start();
+
+    for(i = 0; i < updatelist.length; i++) {
+        if (typeof updatelist[i].layer == 'undefined') {
+            updatelist[i].layer = 5
+        }
+    }
 
 }
 
 // Main Game Window Container
 var gameWindow = {
-    canvas : document.createElement("canvas"),
+    canvas : document.getElementById("maincanvas"),
     start : function(x=0, y=0, angle=0, zoom=100) {
-
         // Starting Variables For Canvas
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
         this.canvas.id = "gamescreen"
         this.context = this.canvas.getContext("2d"); // This is what allows all objects to interface with canvas
         //this.context.filter = "blur(10px)"; // Experimenting with blur effect (Lags Computer)
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]); // Inserts canvas into HTML
+        //document.body.insertBefore(this.canvas, document.body.childNodes[0]); // Inserts canvas into HTML
         camera.start(x,y,angle,zoom);
 
         // Start Refresh Ticker
@@ -157,50 +166,54 @@ var player = {
         this.height = 5;
         this.speed = 0;
         this.turndeg = 0;
+        this.layer = 3;
         this.carimage = new Image();
         this.carimage.src = "textures/car.png";
+        this.distances = [100,99,99,92,76,63,55,49,45,43,41,41,41,42,44,55,52,56,66,83,92,98,100,100,98,93,85,69,56,52,53,42,40,39,39,40,41,44,48,53,62,74,94,101,101]
     },
 
     // Move The Sprite When Update Is Called
     update : function() {
         // Update Camera Position (WIP)
-        this.turnrad = this.wheelbase/tan(this.turndeg)
-        this.arcdeg = degrees(this.speed/this.turnrad)
-        this.theta = 90 - ((180-this.arcdeg)/2)
-        this.angularspeed = sin(this.arcdeg)/(sin((180-this.arcdeg)/2)/this.turnrad)
-        camera.cangle += (this.speed/radians(this.turnrad))/fps
-        if(this.turndeg != 0 && this.speed != 0) {
-            camera.cx += (this.angularspeed * (sin(camera.cangle)))/fps
-            camera.cy += (this.angularspeed * (cos(camera.cangle)))/fps
-        } else {
-            camera.cx += ((this.speed * (sin(camera.cangle))))/fps
-            camera.cy += ((this.speed * (cos(camera.cangle))))/fps
-        }
+        if(!pausemenu.paused) {
+            this.turnrad = this.wheelbase/tan(this.turndeg)
+            this.arcdeg = degrees(this.speed/this.turnrad)
+            this.theta = 90 - ((180-this.arcdeg)/2)
+            this.angularspeed = sin(this.arcdeg)/(sin((180-this.arcdeg)/2)/this.turnrad)
+            camera.cangle += (this.speed/radians(this.turnrad))/fps
+            if(this.turndeg != 0 && this.speed != 0) {
+                camera.cx += (this.angularspeed * (sin(camera.cangle)))/fps
+                camera.cy += (this.angularspeed * (cos(camera.cangle)))/fps
+            } else {
+                camera.cx += ((this.speed * (sin(camera.cangle))))/fps
+                camera.cy += ((this.speed * (cos(camera.cangle))))/fps
+            }
 
-        // Slow Down Effect
-        // if (!up && !down) {
-        //     if (this.speed > 0) {this.speed -= this.deceleration; if(this.speed <=0){this.speed=0}} 
-        //     else if (this.speed < 0) {this.speed += this.deceleration; if(this.speed >=0){this.speed=0}}
-        //     else {this.speed = 0}
-        // }
-        
-        // Stop Turning Effect
-        // if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/60); if(this.turndeg <=0){this.turndeg=0}} 
-        // else if (this.turndeg < 0 && !(left || right)) {this.turndeg += this.turnback * Math.abs(this.speed/60); if(this.turndeg >=0){this.turndeg=0}}
-        // else if (!(left || right)) {this.rotation = 0}
+            // Slow Down Effect
+            if (!up && !down) {
+                if (this.speed > 0) {this.speed -= this.deceleration; if(this.speed <=0){this.speed=0}} 
+                else if (this.speed < 0) {this.speed += this.deceleration; if(this.speed >=0){this.speed=0}}
+                else {this.speed = 0}
+            }
+            
+            // Stop Turning Effect
+            if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/60); if(this.turndeg <=0){this.turndeg=0}} 
+            else if (this.turndeg < 0 && !(left || right)) {this.turndeg += this.turnback * Math.abs(this.speed/60); if(this.turndeg >=0){this.turndeg=0}}
+            else if (!(left || right)) {this.rotation = 0}
+        }
 
         // Update Player Visuals
         wheelL = gameWindow.context;
         wheelL.save();
-        wheelL.translate(((gameWindow.canvas.width/2 - this.width/3.4*(camera.czoom/100))), ((gameWindow.canvas.height/2 - this.height/3.8*(camera.czoom/100))));
+        wheelL.translate(((gameWindow.canvas.width/2 - ((this.width/3.0)*(scalar)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)))));
         wheelL.rotate(radians(this.turndeg));
         wheelL.fillStyle = "black";
-        wheelL.fillRect((this.width/10*(camera.czoom/100)) / -2, (this.height/6*(camera.czoom/100)) / -2, this.width/10*(camera.czoom/100), this.height/6*(camera.czoom/100));
+        wheelL.fillRect(((this.width/10) / -2)*scalar, ((this.height/6) / -2)*scalar, (this.width/10)*(scalar), (this.height/6)*(scalar));
         wheelL.restore();
 
         wheelR = gameWindow.context;
         wheelR.save();
-        wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.4)*(scalar)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)))));
+        wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)))));
         wheelR.rotate(radians(this.turndeg));
         wheelR.fillStyle = "black";
         wheelR.fillRect(((this.width/10) / -2)*scalar, ((this.height/6) / -2)*scalar, (this.width/10)*(scalar), (this.height/6)*(scalar));
@@ -211,6 +224,54 @@ var player = {
         car.drawImage(this.carimage, (gameWindow.canvas.width/2)-((this.width/2)*(scalar)*(camera.czoom/100)), (gameWindow.canvas.height/2)-((this.height/2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
 
         // Let the renderer know rendering is complete
+        upcount++
+    }
+}
+
+function carborder() {
+    this.x = gameWindow.canvas.width/2 - 2.5
+    this.y = gameWindow.canvas.height/2 - 2.5
+    this.distances = player.distances
+    console.debug(this.distances.length)
+    this.update = function() {
+        for (i = 0; i < this.distances.length; i++) {
+            this.newx = this.x + (sin(i*8 + 45) * this.distances[i])
+            this.newy = this.y + (cos(i*8 + 45) * this.distances[i])
+
+            bg = gameWindow.context;
+            bg.fillStyle = "red";
+            bg.fillRect(this.newx,this.newy,5,5);
+            bg.globalAlpha = 1.0;
+        }
+        upcount++
+    }
+}
+
+// Loads text into the player HUD
+function displaytext(x, y, text, justify, size, font="Arial", color="white") {
+    this.x = x;
+    this.y = y;
+    this.text = text;
+    this.justify = justify;
+    this.size = size;
+    this.font = font;
+    this.color = color;
+    this.alpha = 100;
+
+    this.update = function() {
+        canvas = gameWindow.context;
+        canvas.font = (`${this.size}px ${this.font}`);
+        canvas.fillStyle = this.color;
+        if (this.justify == "center") {
+            this.jpos = canvas.measureText(this.text).width/2;
+        } else if (this.justify == "right") {
+            this.jpos = canvas.measureText(this.text).width;
+        } else {
+            this.jpos = 0;
+        }
+        canvas.globalAlpha = (this.alpha/100);
+        canvas.fillText(this.text, this.x - this.jpos, this.y + this.size/3);
+        canvas.globalAlpha = 1;
         upcount++
     }
 }
@@ -252,22 +313,47 @@ function updateGameWindow() {
 
     // Affect player when buttons pressed
     if(!pausemenu.paused) {
-        if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (1); }
-        if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (1); }
-        //if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += 10} else {player.speed += 0}}
-        //if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= 10} else {player.speed -= 0}}
-        if (up) {player.speed = 10
-        } else if (down) {player.speed = -10
-        } else {player.speed = 0}
+        if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (2); }
+        if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (2); }
+        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += 0.1} else {player.speed += 0.3}}
+        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= 0.1} else {player.speed -= 0.3}}
+        // if (up) {player.speed = 10
+        // } else if (down) {player.speed = -10
+        // } else {player.speed = 0}
     }
     
     // Pause Menu (WIP)
     if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
     
     // Load all objects, upcount allows objects to notify loader when they complete loading to avoid async overlap
-    while(upcount < updatelist.length) {
-        updatelist[upcount].update();
+    g = 1
+    while (g < 6) {
+        upcount = 0
+        maxupcount = 0
+        timeout = 0
+        for (f = 0; f < updatelist.length; f++) {
+            if (updatelist[f].layer == g) {
+                updatelist[f].update()
+                maxupcount++
+            }
+        }
+        
+        // //console.debug(`Found ${maxupcount} layer ${g} sprites`)
+        // while(upcount < maxupcount && timeout < 10) {
+        //     timeout++
+        // }
+        // //console.debug(`Timeout value on sprite ${g} is ${timeout}`)
+        // if(timeout > 10) {
+        //     console.error("Item did not load under 10ms")
+        // }
+        g++
     }
+    
+    
+    
+    // while(upcount < updatelist.length) {
+    //     updatelist[upcount].update();
+    // }
 
 }
 
@@ -280,3 +366,20 @@ function sin(theta) {return Math.sin(theta * Math.PI/180)} //Sin in degrees
 function tan(theta) {return Math.tan(theta * Math.PI/180)} //Tan in degrees
 function invtan(imp) {return Math.atan(imp) * 180/Math.PI} //Inverse tan in degrees
 function invtan2(imp1,imp2) {return Math.atan2(imp1,imp2) * 180/Math.PI}
+function loadsprites(map, maps) {
+    for (i = 0; i < textures[0].length; i++) {
+        f = new Image();
+        f.src = textures[0][i][1]
+        loadedtextures[textures[0][i][0]] = f
+    }
+
+    for (i = 0; i < textures[map].length; i++) {
+        f = new Image();
+        f.src = textures[map][i][1]
+        loadedtextures[textures[map][i][0]] = f
+    }
+
+    for (i = 0; i < maps[map-1].length; i++) {
+        maps[map-1][i].start()
+    }
+}
