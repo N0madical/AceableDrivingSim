@@ -135,34 +135,34 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
     this.update = function() {
         if (this.tilex > 1000000 || this.tiley > 1000000) {
             this.start()
-        } else if (this.x - this.width/2 < camera.cx - gameWindow.canvas.width/scalar || this.x + this.width/2 > camera.cx + gameWindow.canvas.width/scalar || this.y - this.height/2 < camera.cy - gameWindow.canvas.height/scalar || this.y + this.height/2 > camera.cy + gameWindow.canvas.height/scalar) {
-            console.debug(`New rendering engine is being used for ${image}`)
-            for (this.i = 0; this.i*this.iheight < gameWindow.canvas.height/scalar; this.i++) {
-                for (this.f = 0; this.f*this.iwidth < gameWindow.canvas.width/scalar; this.f++) {
-                    this.x2 = ((gameWindow.canvas.width/-2)/scalar) + (this.f * this.iwidth)
-                    this.y2 = ((gameWindow.canvas.height/-2)/scalar) + (this.i * this.iheight)
-                    if(this.f == 1 && this.i == 1) {
-                        console.debug(this.x2, this.y2)
-                    }
-                    if(this.x2 > this.x-(this.width/2) || this.x2 < this.x+(this.width/2)) {
-                        if(this.y2 > this.y-(this.height/2) || this.y2 < this.y+(this.height/2)) {
-                            this.pos = camera.position(this.x2,this.y2,this.angle);
-                            canvas.save();
-                            //canvas.imageSmoothingEnabled = false;
-                            if (this.layer == 1) {
-                                canvas.globalCompositeOperation='destination-over'
-                            }
-                            canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
-                            canvas.rotate(radians(this.pos[2]));
-                            if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
-                            if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
-                            canvas.drawImage(this.image, 0, (0 - this.trimy)*scalar, (this.iwidth + this.trimx) * scalar, (this.iheight + this.trimy) * scalar, ((this.iwidth*(camera.czoom/100)) / -2)*scalar, ((this.iheight*(camera.czoom/100)) / -2 - this.trimy)*scalar, (this.iwidth*(camera.czoom/100)+this.trimx)*scalar, (this.iheight*(camera.czoom/100)+this.trimy)*scalar);
-                            canvas.restore();
-                        }
-                    }
+        // } else if (this.x - this.width/2 < camera.cx - gameWindow.canvas.width/scalar || this.x + this.width/2 > camera.cx + gameWindow.canvas.width/scalar || this.y - this.height/2 < camera.cy - gameWindow.canvas.height/scalar || this.y + this.height/2 > camera.cy + gameWindow.canvas.height/scalar) {
+        //     console.debug(`New rendering engine is being used for ${image}`)
+        //     for (this.i = 0; this.i*this.iheight < gameWindow.canvas.height/scalar; this.i++) {
+        //         for (this.f = 0; this.f*this.iwidth < gameWindow.canvas.width/scalar; this.f++) {
+        //             this.x2 = ((gameWindow.canvas.width/-2)/scalar) + (this.f * this.iwidth)
+        //             this.y2 = ((gameWindow.canvas.height/-2)/scalar) + (this.i * this.iheight)
+        //             if(this.f == 1 && this.i == 1) {
+        //                 console.debug(this.x2, this.y2)
+        //             }
+        //             if(this.x2 > this.x-(this.width/2) || this.x2 < this.x+(this.width/2)) {
+        //                 if(this.y2 > this.y-(this.height/2) || this.y2 < this.y+(this.height/2)) {
+        //                     this.pos = camera.position(this.x2,this.y2,this.angle);
+        //                     canvas.save();
+        //                     //canvas.imageSmoothingEnabled = false;
+        //                     if (this.layer == 1) {
+        //                         canvas.globalCompositeOperation='destination-over'
+        //                     }
+        //                     canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
+        //                     canvas.rotate(radians(this.pos[2]));
+        //                     if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
+        //                     if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
+        //                     canvas.drawImage(this.image, 0, (0 - this.trimy)*scalar, (this.iwidth + this.trimx) * scalar, (this.iheight + this.trimy) * scalar, ((this.iwidth*(camera.czoom/100)) / -2)*scalar, ((this.iheight*(camera.czoom/100)) / -2 - this.trimy)*scalar, (this.iwidth*(camera.czoom/100)+this.trimx)*scalar, (this.iheight*(camera.czoom/100)+this.trimy)*scalar);
+        //                     canvas.restore();
+        //                 }
+        //             }
                     
-                }
-            }
+        //         }
+        //     }
         } else {
             for(this.i = 0; this.i < this.tiley; this.i++) {
                 for(this.f = 0; this.f < this.tilex; this.f++) {

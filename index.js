@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Config
-var fps = 60;
+var fps = 120;
 var zoom = 100;
 var map = 1
 
@@ -65,7 +65,21 @@ var gameWindow = {
         camera.start(x,y,angle,zoom);
 
         // Start Refresh Ticker
-        this.interval = setInterval(updateGameWindow, (1000/fps));
+        msPrev = window.performance.now()
+        function gameTick() {
+            window.requestAnimationFrame(gameTick)
+
+            const msNow = window.performance.now()
+            const msPassed = msNow - msPrev
+
+            if (msPassed < 1000/fps) return
+
+            const excessTime = msPassed % (1000/fps)
+            msPrev = msNow - excessTime
+
+            updateGameWindow()
+        }
+        gameTick()
 
         // Keyboard Listeners
         window.addEventListener('keydown', function (e) {
@@ -156,7 +170,7 @@ var pausemenu = {
 var player = {
     start : function(x, y, angle, zoom) {
         // Config For The Car
-        this.deceleration = 0.1
+        this.deceleration = 10
         this.turnback = 5
         this.maxturndeg = 30
         this.wheelbase = 3
@@ -191,8 +205,8 @@ var player = {
 
             // Slow Down Effect
             if (!up && !down) {
-                if (this.speed > 0) {this.speed -= this.deceleration; if(this.speed <=0){this.speed=0}} 
-                else if (this.speed < 0) {this.speed += this.deceleration; if(this.speed >=0){this.speed=0}}
+                if (this.speed > 0) {this.speed -= this.deceleration/fps; if(this.speed <=0){this.speed=0}} 
+                else if (this.speed < 0) {this.speed += this.deceleration/fps; if(this.speed >=0){this.speed=0}}
                 else {this.speed = 0}
             }
             
@@ -283,13 +297,20 @@ function updateGameWindow() {
     upcount = 0
     const d = new Date();
     fpsrec += 1
-    if (lasttime + 125 <= d.getTime()) {
+    if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
-        fpscount.text = `FPS: ${fpsrec * 8} / ${fps}`;
+        fpscount.text = `FPS: ${fpsrec * 4} / ${fps}`;
         speedometer.text = `Speed: ${round(player.speed,1)}, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
         posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°`
+        realfps = fpsrec * 4;
         fpsrec = 0;
     }
+
+    // if(Math.abs(realfps - fps) > 10) {
+    //     clearInterval(gameWindow.interval)
+    //     gameWindow.interval = setInterval(updateGameWindow, (16))
+    //     console.debug(gameWindow.interval)
+    // }
 
     // Defining and Detecting Keypresses
     if (gameWindow.keys && (gameWindow.keys[37] || gameWindow.keys[65])) {left = true} else {left = false}
@@ -313,12 +334,12 @@ function updateGameWindow() {
 
     // Affect player when buttons pressed
     if(!pausemenu.paused) {
-        if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (2); }
-        if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (2); }
-        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += 0.1} else {player.speed += 0.3}}
-        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= 0.1} else {player.speed -= 0.3}}
-        // if (up) {player.speed = 10
-        // } else if (down) {player.speed = -10
+        if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (120/fps); }
+        if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (120/fps); }
+        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += (5/fps)} else {player.speed += 0.3}}
+        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= (5/fps)} else {player.speed -= 0.3}}
+        // if (up) {player.speed = 1
+        // } else if (down) {player.speed = -1
         // } else {player.speed = 0}
     }
     
