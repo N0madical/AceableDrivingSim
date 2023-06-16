@@ -2,7 +2,7 @@
 textures = [
     global = [
         ["asphalt", "textures/crasphalt.jpg"],
-        ["grass", "textures/grass.png"],
+        ["grass", "textures/grass.jpg"],
     ],
     
     parkinglot = [
@@ -20,34 +20,36 @@ maps = [
         new terrain(0, 0, 0, 15, 20, "asphalt"),
         new terrain(0, 0, 0, 100, 100, "grass"),
 
-        new shape("image", -10, 8, 0, 8, 8, "tree", 5),
-        new shape("image", -10, 0, 0, 8, 8, "tree", 5),
-        new shape("image", -10, -8, 0, 8, 8, "tree", 5),
+        new rect(true, -10, 8, 0, 8, 8, "tree", 5),
+        new rect(true, -10, 0, 0, 8, 8, "tree", 5),
+        new rect(true, -10, -8, 0, 8, 8, "tree", 5),
 
-        // new shape("rect", -10, 8, 0, 8, 8, "red", 4),
-        // new shape("rect", -10, 0, 0, 8, 8, "red", 4),
-        // new shape("rect", -10, -8, 0, 8, 8, "red", 4),
+        new circle(false, 0, 10, 0, 5, "red", 4),
 
-        new shape("rect", -10, 17.5, 0, 2.5, 0.25, "yellow"),
-        new shape("rect", -5, 17.5, 0, 2.5, 0.25, "yellow"),
-        new shape("rect", 0, 17.5, 0, 2.5, 0.25, "yellow"),
-        new shape("rect", 5, 17.5, 0, 2.5, 0.25, "yellow"),
-        new shape("rect", 10, 17.5, 0, 2.5, 0.25, "yellow"),
+        // new rect(false, -10, 8, 0, 8, 8, "red", 4),
+        // new rect(false, -10, 0, 0, 8, 8, "red", 4),
+        // new rect(false, -10, -8, 0, 8, 8, "red", 4),
 
-        new shape("rect", 5.625, -7.5, 45, 0.25, 5, "yellow"), 
-        new shape("rect", 5.625, -3.75, 45, 0.25, 5, "yellow"),
-        new shape("rect", 5.625, 0, 45, 0.25, 5, "yellow"), 
-        new shape("rect", 5.625, 3.75, 45, 0.25, 5, "yellow"),
-        new shape("rect", 5.625, 7.5, 45, 0.25, 5, "yellow"),
+        new rect(false, -10, 17.5, 0, 2.5, 0.25, "yellow"),
+        new rect(false, -5, 17.5, 0, 2.5, 0.25, "yellow"),
+        new rect(false, 0, 17.5, 0, 2.5, 0.25, "yellow"),
+        new rect(false, 5, 17.5, 0, 2.5, 0.25, "yellow"),
+        new rect(false, 10, 17.5, 0, 2.5, 0.25, "yellow"),
 
-        new shape("rect", -5.625, -7.5, -45, 0.25, 5, "yellow"), 
-        new shape("rect", -5.625, -3.75, -45, 0.25, 5, "yellow"),
-        new shape("rect", -5.625, 0, -45, 0.25, 5, "yellow"), 
-        new shape("rect", -5.625, 3.75, -45, 0.25, 5, "yellow"),
-        new shape("rect", -5.625, 7.5, -45, 0.25, 5, "yellow"),
+        new rect(false, 5.625, -7.5, 45, 0.25, 5, "yellow"), 
+        new rect(false, 5.625, -3.75, 45, 0.25, 5, "yellow"),
+        new rect(false, 5.625, 0, 45, 0.25, 5, "yellow"), 
+        new rect(false, 5.625, 3.75, 45, 0.25, 5, "yellow"),
+        new rect(false, 5.625, 7.5, 45, 0.25, 5, "yellow"),
 
-        new shape("rect", -7.5, 0, 0, 0.5, 20, "dimgray", 3),
-        new shape("rect", 7.5, 0, 0, 0.5, 20, "dimgray", 3),
+        new rect(false, -5.625, -7.5, -45, 0.25, 5, "yellow"), 
+        new rect(false, -5.625, -3.75, -45, 0.25, 5, "yellow"),
+        new rect(false, -5.625, 0, -45, 0.25, 5, "yellow"), 
+        new rect(false, -5.625, 3.75, -45, 0.25, 5, "yellow"),
+        new rect(false, -5.625, 7.5, -45, 0.25, 5, "yellow"),
+
+        //new rect(false, -7.5, 0, 0, 0.5, 20, "dimgray", 3),
+        new rect(false, 7.5, 0, 0, 0.5, 20, "dimgray", 3),
     ],
 
     // Road map (WIP)
