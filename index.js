@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Config
-var fps = 120;
+var fps = 144;
 var zoom = 100;
 var map = 1
 
