@@ -52,7 +52,7 @@ maps = [
 
         new circle(false, 0, 10, 0, 5, "red", 4),
 
-        new rect(false, 0, 3, 0, 0.1, 1, "black"),
+        new rect(false, 0, 4.0, 0, 0.1, 3, "black"),
 
         // new rect(false, -10, 8, 0, 8, 8, "red", 4),
         // new rect(false, -10, 0, 0, 8, 8, "red", 4),

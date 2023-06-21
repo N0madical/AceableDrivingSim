@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Config
-var fps = 120;
+var fpscap = 165;
 var zoom = 100;
 var map = 1
 
@@ -17,6 +17,7 @@ let right = false;
 let up = false;
 let down = false;
 let esc = false;
+var fps = fpscap;
 let loadedtextures = {}
 
 // Debug Timer
@@ -72,9 +73,9 @@ var gameWindow = {
             const msNow = window.performance.now()
             const msPassed = msNow - msPrev
 
-            if (msPassed < 1000/fps) return
+            if (msPassed < 1000/fpscap) return
 
-            const excessTime = msPassed % (1000/fps)
+            const excessTime = msPassed % (1000/fpscap)
             msPrev = msNow - excessTime
 
             updateGameWindow()
@@ -126,11 +127,11 @@ var pausemenu = {
         this.maxblur = 80;
         this.blurstep = 2;
 
-        this.title = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*2, text="Paused", "center", size=100, font="Arial", color="white")
-        this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "center", size=50, font="Arial", color="white")
-        this.restart = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "center", size=50, font="Arial", color="white")
-        this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "center", size=50, font="Arial", color="white")
-        this.settings = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "center", size=50, font="Arial", color="white")
+        this.title = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*1.5, text="Paused", "left", size=100, font="Arial", color="white")
+        this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
+        this.restart = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "left", size=50, font="Arial", color="white")
+        this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
+        this.settings = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "left", size=50, font="Arial", color="white")
         
         this.menutext = [this.title, this.resume, this.restart, this.ability, this.settings]
         updatelist = updatelist.concat(this.menutext)
@@ -158,8 +159,16 @@ var pausemenu = {
         bg.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
         bg.globalAlpha = 1.0;
 
+        canvas = gameWindow.context;
+        canvas.translate((-500 + this.blur*8), ((gameWindow.canvas.height/2)));
+        canvas.rotate(radians(5));
+        canvas.fillStyle = "#2C3A47"; 
+        canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));
+        canvas.restore();
+
         for(i = 0; i < this.menutext.length; i++) {
             this.menutext[i].alpha = this.blur*1.25;
+            this.menutext[i].x = (-500 + this.blur*7);
         }
 
         upcount++;
@@ -170,7 +179,7 @@ var pausemenu = {
 var player = {
     start : function(x, y, angle, zoom) {
         // Config For The Car
-        this.deceleration = 10
+        this.deceleration = 6.5
         this.turnback = 5
         this.maxturndeg = 30
         this.wheelbase = 3
@@ -204,15 +213,15 @@ var player = {
             }
 
             // Slow Down Effect
-            if (!up && !down) {
-                if (this.speed > 0) {this.speed -= this.deceleration/fps; if(this.speed <=0){this.speed=0}} 
-                else if (this.speed < 0) {this.speed += this.deceleration/fps; if(this.speed >=0){this.speed=0}}
-                else {this.speed = 0}
-            }
+            // if (!up && !down) {
+            //     if (this.speed > 0) {this.speed -= this.deceleration/fps; if(this.speed <=0){this.speed=0}} 
+            //     else if (this.speed < 0) {this.speed += this.deceleration/fps; if(this.speed >=0){this.speed=0}}
+            //     else {this.speed = 0}
+            // }
             
             // Stop Turning Effect
-            if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/60); if(this.turndeg <=0){this.turndeg=0}} 
-            else if (this.turndeg < 0 && !(left || right)) {this.turndeg += this.turnback * Math.abs(this.speed/60); if(this.turndeg >=0){this.turndeg=0}}
+            if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/fps); if(this.turndeg <=0){this.turndeg=0}} 
+            else if (this.turndeg < 0 && !(left || right)) {this.turndeg += this.turnback * Math.abs(this.speed/fps); if(this.turndeg >=0){this.turndeg=0}}
             else if (!(left || right)) {this.rotation = 0}
         }
 
@@ -292,17 +301,19 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
 
 // Refresh The Canvas (50x per second)
 function updateGameWindow() {
-
+    gameWindow.canvas.width = window.innerWidth;
+    gameWindow.canvas.height = window.innerHeight;
+    
     // Debug ticker gives steady timer to load fps
     upcount = 0
     const d = new Date();
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
-        fpscount.text = `FPS: ${fpsrec * 4} / ${fps}`;
+        fpscount.text = `FPS: ${fpsrec * 4} / ${fpscap}`;
         speedometer.text = `Speed: ${round(player.speed,1)}, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
         posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°`
-        realfps = fpsrec * 4;
+        fps = fpsrec * 4;
         fpsrec = 0;
     }
 
@@ -336,8 +347,8 @@ function updateGameWindow() {
     if(!pausemenu.paused) {
         if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (120/fps); }
         if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (120/fps); }
-        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += (5/fps)} else {player.speed += 0.3}}
-        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= (5/fps)} else {player.speed -= 0.3}}
+        if (up && (player.speed < 100)) {if(player.speed >= 0) {player.speed += (4/fps)} else {player.speed += 10/fps}}
+        if (down && (player.speed > -100)) {if(player.speed <= 0) {player.speed -= (4/fps)} else {player.speed -= 10/fps}}
         // if (up) {player.speed = 1
         // } else if (down) {player.speed = -1
         // } else {player.speed = 0}
