@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Config
-var fpscap = 165;
+var fpscap = 60;
 var zoom = 100;
 var map = 1
 
@@ -213,11 +213,11 @@ var player = {
             }
 
             // Slow Down Effect
-            // if (!up && !down) {
-            //     if (this.speed > 0) {this.speed -= this.deceleration/fps; if(this.speed <=0){this.speed=0}} 
-            //     else if (this.speed < 0) {this.speed += this.deceleration/fps; if(this.speed >=0){this.speed=0}}
-            //     else {this.speed = 0}
-            // }
+            if (!up && !down) {
+                if (this.speed > 0) {this.speed -= this.deceleration/fps; if(this.speed <=0){this.speed=0}} 
+                else if (this.speed < 0) {this.speed += this.deceleration/fps; if(this.speed >=0){this.speed=0}}
+                else {this.speed = 0}
+            }
             
             // Stop Turning Effect
             if (this.turndeg > 0 && !(left || right)) {this.turndeg -= this.turnback * Math.abs(this.speed/fps); if(this.turndeg <=0){this.turndeg=0}} 
@@ -311,7 +311,7 @@ function updateGameWindow() {
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
         fpscount.text = `FPS: ${fpsrec * 4} / ${fpscap}`;
-        speedometer.text = `Speed: ${round(player.speed,1)}, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
+        speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
         posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°`
         fps = fpsrec * 4;
         fpsrec = 0;
@@ -347,8 +347,8 @@ function updateGameWindow() {
     if(!pausemenu.paused) {
         if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (120/fps); }
         if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (120/fps); }
-        if (up && (player.speed < 100)) {if(player.speed >= 0) {player.speed += (4/fps)} else {player.speed += 10/fps}}
-        if (down && (player.speed > -100)) {if(player.speed <= 0) {player.speed -= (4/fps)} else {player.speed -= 10/fps}}
+        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += (4/fps)} else {player.speed += 10/fps}}
+        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= (4/fps)} else {player.speed -= 10/fps}}
         // if (up) {player.speed = 1
         // } else if (down) {player.speed = -1
         // } else {player.speed = 0}

@@ -102,7 +102,7 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
         }
         canvas.globalAlpha = (this.opacity/100)
         if(this.isimage) {
-            canvas.drawImage(this.fill, (this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+            canvas.drawImage(this.fill, (this.diameter*(scalar)*(camera.czoom/100)) / -2, (this.diameter*(scalar)*(camera.czoom/100)) / -2, this.diameter*(scalar)*(camera.czoom/100), this.diameter*(scalar)*(camera.czoom/100));
             canvas.restore();
         } else {
             canvas.beginPath();
