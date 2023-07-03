@@ -9,7 +9,7 @@ var map = 1
 // Defining Variables
 var lasttime = 0;
 var fpsrec = 0;
-var scalar = 40;
+var scalar = 50;
 
 // Initiating Variables
 let left = false;
@@ -34,7 +34,7 @@ window.onload = function() {
     border = new carborder();
 
     // Sprides to be loaded on all maps
-    spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
+    spritelist = [player, border, fpscount, speedometer, posdebug, pausemenu]
     
     // Import selected map
     updatelist = maps[map-1].concat(spritelist);
@@ -109,7 +109,7 @@ var camera = {
     },
 
     // Objects use the position function to get position relative to player
-    position : function(x, y, rot) {
+    position : function(x, y, rot=0) {
         this.distance = (Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2)))*scalar
         this.angle = invtan2((y-this.cy),(x-this.cx))+this.cangle
         this.x2 = (cos(this.angle))*this.distance
@@ -185,14 +185,16 @@ var player = {
         this.wheelbase = 3
 
         // Defining Starting Variables On Creation
-        this.width = 2.5;
+        this.width = 2.3;
         this.height = 5;
         this.speed = 0;
         this.turndeg = 0;
         this.layer = 3;
         this.carimage = new Image();
-        this.carimage.src = "textures/car.png";
-        this.distances = [100,99,99,92,76,63,55,49,45,43,41,41,41,42,44,55,52,56,66,83,92,98,100,100,98,93,85,69,56,52,53,42,40,39,39,40,41,44,48,53,62,74,94,101,101]
+        this.carimage.src = "textures/car2.png";
+        this.distances = [122,122,90,62,52,47,46,49,68,78,115,127,124,105,70,72,52,50,52,60,78,110,122]
+        this.wheeldistance = Math.sqrt(Math.pow(this.height/3,2) + Math.pow(this.width/3,2))
+        this.wheelangles = [70,110,250,290]
     },
 
     // Move The Sprite When Update Is Called
@@ -248,23 +250,37 @@ var player = {
 
         // Let the renderer know rendering is complete
         upcount++
+    },
+
+    reset : function() {
+        camera.cx = 0;
+        camera.cy = 0;
+        camera.cangle = 0;
+        this.speed = 0;
     }
 }
 
 function carborder() {
-    this.x = gameWindow.canvas.width/2 - 2.5
-    this.y = gameWindow.canvas.height/2 - 2.5
     this.distances = player.distances
     console.debug(this.distances.length)
     this.update = function() {
+        this.x = gameWindow.canvas.width/2
+        this.y = gameWindow.canvas.height/2
         for (i = 0; i < this.distances.length; i++) {
-            this.newx = this.x + (sin(i*8 + 45) * this.distances[i])
-            this.newy = this.y + (cos(i*8 + 45) * this.distances[i])
+            this.newx = this.x + (sin(i*16) * this.distances[i])
+            this.newy = this.y + (cos(i*16) * this.distances[i])
 
             bg = gameWindow.context;
             bg.fillStyle = "red";
             bg.fillRect(this.newx,this.newy,5,5);
-            bg.globalAlpha = 1.0;
+        }
+        for (this.f = 0; this.f < player.wheelangles.length; this.f++) {
+            this.newx = this.x + (player.wheeldistance * sin(player.wheelangles[this.f]+90))*scalar
+            this.newy = this.y + (player.wheeldistance * cos(player.wheelangles[this.f]+90))*scalar
+
+            bg = gameWindow.context;
+            bg.fillStyle = "red";
+            bg.fillRect(this.newx,this.newy,5,5);
         }
         upcount++
     }

@@ -27,17 +27,25 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         if(!pausemenu.paused) {
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*8) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
-                    this.pointy = camera.cy + (cos(((this.i*8) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
                     if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
                     {
-                        if (this.layer == player.layer) {
-                            camera.cx = 0;
-                            camera.cy = 0;
-                            camera.cangle = 0;
-                            player.speed = 0;
-                        } else {
-                            this.opacity -= 1.5
+                        if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
+                    }
+                }
+                if(this.layer == player.layer) {
+                    for (this.f = 0; this.f < player.wheelangles.length; this.f++) {
+                        this.pointx = camera.cx + (player.wheeldistance * sin((player.wheelangles[this.f])%360))
+                        this.pointy = camera.cy + (player.wheeldistance * cos((player.wheelangles[this.f])%360))
+                        if (this.f == 0) {console.debug(this.pointx,this.pointy)}
+                        if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
+                        {
+                            if (this.f <= 2) {
+                                if(player.speed > 0){player.speed = 0}
+                            } else {
+                                if(player.speed < 0){player.speed = 0}
+                            }
                         }
                     }
                 }
@@ -84,18 +92,11 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
         if(!pausemenu.paused) {
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*8) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
-                    this.pointy = camera.cy + (cos(((this.i*8) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
                     if (((this.pointx - this.x)**2) + ((this.pointy - this.y)**2) <= (this.diameter/2)**2)
                     {
-                        if (this.layer == player.layer) {
-                            camera.cx = 0;
-                            camera.cy = 0;
-                            camera.cangle = 0;
-                            player.speed = 0;
-                        } else {
-                            this.opacity -= 1.5
-                        }
+                        if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 3}
                     }
                 }
             }
@@ -191,27 +192,44 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
     }
 }
 
-// Loads a circle on the canvas (experimental)
-function testcirc() {
+// Parking space object
+function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
     this.start = function() {
-        this.y = 0
-        this.x = 0
-        this.radius = 5.2
-        this.angle = 0
+        this.circle = iscircle
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.idealangle = (angle + idealangle) % 360;
+        this.width = width;
+        this.height = height;
+        this.fill = "green";
+        this.layer = 2;
+        this.toggle = 0;
+        this.opacity = 50;
     }
-    
+
     this.update = function() {
-        canvas = gameWindow.context;
-        canvas.beginPath();
-        if(player.turnrad > 0) {
-            this.x = player.turnrad
-        } else {
-            this.x = -player.turnrad
+        if (this.toggle == 0) { this.opacity -= (30/fps);
+            if(this.opacity <= 20) { this.toggle = 1}
+        } else { this.opacity += (30/fps);
+            if(this.opacity >= 50) {this.toggle = 0}
         }
-        canvas.arc((gameWindow.canvas.width/2)+camera.position(player.turnrad,this.y,this.angle)[0], (gameWindow.canvas.height/2)-camera.position(player.turnrad,this.y,this.angle)[1], Math.abs(player.turnrad)*scalar, 0, 2*Math.PI);
-        canvas.stroke();
+        canvas = gameWindow.context;
+        canvas.save();
+        this.pos = camera.position(this.x,this.y,this.angle);
+        canvas.globalAlpha = (this.opacity/100)
+        canvas.fillStyle = this.fill;
+        if (this.circle) {
+            canvas.beginPath();
+            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.width/2)*scalar,0,2*Math.PI);
+            canvas.fill();
+        } else {
+            canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
+            canvas.rotate(radians(this.pos[2]));
+            canvas.fillRect((this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+        }
+        
+        canvas.restore();
         upcount++
     }
 }
-
-(player.x > (this.x + this.width) || (player.x + player.width) < this.x || player.y > (this.y + this.height) || (player.y + player.height) < this.y);
