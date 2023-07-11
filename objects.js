@@ -10,6 +10,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         this.width = width;
         this.height = height;
         this.opacity = 100;
+        this.pointrec = [0,0]
         if (this.isimage) {
             this.fill = loadedtextures[fill];
         } else {
@@ -25,27 +26,30 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         canvas.rotate(radians(this.pos[2]));
         this.opacity = 100;
         if(!pausemenu.paused) {
-            if(this.layer >= player.layer) {
+            if(this.layer > player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
-                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
                     if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
                     {
                         if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
                     }
                 }
-                if(this.layer == player.layer) {
-                    for (this.f = 0; this.f < player.wheelangles.length; this.f++) {
-                        this.pointx = camera.cx + (player.wheeldistance * sin((player.wheelangles[this.f])%360))
-                        this.pointy = camera.cy + (player.wheeldistance * cos((player.wheelangles[this.f])%360))
-                        if (this.f == 0) {console.debug(this.pointx,this.pointy)}
-                        if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
-                        {
-                            if (this.f <= 2) {
-                                if(player.speed > 0){player.speed = 0}
-                            } else {
-                                if(player.speed < 0){player.speed = 0}
-                            }
+            }
+            if(this.layer == player.layer) {
+                for (this.f = 0; this.f < player.wheelangles.length; this.f++) {
+                    this.pointx2 = camera.cx - (cos(((player.wheelangles[this.f]) + camera.cangle) % 360) * (player.wheeldistance))
+                    this.pointy2 = camera.cy - (sin(((player.wheelangles[this.f]) + camera.cangle) % 360) * (player.wheeldistance))
+                    if (this.f == 0) {
+                        console.debug(this.pointx2,this.pointy2)
+                        this.pointrec = [this.pointx2, this.pointy2]
+                    }
+                    if ((this.x - this.width/2 <= this.pointx2 && this.pointx2 <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy2 && this.pointy2 <= this.y + this.height/2))
+                    {
+                        if (this.f <= 2) {
+                            if(player.speed > 0){player.speed = 0}
+                        } else {
+                            if(player.speed < 0){player.speed = 0}
                         }
                     }
                 }

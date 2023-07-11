@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Config
-var fpscap = 60;
+var fpscap = 30;
 var zoom = 100;
 var map = 1
 
@@ -274,7 +274,7 @@ function carborder() {
             bg.fillStyle = "red";
             bg.fillRect(this.newx,this.newy,5,5);
         }
-        for (this.f = 0; this.f < player.wheelangles.length; this.f++) {
+        for (this.f = 0; this.f < 1; this.f++) {
             this.newx = this.x + (player.wheeldistance * sin(player.wheelangles[this.f]+90))*scalar
             this.newy = this.y + (player.wheeldistance * cos(player.wheelangles[this.f]+90))*scalar
 
@@ -282,6 +282,10 @@ function carborder() {
             bg.fillStyle = "red";
             bg.fillRect(this.newx,this.newy,5,5);
         }
+
+        bg = gameWindow.context;
+        bg.fillStyle = "red";
+        bg.fillRect(((maps[0][19].pointrec[0]*scalar)+gameWindow.canvas.width/2)-camera.cx*scalar,((maps[0][19].pointrec[1]*scalar)+gameWindow.canvas.height/2)-camera.cy*scalar,50,50);
         upcount++
     }
 }
