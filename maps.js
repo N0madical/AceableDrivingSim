@@ -83,7 +83,7 @@ maps = [
         new rect(false, -5, 7.5, 90, 0.15, 5, "yellow"),
         new rect(false, -5, 10, 90, 0.15, 5, "yellow"),
 
-        //new rect(false, -7.5, 0, 0, 0.5, 20, "dimgray", 3),
+        new rect(false, -7.5, 0, 0, 0.5, 20, "dimgray", 3),
         new rect(false, 7.5, 0, 0, 0.5, 20, "dimgray", 3),
 
         new parkingspot(false, 5.5, 1.8, 45, 2, 4)

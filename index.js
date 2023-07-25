@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Config
-var fpscap = 30;
+var fpscap = 144;
 var zoom = 100;
 var map = 1
 
@@ -34,7 +34,7 @@ window.onload = function() {
     border = new carborder();
 
     // Sprides to be loaded on all maps
-    spritelist = [player, border, fpscount, speedometer, posdebug, pausemenu]
+    spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
     
     // Import selected map
     updatelist = maps[map-1].concat(spritelist);
@@ -183,6 +183,7 @@ var player = {
         this.turnback = 5
         this.maxturndeg = 30
         this.wheelbase = 3
+        this.acceleration = 4
 
         // Defining Starting Variables On Creation
         this.width = 2.3;
@@ -194,7 +195,7 @@ var player = {
         this.carimage.src = "textures/car2.png";
         this.distances = [122,122,90,62,52,47,46,49,68,78,115,127,124,105,70,72,52,50,52,60,78,110,122]
         this.wheeldistance = Math.sqrt(Math.pow(this.height/3,2) + Math.pow(this.width/3,2))
-        this.wheelangles = [70,110,250,290]
+        this.wheelangles = [30,150,210,330]
     },
 
     // Move The Sprite When Update Is Called
@@ -367,8 +368,8 @@ function updateGameWindow() {
     if(!pausemenu.paused) {
         if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (120/fps); }
         if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (120/fps); }
-        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += (4/fps)} else {player.speed += 10/fps}}
-        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= (4/fps)} else {player.speed -= 10/fps}}
+        if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += (player.acceleration/fps)} else {player.speed += 10/fps}}
+        if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= (player.acceleration/fps)} else {player.speed -= 10/fps}}
         // if (up) {player.speed = 1
         // } else if (down) {player.speed = -1
         // } else {player.speed = 0}

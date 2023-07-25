@@ -11,6 +11,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         this.height = height;
         this.opacity = 100;
         this.pointrec = [0,0]
+        this.touching = [false,false,false,false]
         if (this.isimage) {
             this.fill = loadedtextures[fill];
         } else {
@@ -37,21 +38,15 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
                 }
             }
             if(this.layer == player.layer) {
-                for (this.f = 0; this.f < player.wheelangles.length; this.f++) {
-                    this.pointx2 = camera.cx - (cos(((player.wheelangles[this.f]) + camera.cangle) % 360) * (player.wheeldistance))
-                    this.pointy2 = camera.cy - (sin(((player.wheelangles[this.f]) + camera.cangle) % 360) * (player.wheeldistance))
-                    if (this.f == 0) {
-                        console.debug(this.pointx2,this.pointy2)
-                        this.pointrec = [this.pointx2, this.pointy2]
-                    }
-                    if ((this.x - this.width/2 <= this.pointx2 && this.pointx2 <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy2 && this.pointy2 <= this.y + this.height/2))
+                for (this.i = 0; this.i < player.wheelangles.length; this.i++) {
+                    this.pointx = camera.cx + (sin(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
+                    this.pointy = camera.cy + (cos(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
+                    if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
                     {
-                        if (this.f <= 2) {
-                            if(player.speed > 0){player.speed = 0}
-                        } else {
-                            if(player.speed < 0){player.speed = 0}
-                        }
+                        if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
+                        if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
                     }
+                    console.debug(this.touching)
                 }
             }
         }
