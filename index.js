@@ -91,6 +91,9 @@ var gameWindow = {
         window.addEventListener('keyup', function (e) {
             gameWindow.keys[e.keyCode] = (e.type == "keydown");
         })
+        window.addEventListener('click', function(e) {
+            mousepos = [e.pageX, e.pageY]
+        }
     },
 
     // Wipe Canvas To Create Refresh Effect
@@ -127,7 +130,7 @@ var pausemenu = {
         this.maxblur = 80;
         this.blurstep = 2;
 
-        this.title = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*1.5, text="Paused", "left", size=100, font="Arial", color="white")
+        this.title = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Paused", justify="left", size=100, font="Arial", color="white")
         this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
         this.restart = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "left", size=50, font="Arial", color="white")
         this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
@@ -168,7 +171,7 @@ var pausemenu = {
 
         for(i = 0; i < this.menutext.length; i++) {
             this.menutext[i].alpha = this.blur*1.25;
-            this.menutext[i].x = (-500 + this.blur*7);
+            this.menutext[i].x = (-450 + this.blur*7);
         }
 
         upcount++;
@@ -304,6 +307,7 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
 
     this.update = function() {
         canvas = gameWindow.context;
+        canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.font = (`${this.size}px ${this.font}`);
         canvas.fillStyle = this.color;
         if (this.justify == "center") {
@@ -314,6 +318,10 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
             this.jpos = 0;
         }
         canvas.globalAlpha = (this.alpha/100);
+
+        if(this.size == 100) {
+            console.debug(this.y, this.size/3)
+        }
         canvas.fillText(this.text, this.x - this.jpos, this.y + this.size/3);
         canvas.globalAlpha = 1;
         upcount++

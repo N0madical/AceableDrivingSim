@@ -11,7 +11,6 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         this.height = height;
         this.opacity = 100;
         this.pointrec = [0,0]
-        this.touching = [false,false,false,false]
         if (this.isimage) {
             this.fill = loadedtextures[fill];
         } else {
@@ -46,7 +45,6 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
                         if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
                         if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
                     }
-                    console.debug(this.touching)
                 }
             }
         }
