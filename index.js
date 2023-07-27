@@ -36,7 +36,7 @@ window.onload = function() {
         speedometer = new displaytext(50, 100, "Speed: Error", "left", size=30);
         posdebug = new displaytext(50, 150, "Position: Error", "left", size=30);
     } else {
-        fpscount = new displaytext(2, 10, "FPS: Error", "left", size=15);
+        fpscount = new displaytext(gameWindow.canvas.width-2, 10, "FPS: Error", "right", size=15);
     }
     
     border = new carborder();
@@ -142,6 +142,10 @@ var pausemenu = {
         this.maxblur = 80;
         this.blurstep = 2;
         this.selheight = -100;
+        this.pbcolor = "#1b2932"
+
+        this.pauseimage = new Image();
+        this.pauseimage.src = "textures/pause.png";
 
         this.title = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Paused", justify="left", size=100, font="Arial", color="white")
         this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
@@ -170,6 +174,14 @@ var pausemenu = {
         if ((this.blur < this.maxblur) && (this.paused == true)) {
             this.blur += this.blurstep;
         }
+
+        pausebutton = gameWindow.context;
+        pausebutton.save()
+        pausebutton.fillStyle = this.pbcolor;
+        pausebutton.arc(0,0,((gameWindow.canvas.height/15)),0,2*Math.PI);
+        pausebutton.fill();
+        pausebutton.drawImage(this.pauseimage, gameWindow.canvas.height/120, gameWindow.canvas.height/120, gameWindow.canvas.height/30, gameWindow.canvas.height/30);
+
         bg = gameWindow.context;
         bg.fillStyle = "black";
         bg.globalAlpha = (this.blur/100);
@@ -180,15 +192,14 @@ var pausemenu = {
         canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.translate((-500 + this.blur*8), ((gameWindow.canvas.height/2)));
         canvas.rotate(radians(5));
-        canvas.fillStyle = "#2C3A47"; 
+        canvas.fillStyle = "#1b2932"; 
         canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));        
         canvas.restore();
 
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.translate((-530 + this.blur*8), (this.selheight));
-        //canvas.rotate(radians(5));
-        canvas.fillStyle = "#FFD700"; 
+        canvas.fillStyle = "#49545b"; 
         canvas.globalAlpha = 0.5;
         canvas.fillRect( 800/-2, (gameWindow.canvas.height*0.1)/-2, 800, (gameWindow.canvas.height*0.1));
         canvas.globalAlpha = 1.0;
@@ -199,7 +210,10 @@ var pausemenu = {
             this.menutext[i].x = (-450 + this.blur*7);
 
             if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.menutext[i].y-50)) && (mousepos[1] <= (this.menutext[i].y+50))) && (i != 0)) {
-                this.selheight = this.menutext[i].y
+                if (Math.round(this.selheight) != this.menutext[i].y){
+                    this.selheight += (this.menutext[i].y - this.selheight)/1.5
+                }
+                
 
                 if(mousedown == 1 && pausemenu.paused == 1) {
                     if(i == 2) {
@@ -210,6 +224,16 @@ var pausemenu = {
             }
         }
 
+        if(!pausemenu.paused) {
+            if((mousepos[0] <= gameWindow.canvas.height/20) && (mousepos[1] <= gameWindow.canvas.height/20)) {
+                this.pbcolor = "#49545b"
+                if (mousedown == 1) {
+                    pausemenu.toggle()
+                }
+            } else {
+                this.pbcolor = "#1b2932"
+            }
+        }
 
 
         upcount++;
