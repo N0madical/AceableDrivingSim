@@ -4,7 +4,8 @@
 // Config
 var fpscap = 144;
 var zoom = 100;
-var map = 1
+var map = 1;
+var debug = false;
 
 // Defining Variables
 var lasttime = 0;
@@ -12,6 +13,8 @@ var fpsrec = 0;
 var scalar = 50;
 
 // Initiating Variables
+let mousepos = [0,0]
+let mousedown = 0
 let left = false;
 let right = false;
 let up = false;
@@ -28,13 +31,22 @@ window.onload = function() {
 
     gameWindow.start(0, 0, 0, zoom);
     player.start();
-    fpscount = new displaytext(50, 50, "FPS: Error", "left", size=30);
-    speedometer = new displaytext(50, 100, "Speed: Error", "left", size=30);
-    posdebug = new displaytext(50, 150, "Position: Error", "left", size=30);
+    if (debug) {
+        fpscount = new displaytext(50, 50, "FPS: Error", "left", size=30);
+        speedometer = new displaytext(50, 100, "Speed: Error", "left", size=30);
+        posdebug = new displaytext(50, 150, "Position: Error", "left", size=30);
+    } else {
+        fpscount = new displaytext(2, 10, "FPS: Error", "left", size=15);
+    }
+    
     border = new carborder();
 
     // Sprides to be loaded on all maps
-    spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
+    if(debug) {
+        spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
+    } else {
+        spritelist = [player, fpscount, pausemenu]
+    }
     
     // Import selected map
     updatelist = maps[map-1].concat(spritelist);
@@ -91,9 +103,9 @@ var gameWindow = {
         window.addEventListener('keyup', function (e) {
             gameWindow.keys[e.keyCode] = (e.type == "keydown");
         })
-        window.addEventListener('click', function(e) {
-            mousepos = [e.pageX, e.pageY]
-        }
+        window.addEventListener('mousemove', function(e) {mousepos = [e.pageX, e.pageY]})
+        window.addEventListener('mousedown', function(e) {mousedown = 1})
+        window.addEventListener('mouseup', function(e) {mousedown = 0})
     },
 
     // Wipe Canvas To Create Refresh Effect
@@ -129,6 +141,7 @@ var pausemenu = {
         this.blur = 0;
         this.maxblur = 80;
         this.blurstep = 2;
+        this.selheight = -100;
 
         this.title = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Paused", justify="left", size=100, font="Arial", color="white")
         this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
@@ -152,6 +165,7 @@ var pausemenu = {
     update : function() {
         if ((this.blur > 0) && (this.paused == false)) {
             this.blur -= this.blurstep;
+            this.selheight = -100;
         }
         if ((this.blur < this.maxblur) && (this.paused == true)) {
             this.blur += this.blurstep;
@@ -163,16 +177,40 @@ var pausemenu = {
         bg.globalAlpha = 1.0;
 
         canvas = gameWindow.context;
+        canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.translate((-500 + this.blur*8), ((gameWindow.canvas.height/2)));
         canvas.rotate(radians(5));
         canvas.fillStyle = "#2C3A47"; 
-        canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));
+        canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));        
+        canvas.restore();
+
+        canvas = gameWindow.context;
+        canvas.setTransform(1, 0, 0, 1, 0, 0);
+        canvas.translate((-530 + this.blur*8), (this.selheight));
+        //canvas.rotate(radians(5));
+        canvas.fillStyle = "#FFD700"; 
+        canvas.globalAlpha = 0.5;
+        canvas.fillRect( 800/-2, (gameWindow.canvas.height*0.1)/-2, 800, (gameWindow.canvas.height*0.1));
+        canvas.globalAlpha = 1.0;
         canvas.restore();
 
         for(i = 0; i < this.menutext.length; i++) {
             this.menutext[i].alpha = this.blur*1.25;
             this.menutext[i].x = (-450 + this.blur*7);
+
+            if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.menutext[i].y-50)) && (mousepos[1] <= (this.menutext[i].y+50))) && (i != 0)) {
+                this.selheight = this.menutext[i].y
+
+                if(mousedown == 1 && pausemenu.paused == 1) {
+                    if(i == 2) {
+                        player.reset()
+                    }
+                    pausemenu.toggle()
+                }
+            }
         }
+
+
 
         upcount++;
     },
@@ -340,8 +378,10 @@ function updateGameWindow() {
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
         fpscount.text = `FPS: ${fpsrec * 4} / ${fpscap}`;
-        speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
-        posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°`
+        if (debug) {
+            speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
+            posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
+        }
         fps = fpsrec * 4;
         fpsrec = 0;
     }
