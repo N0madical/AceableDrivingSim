@@ -203,6 +203,8 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         this.layer = 2;
         this.toggle = 0;
         this.opacity = 50;
+        this.yoffset = -100
+
     }
 
     this.update = function() {
@@ -225,8 +227,17 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
             canvas.rotate(radians(this.pos[2]));
             canvas.fillRect((this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
         }
-        
+        canvas.globalAlpha = 1
         canvas.restore();
+
+        if(!pausemenu.paused) {
+            if(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) <= 2)  {
+                parked = true
+            } else {
+                parked = false
+            }
+        }
+
         upcount++
     }
 }

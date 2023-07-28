@@ -20,6 +20,8 @@ let right = false;
 let up = false;
 let down = false;
 let esc = false;
+let space = false;
+let parked = false
 var fps = fpscap;
 let loadedtextures = {}
 
@@ -43,9 +45,9 @@ window.onload = function() {
 
     // Sprides to be loaded on all maps
     if(debug) {
-        spritelist = [player, fpscount, speedometer, posdebug, pausemenu]
+        spritelist = [player, fpscount, speedometer, posdebug, finishscreen, pausemenu]
     } else {
-        spritelist = [player, fpscount, pausemenu]
+        spritelist = [player, fpscount, finishscreen, pausemenu]
     }
     
     // Import selected map
@@ -55,6 +57,7 @@ window.onload = function() {
 
     // Initiate pause menu
     pausemenu.start();
+    finishscreen.start();
 
     for(i = 0; i < updatelist.length; i++) {
         if (typeof updatelist[i].layer == 'undefined') {
@@ -134,7 +137,7 @@ var camera = {
     }
 }
 
-// WIP: The pause menu (press esc to activate)
+// The pause menu (press esc to activate)
 var pausemenu = {
     start : function() {
         this.paused = false;
@@ -218,6 +221,7 @@ var pausemenu = {
                 if(mousedown == 1 && pausemenu.paused == 1) {
                     if(i == 2) {
                         player.reset()
+                        finishscreen.finished = false
                     }
                     pausemenu.toggle()
                 }
@@ -234,8 +238,75 @@ var pausemenu = {
                 this.pbcolor = "#1b2932"
             }
         }
+        upcount++;
+    },
+}
 
+var finishscreen = {
+    start : function() {
+        this.yoffset = -100
+        this.finished = false
+        this.stars = 5;
 
+        this.spacebar = new Image(); this.spacebar.src = "textures/spacebar.png";
+        this.tabbg = new Image(); this.tabbg.src = "textures/tabbg.png";
+        this.tabbg2 = new Image(); this.tabbg2.src = "textures/tabbg2.png";
+        this.star = new Image(); this.star.src = "textures/star.png";
+
+        this.tabimage = this.tabbg
+
+        this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=30, font="Arial", color="white")
+        this.finishtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-100, text="Congradulations!", justify="center", size=150, font="Arial", color="white")
+    },
+
+    update : function() {
+        if(parked) {
+            if (Math.round(this.yoffset) < 0){
+                this.yoffset += (0 - this.yoffset)/4
+            }      
+        } else {
+            if (Math.round(this.yoffset) > -100 ){
+                this.yoffset += (-100 - this.yoffset)/10
+            }
+        }
+
+        if(this.yoffset > -99) {
+            canvas.setTransform(1, 0, 0, 1, 0, 0);
+            car = gameWindow.context;
+            car.drawImage(this.tabimage, (gameWindow.canvas.width/2)-300, -30 + this.yoffset, 600, 100);
+            car.drawImage(this.spacebar, (gameWindow.canvas.width/2)-190, 10 + this.yoffset, 160, (180/4));
+
+            this.complete.y = 30 + this.yoffset;
+            this.complete.x = (gameWindow.canvas.width/2)
+            this.complete.update();
+        }
+
+        if ((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) {
+            this.tabimage = this.tabbg2
+        } else {
+            this.tabimage = this.tabbg
+        }
+
+        if (parked && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && mousedown == 1))) {
+            this.finished = true
+        }
+
+        if(this.finished) {
+            canvas = gameWindow.context
+            canvas.fillStyle = "black";
+            canvas.globalAlpha = 0.8;
+            canvas.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
+            canvas.globalAlpha = 1.0;
+
+            this.finishtext.x = (gameWindow.canvas.width/2)
+            this.finishtext.y = (gameWindow.canvas.height/2 - 100)
+            this.finishtext.update();
+
+            for(this.i = 0; this.i < this.stars; this.i++) {
+                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((this.stars * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2 + 0, 200, 200);
+                console.debug("test")
+            }
+        }
         upcount++;
     },
 }
@@ -261,6 +332,8 @@ var player = {
         this.distances = [122,122,90,62,52,47,46,49,68,78,115,127,124,105,70,72,52,50,52,60,78,110,122]
         this.wheeldistance = Math.sqrt(Math.pow(this.height/3,2) + Math.pow(this.width/3,2))
         this.wheelangles = [30,150,210,330]
+
+        this.finished = new displaytext()
     },
 
     // Move The Sprite When Update Is Called
@@ -323,12 +396,12 @@ var player = {
         camera.cy = 0;
         camera.cangle = 0;
         this.speed = 0;
+        this.turndeg = 0;
     }
 }
 
 function carborder() {
     this.distances = player.distances
-    console.debug(this.distances.length)
     this.update = function() {
         this.x = gameWindow.canvas.width/2
         this.y = gameWindow.canvas.height/2
@@ -381,9 +454,6 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
         }
         canvas.globalAlpha = (this.alpha/100);
 
-        if(this.size == 100) {
-            console.debug(this.y, this.size/3)
-        }
         canvas.fillText(this.text, this.x - this.jpos, this.y + this.size/3);
         canvas.globalAlpha = 1;
         upcount++
@@ -410,6 +480,10 @@ function updateGameWindow() {
         fpsrec = 0;
     }
 
+    if(debug == false) {
+        fpscount.x = gameWindow.canvas.width-2
+    }
+
     // if(Math.abs(realfps - fps) > 10) {
     //     clearInterval(gameWindow.interval)
     //     gameWindow.interval = setInterval(updateGameWindow, (16))
@@ -422,6 +496,7 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[38] || gameWindow.keys[87])) {up = true} else {up = false}
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
     if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
+    if (gameWindow.keys && (gameWindow.keys[32])) {space = true} else {space = false}
 
     if(pausemenu.paused){left=false; right=false; up=false; down=false;}
 
