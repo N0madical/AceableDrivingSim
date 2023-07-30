@@ -146,6 +146,7 @@ var pausemenu = {
         this.blurstep = 2;
         this.selheight = -100;
         this.pbcolor = "#1b2932"
+        this.tempfps = fpscap
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
@@ -176,6 +177,12 @@ var pausemenu = {
         }
         if ((this.blur < this.maxblur) && (this.paused == true)) {
             this.blur += this.blurstep;
+        }
+
+        if(this.blur == this.maxblur) {
+            fpscap = 30
+        } else {
+            fpscap = this.tempfps
         }
 
         pausebutton = gameWindow.context;
@@ -246,7 +253,7 @@ var finishscreen = {
     start : function() {
         this.yoffset = -100
         this.finished = false
-        this.stars = 5;
+        this.score = 0;
 
         this.spacebar = new Image(); this.spacebar.src = "textures/spacebar.png";
         this.tabbg = new Image(); this.tabbg.src = "textures/tabbg.png";
@@ -256,7 +263,12 @@ var finishscreen = {
         this.tabimage = this.tabbg
 
         this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=30, font="Arial", color="white")
-        this.finishtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-100, text="Congradulations!", justify="center", size=150, font="Arial", color="white")
+
+        this.textrender = [
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-200, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-100, text="Level Complete", justify="center", size=50, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+75, text="Score:", justify="center", size=50, font="Arial", color="white")
+        ]
     },
 
     update : function() {
@@ -281,13 +293,13 @@ var finishscreen = {
             this.complete.update();
         }
 
-        if ((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) {
+        if ((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300)) && (pausemenu.paused == false)) {
             this.tabimage = this.tabbg2
         } else {
             this.tabimage = this.tabbg
         }
 
-        if (parked && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && mousedown == 1))) {
+        if (parked && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && (mousedown == 1))) && (pausemenu.paused == false)) {
             this.finished = true
         }
 
@@ -298,12 +310,13 @@ var finishscreen = {
             canvas.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
             canvas.globalAlpha = 1.0;
 
-            this.finishtext.x = (gameWindow.canvas.width/2)
-            this.finishtext.y = (gameWindow.canvas.height/2 - 100)
-            this.finishtext.update();
+            for(this.i = 0; this.i < this.textrender.length; this.i++) {
+                this.textrender[this.i].x = (gameWindow.canvas.width/2)
+                this.textrender[this.i].update();
+            }
 
-            for(this.i = 0; this.i < this.stars; this.i++) {
-                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((this.stars * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2 + 0, 200, 200);
+            for(this.i = 0; this.i < this.score; this.i++) {
+                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((this.score * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2 + 100, 200, 200);
                 console.debug("test")
             }
         }

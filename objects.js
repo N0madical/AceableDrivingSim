@@ -197,6 +197,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         this.y = y;
         this.angle = angle;
         this.idealangle = (angle + idealangle) % 360;
+        this.reverse = true
         this.width = width;
         this.height = height;
         this.fill = "green";
@@ -233,6 +234,12 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         if(!pausemenu.paused) {
             if(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) <= 2)  {
                 parked = true
+                finishscreen.score = Math.round(Math.abs(-(Math.abs(this.idealangle - camera.cangle)%180)/(36/2)+5))
+                if(this.reverse == true) {
+                    if(Math.abs(this.idealangle - camera.cangle) > 90) {
+                        finishscreen.score = 0
+                    }
+                }
             } else {
                 parked = false
             }
