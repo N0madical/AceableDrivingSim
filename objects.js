@@ -104,7 +104,7 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
             canvas.restore();
         } else {
             canvas.beginPath();
-            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar,0,2*Math.PI);
+            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),0,2*Math.PI);
             canvas.fillStyle = this.fill; 
             canvas.fill();
         }
@@ -166,8 +166,8 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
                 for(this.f = 0; this.f < this.tilex; this.f++) {
                     this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*this.f))
                     this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*this.i))
-                    if((this.x2 - this.radlength < camera.cx + (gameWindow.canvas.width/scalar)) && (this.x2 + this.radlength > camera.cx - (gameWindow.canvas.width/scalar))) {
-                        if((this.y2 - this.radlength < camera.cy + (gameWindow.canvas.height/scalar)) && (this.y2 + this.radlength > camera.cy - (gameWindow.canvas.height/scalar))) {
+                    if((this.x2 - this.radlength < camera.cx + (gameWindow.canvas.width/(scalar*(camera.czoom/100)))) && (this.x2 + this.radlength > camera.cx - (gameWindow.canvas.width/(scalar*(camera.czoom/100))))) {
+                        if((this.y2 - this.radlength < camera.cy + (gameWindow.canvas.height/(scalar*(camera.czoom/100)))) && (this.y2 + this.radlength > camera.cy - (gameWindow.canvas.height/(scalar*(camera.czoom/100))))) {
                             this.pos = camera.position(this.x2,this.y2,this.angle);
                             canvas.save();
                             //canvas.imageSmoothingEnabled = false;
@@ -178,7 +178,11 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
                             canvas.rotate(radians(this.pos[2]));
                             if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
                             if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
-                            canvas.drawImage(this.image, 0, (0 - this.trimy)*scalar, (this.iwidth + this.trimx) * scalar, (this.iheight + this.trimy) * scalar, ((this.iwidth*(camera.czoom/100)) / -2)*scalar, ((this.iheight*(camera.czoom/100)) / -2 - this.trimy)*scalar, (this.iwidth*(camera.czoom/100)+this.trimx)*scalar, (this.iheight*(camera.czoom/100)+this.trimy)*scalar);
+                            canvas.drawImage(
+                                this.image, 
+                                0, (0 - this.trimy)*scalar, (this.iwidth + this.trimx) * scalar, (this.iheight + this.trimy) * scalar, 
+                                ((this.iwidth) / -2)* scalar * (camera.czoom/100), ((this.iheight) / -2 - this.trimy) * scalar *(camera.czoom/100), (this.iwidth+this.trimx)*scalar*(camera.czoom/100), (this.iheight+this.trimy)*scalar*(camera.czoom/100)
+                            );
                             canvas.restore();
                         }
                     } 
@@ -221,7 +225,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         canvas.fillStyle = this.fill;
         if (this.circle) {
             canvas.beginPath();
-            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.width/2)*scalar,0,2*Math.PI);
+            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.width/2)*scalar*(camera.czoom/100),0,2*Math.PI);
             canvas.fill();
         } else {
             canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
@@ -235,7 +239,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
             if(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) <= 2)  {
                 parked = true
                 finishscreen.score = Math.round(Math.abs(-(Math.abs(this.idealangle - camera.cangle)%180)/(36/2)+5))
-                if(this.reverse == true) {
+                if(this.reverse == false) {
                     if(Math.abs(this.idealangle - camera.cangle) > 90) {
                         finishscreen.score = 0
                     }
@@ -246,5 +250,16 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         }
 
         upcount++
+    }
+}
+
+function car(type, logic) {
+    this.start = function() {
+        this.type = type
+        this.logic = logic
+    }
+
+    this.update = function() {
+
     }
 }

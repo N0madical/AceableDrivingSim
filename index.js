@@ -1,11 +1,9 @@
 // --------------------------------------------------------------
 // Code Starts Here
 
-// Config
-var fpscap = 144;
-var zoom = 100;
+// Starting Config
 var map = 1;
-var debug = false;
+player_position = [0,0,0]
 
 // Defining Variables
 var lasttime = 0;
@@ -22,7 +20,7 @@ let down = false;
 let esc = false;
 let space = false;
 let parked = false
-var fps = fpscap;
+var fps = maxfps;
 let loadedtextures = {}
 
 // Debug Timer
@@ -31,7 +29,7 @@ var upcount = 0;
 // Launch The Game On Window Load
 window.onload = function() {
 
-    gameWindow.start(0, 0, 0, zoom);
+    gameWindow.start(player_position[0], player_position[1], player_position[2], zoom);
     player.start();
     if (debug) {
         fpscount = new displaytext(50, 50, "FPS: Error", "left", size=30);
@@ -88,9 +86,9 @@ var gameWindow = {
             const msNow = window.performance.now()
             const msPassed = msNow - msPrev
 
-            if (msPassed < 1000/fpscap) return
+            if (msPassed < 1000/maxfps) return
 
-            const excessTime = msPassed % (1000/fpscap)
+            const excessTime = msPassed % (1000/maxfps)
             msPrev = msNow - excessTime
 
             updateGameWindow()
@@ -128,7 +126,7 @@ var camera = {
 
     // Objects use the position function to get position relative to player
     position : function(x, y, rot=0) {
-        this.distance = (Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2)))*scalar
+        this.distance = (Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2)))*scalar*(camera.czoom/100)
         this.angle = invtan2((y-this.cy),(x-this.cx))+this.cangle
         this.x2 = (cos(this.angle))*this.distance
         this.y2 = (sin(this.angle))*this.distance
@@ -146,7 +144,7 @@ var pausemenu = {
         this.blurstep = 2;
         this.selheight = -100;
         this.pbcolor = "#1b2932"
-        this.tempfps = fpscap
+        this.tempfps = maxfps
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
@@ -180,9 +178,9 @@ var pausemenu = {
         }
 
         if(this.blur == this.maxblur) {
-            fpscap = 30
+            maxfps = 30
         } else {
-            fpscap = this.tempfps
+            maxfps = this.tempfps
         }
 
         pausebutton = gameWindow.context;
@@ -382,18 +380,18 @@ var player = {
         // Update Player Visuals
         wheelL = gameWindow.context;
         wheelL.save();
-        wheelL.translate(((gameWindow.canvas.width/2 - ((this.width/3.0)*(scalar)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)))));
+        wheelL.translate(((gameWindow.canvas.width/2 - ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
         wheelL.rotate(radians(this.turndeg));
         wheelL.fillStyle = "black";
-        wheelL.fillRect(((this.width/10) / -2)*scalar, ((this.height/6) / -2)*scalar, (this.width/10)*(scalar), (this.height/6)*(scalar));
+        wheelL.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
         wheelL.restore();
 
         wheelR = gameWindow.context;
         wheelR.save();
-        wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)))));
+        wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
         wheelR.rotate(radians(this.turndeg));
         wheelR.fillStyle = "black";
-        wheelR.fillRect(((this.width/10) / -2)*scalar, ((this.height/6) / -2)*scalar, (this.width/10)*(scalar), (this.height/6)*(scalar));
+        wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
         wheelR.restore();
 
         car = gameWindow.context;
@@ -484,7 +482,7 @@ function updateGameWindow() {
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
-        fpscount.text = `FPS: ${fpsrec * 4} / ${fpscap}`;
+        fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
         if (debug) {
             speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
             posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
