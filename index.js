@@ -139,6 +139,7 @@ var camera = {
 var pausemenu = {
     start : function() {
         this.paused = false;
+        this.menu = 0
         this.blur = 0;
         this.maxblur = 80;
         this.blurstep = 2;
@@ -154,13 +155,21 @@ var pausemenu = {
         this.restart = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "left", size=50, font="Arial", color="white")
         this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
         this.settings = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "left", size=50, font="Arial", color="white")
+
+        this.settingstitle = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Settings", justify="center", size=100, font="Arial", color="white")
+        this.Smaxfps = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*3, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
+        this.Smaxfpsnumber = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*4, text=maxfps, justify="center", size=20, font="Arial", color="white")
+        this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*5, width=150, height=20, 0, 10, 300, "#49545b", "white")
+        this.Szoom = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/10)*3, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
         
-        this.menutext = [this.title, this.resume, this.restart, this.ability, this.settings]
-        updatelist = updatelist.concat(this.menutext)
+        this.mainmenutext = [this.title, this.resume, this.restart, this.ability, this.settings]
+        this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom]
+        //updatelist = updatelist.concat(this.menutext)
     },
 
     toggle : function() {
         if (this.blur == 0) {
+            pausemenu.menu = 1;
             this.paused = true;
         }
         if (this.blur == this.maxblur) {
@@ -168,20 +177,83 @@ var pausemenu = {
         }
     },
 
+    mainmenu : function() {
+        if(pausemenu.menu == 1) {
+            canvas = gameWindow.context;
+            canvas.setTransform(1, 0, 0, 1, 0, 0);
+            canvas.translate((-500 + this.blur*8), ((gameWindow.canvas.height/2)));
+            canvas.rotate(radians(5));
+            canvas.fillStyle = "#1b2932"; 
+            canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));        
+            canvas.restore();
+
+            canvas = gameWindow.context;
+            canvas.setTransform(1, 0, 0, 1, 0, 0);
+            canvas.translate((-530 + this.blur*8), (this.selheight));
+            canvas.fillStyle = "#49545b"; 
+            canvas.globalAlpha = 0.5;
+            canvas.fillRect( 800/-2, (gameWindow.canvas.height*0.1)/-2, 800, (gameWindow.canvas.height*0.1));
+            canvas.globalAlpha = 1.0;
+            canvas.restore();
+
+            for(i = 0; i < this.mainmenutext.length; i++) {
+                this.mainmenutext[i].alpha = this.blur*1.25;
+                this.mainmenutext[i].x = (-450 + this.blur*7);
+                this.mainmenutext[i].update()
+
+                if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.mainmenutext[i].y-50)) && (mousepos[1] <= (this.mainmenutext[i].y+50))) && (i != 0)) {
+                    if (Math.round(this.selheight) != this.mainmenutext[i].y){
+                        this.selheight += (this.mainmenutext[i].y - this.selheight)/1.5
+                    }
+                    
+
+                    if(mousedown == 1 && pausemenu.paused == 1) {
+                        if(i == 1) {
+                            pausemenu.toggle()
+                        } else if (i == 2) {
+                            player.reset()
+                            finishscreen.finished = false
+                            pausemenu.toggle()
+                        } else if (i == 4) {
+                            pausemenu.menu = 2
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    settingsmenu : function() {
+        if(this.menu == 2) {
+            canvas = gameWindow.context;
+            canvas.fillStyle = "#1b2932"; 
+            canvas.globalAlpha = ((this.blur * (100/this.maxblur))/100)
+            canvas.fillRect((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2), (gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2), gameWindow.canvas.width/1.1, gameWindow.canvas.height/1.1)
+            canvas.globalAlpha = 1
+
+            for (i = 0; i < this.settingsmenutext.length; i++) {
+                this.settingsmenutext[i].update()
+            }
+
+            if(this.settingsmenutext[3].value >= 9) {
+                maxfps = this.settingsmenutext[3].value
+            }
+            this.settingsmenutext[2].text = maxfps
+        }
+    },
+
     update : function() {
         if ((this.blur > 0) && (this.paused == false)) {
             this.blur -= this.blurstep;
             this.selheight = -100;
+        } else if ((this.blur <= 0) && (this.paused == false)) {
+            pausemenu.menu = 0;
         }
         if ((this.blur < this.maxblur) && (this.paused == true)) {
             this.blur += this.blurstep;
         }
 
-        if(this.blur == this.maxblur) {
-            maxfps = 30
-        } else {
-            maxfps = this.tempfps
-        }
+        if(this.blur == this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps;}
 
         pausebutton = gameWindow.context;
         pausebutton.save()
@@ -196,42 +268,9 @@ var pausemenu = {
         bg.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
         bg.globalAlpha = 1.0;
 
-        canvas = gameWindow.context;
-        canvas.setTransform(1, 0, 0, 1, 0, 0);
-        canvas.translate((-500 + this.blur*8), ((gameWindow.canvas.height/2)));
-        canvas.rotate(radians(5));
-        canvas.fillStyle = "#1b2932"; 
-        canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));        
-        canvas.restore();
+        pausemenu.mainmenu()
 
-        canvas = gameWindow.context;
-        canvas.setTransform(1, 0, 0, 1, 0, 0);
-        canvas.translate((-530 + this.blur*8), (this.selheight));
-        canvas.fillStyle = "#49545b"; 
-        canvas.globalAlpha = 0.5;
-        canvas.fillRect( 800/-2, (gameWindow.canvas.height*0.1)/-2, 800, (gameWindow.canvas.height*0.1));
-        canvas.globalAlpha = 1.0;
-        canvas.restore();
-
-        for(i = 0; i < this.menutext.length; i++) {
-            this.menutext[i].alpha = this.blur*1.25;
-            this.menutext[i].x = (-450 + this.blur*7);
-
-            if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.menutext[i].y-50)) && (mousepos[1] <= (this.menutext[i].y+50))) && (i != 0)) {
-                if (Math.round(this.selheight) != this.menutext[i].y){
-                    this.selheight += (this.menutext[i].y - this.selheight)/1.5
-                }
-                
-
-                if(mousedown == 1 && pausemenu.paused == 1) {
-                    if(i == 2) {
-                        player.reset()
-                        finishscreen.finished = false
-                    }
-                    pausemenu.toggle()
-                }
-            }
-        }
+        pausemenu.settingsmenu()
 
         if(!pausemenu.paused) {
             if((mousepos[0] <= gameWindow.canvas.height/20) && (mousepos[1] <= gameWindow.canvas.height/20)) {
@@ -468,6 +507,53 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
         canvas.fillText(this.text, this.x - this.jpos, this.y + this.size/3);
         canvas.globalAlpha = 1;
         upcount++
+    }
+}
+
+function slider(x, y, width, height, value, min, max, barcolor, handlecolor, roundto=0) {
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
+    this.value = value
+    this.min = min
+    this.max = max
+    this.color1 = barcolor
+    this.color2 = handlecolor
+    this.active = false
+    this.roundto = roundto
+
+    this.update = function() {
+        canvas = gameWindow.context;
+        canvas.setTransform(1, 0, 0, 1, 0, 0);
+
+        canvas.fillStyle = this.color1
+        canvas.fillRect(this.x - this.width/2, this.y - this.height/(4*2), this.width, this.height/4);
+        
+        canvas.fillStyle = this.color2
+        canvas.beginPath();
+        canvas.arc((this.x - this.width/2) + ((this.width/(this.max - this.min))*this.value), this.y, this.height, 0, 2*Math.PI);
+        canvas.fill();
+
+        if((mousepos[0] > (this.x - this.width/2)) && (mousepos[0] < (this.x + this.width/2)) && (mousepos[1] < (this.y + this.height*1.5)) && (mousepos[1] > (this.y - (this.height/2)*1.5)) && (mousedown == true)) {
+            this.active = true
+        }
+        if(this.active) {
+            this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width))),this.roundto)
+            if((this.nextvalue >= this.min) && (this.nextvalue <= this.max)) {
+                this.value = this.nextvalue
+            } else if (this.nextvalue <= this.min) {
+                this.value = this.min
+            } else if (this.nextvalue >= this.max) {
+                this.value = this.max
+            }
+            
+            if(mousedown == 0) { 
+                this.active = false
+            }
+        }
+
+        console.debug(mousepos[1], (this.y - this.height/2), (this.y + this.height))
     }
 }
 
