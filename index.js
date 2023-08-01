@@ -547,7 +547,7 @@ function slider(x, y, width, height, value, min, max, barcolor, handlecolor, rou
             } else if (this.nextvalue >= this.max) {
                 this.value = this.max
             }
-            
+
             if(mousedown == 0) { 
                 this.active = false
             }
@@ -670,10 +670,12 @@ function loadsprites(map, maps) {
         loadedtextures[textures[0][i][0]] = f
     }
 
-    for (i = 0; i < textures[map].length; i++) {
-        f = new Image();
-        f.src = textures[map][i][1]
-        loadedtextures[textures[map][i][0]] = f
+    if (typeof(textures[map]) != "undefined") {
+        for (i = 0; i < textures[map].length; i++) {
+            f = new Image();
+            f.src = textures[map][i][1]
+            loadedtextures[textures[map][i][0]] = f
+        }
     }
 
     for (i = 0; i < maps[map-1].length; i++) {
