@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Starting Config
-var map = 1;
+var map = 2;
 player_position = [0,0,0]
 
 // Defining Variables

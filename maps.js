@@ -53,6 +53,13 @@ textures = [
         ["lightpole", "textures/lightpole.png"],
         ["tree", "textures/tree.png"],
     ],
+    
+    parkinglot2 = [
+        ["lightpole", "textures/lightpole.png"],
+        ["tree", "textures/tree.png"],
+
+    ],
+
 ]
 
 // Maps
@@ -101,6 +108,16 @@ maps = [
         new rect(false, 22.5, 24, 90, 0.15, 5, "yellow"),
         new rect(false, 22.5, 21.5, 90, 0.15, 5, "yellow"),
         new rect(false, 22.5, 19, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 16.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 14, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 11.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 9, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 6.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 4, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, 1.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -1, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -3.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -6, 90, 0.15, 5, "yellow"),
         
 
         new rect(false, 25, 0, 0, 0.5, 50.5, "dimgray", 3), //curb
