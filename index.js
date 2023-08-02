@@ -146,6 +146,7 @@ var pausemenu = {
         this.selheight = -100;
         this.pbcolor = "#1b2932"
         this.tempfps = maxfps
+        this.active = 0
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
@@ -156,14 +157,17 @@ var pausemenu = {
         this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
         this.settings = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "left", size=50, font="Arial", color="white")
 
-        this.settingstitle = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Settings", justify="center", size=100, font="Arial", color="white")
-        this.Smaxfps = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*3, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
-        this.Smaxfpsnumber = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*4, text=maxfps, justify="center", size=20, font="Arial", color="white")
-        this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*5, width=150, height=20, maxfps, 10, 300, "#49545b", "white")
-        this.Szoom = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/10)*3, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
+        this.settingstitle = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/20)*3), text="Settings", justify="center", size=100, font="Arial", color="white")
+        this.Smaxfps = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*6, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
+        this.Smaxfpsnumber = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*7, text=maxfps, justify="center", size=20, font="Arial", color="white")
+        this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*8, width=150, height=20, maxfps, 10, 300, "#49545b", "white", 5)
+        this.Szoom = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*6, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
+        this.Szoomnumber = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*7, text=`${camera.czoom}%`, justify="center", size=20, font="Arial", color="white")
+        this.Szoomslider = new slider(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*8, width=150, height=20, zoom, 25, 200, "#49545b", "white", 5)
+        this.Sdebugtext = new displaytext(x=((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2)) + gameWindow.canvas.width/1.11, y=((gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2)) + gameWindow.canvas.height/1.12, text=`Debug: ${debug}`, justify="right", size=10, font="Arial", color="white")
         
         this.mainmenutext = [this.title, this.resume, this.restart, this.ability, this.settings]
-        this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom]
+        this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom, this.Szoomnumber, this.Szoomslider, this.Sdebugtext]
         //updatelist = updatelist.concat(this.menutext)
     },
 
@@ -235,8 +239,13 @@ var pausemenu = {
                 this.settingsmenutext[i].update()
             }
 
-            this.tempfps = this.settingsmenutext[3].value
-            this.settingsmenutext[2].text = this.tempfps
+            this.tempfps = this.Smaxfpsslider.value
+            this.Smaxfpsnumber.text = this.tempfps
+
+            camera.czoom = this.Szoomslider.value
+            this.Szoomnumber.text = `${camera.czoom}%`
+
+            this.Sdebugtext.text = `Debug: ${debug}`
         }
     },
 
@@ -352,7 +361,6 @@ var finishscreen = {
 
             for(this.i = 0; this.i < this.score; this.i++) {
                 canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((this.score * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2 + 100, 200, 200);
-                console.debug("test")
             }
         }
         upcount++;
@@ -487,28 +495,31 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
     this.font = font;
     this.color = color;
     this.alpha = 100;
+    this.width = this.size;
+    this.height = (this.size/3)*2;
 
     this.update = function() {
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.font = (`${this.size}px ${this.font}`);
         canvas.fillStyle = this.color;
+        this.width = canvas.measureText(this.text).width
         if (this.justify == "center") {
-            this.jpos = canvas.measureText(this.text).width/2;
+            this.jpos = this.width/2;
         } else if (this.justify == "right") {
-            this.jpos = canvas.measureText(this.text).width;
+            this.jpos = this.width;
         } else {
             this.jpos = 0;
         }
         canvas.globalAlpha = (this.alpha/100);
 
-        canvas.fillText(this.text, this.x - this.jpos, this.y + this.size/3);
+        canvas.fillText(this.text, this.x - this.jpos, this.y + this.height/2);
         canvas.globalAlpha = 1;
         upcount++
     }
 }
 
-function slider(x, y, width, height, value, min, max, barcolor, handlecolor, roundto=0) {
+function slider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1) {
     this.x = x
     this.y = y
     this.width = width
@@ -519,7 +530,7 @@ function slider(x, y, width, height, value, min, max, barcolor, handlecolor, rou
     this.color1 = barcolor
     this.color2 = handlecolor
     this.active = false
-    this.roundto = roundto
+    this.step = step
 
     this.update = function() {
         canvas = gameWindow.context;
@@ -537,7 +548,15 @@ function slider(x, y, width, height, value, min, max, barcolor, handlecolor, rou
             this.active = true
         }
         if(this.active) {
-            this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width))),this.roundto)
+            if(this.step < 1) {
+                this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width))),String(this.step).length-2)
+            } else if (this.step > 1) {
+                this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width)))/this.step,0)*this.step
+            } else {
+                this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width))),0)
+            }
+            
+
             if((this.nextvalue >= this.min) && (this.nextvalue <= this.max)) {
                 this.value = this.nextvalue
             } else if (this.nextvalue <= this.min) {
@@ -676,5 +695,21 @@ function loadsprites(map, maps) {
 
     for (i = 0; i < maps[map-1].length; i++) {
         maps[map-1][i].start()
+    }
+}
+function clicksprite(x, y, width, height) {
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
+
+    if ((mousepos[0] > (this.x - this.width/2)) && (mousepos[0] < (this.x + this.width/2)) && -(mousepos[1] < (this.y + (this.height/2))) && (mousepos[1] > (this.y - (this.height/2)))) {
+        if(mousedown == true) {
+            return 2
+        } else {
+            return 1
+        }
+    } else {
+        return 0
     }
 }
