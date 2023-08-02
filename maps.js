@@ -104,7 +104,8 @@ maps = [
         new circle(true, -10, 8, 0, 8, "tree", 5),
         new circle(true, -10, 0, 70, 8, "tree", 5),
         new circle(true, -10, -8, 230, 8, "tree", 5),
-
+        
+        // far right side yellow lines
         new rect(false, 22.5, 24, 90, 0.15, 5, "yellow"),
         new rect(false, 22.5, 21.5, 90, 0.15, 5, "yellow"),
         new rect(false, 22.5, 19, 90, 0.15, 5, "yellow"),
@@ -118,13 +119,22 @@ maps = [
         new rect(false, 22.5, -1, 90, 0.15, 5, "yellow"),
         new rect(false, 22.5, -3.5, 90, 0.15, 5, "yellow"),
         new rect(false, 22.5, -6, 90, 0.15, 5, "yellow"),
-        
+        new rect(false, 22.5, -8.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -11, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -13.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -16, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -18.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -21, 90, 0.15, 5, "yellow"),
+        new rect(false, 22.5, -23.5, 90, 0.15, 5, "yellow"),
 
-        new rect(false, 25, 0, 0, 0.5, 50.5, "dimgray", 3), //curb
-        new rect(false, 0, 25, 0, 50.5, 0.5, "dimgray", 3), //curb
+        new rect(false, 25, 0, 0, 0.5, 50.5, "dimgray", 3), //right curb
+        new rect(false, 0, 25, 0, 50.5, 0.5, "dimgray", 3), // top curb
+        new rect(false, 0, -25, 0, 50.5, 0.5, "dimgray", 3), //bottom curb
+        new rect(false, 8, 0, 0, 0.5, 35, "dimgray", 3), //right curb
         
 
         new parkingspot(false, 22.5, 22.75, 90, 2, 4), //green spot
+        new parkingspot(false, 22.5, -2.25, 90, 2, 4), //green spot
     ],
 
     // Road map (WIP)
