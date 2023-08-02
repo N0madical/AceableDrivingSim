@@ -2,7 +2,7 @@
 // Code Starts Here
 
 // Starting Config
-var map = 2;
+var map = 1;
 player_position = [0,0,0]
 
 // Defining Variables
@@ -159,7 +159,7 @@ var pausemenu = {
         this.settingstitle = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Settings", justify="center", size=100, font="Arial", color="white")
         this.Smaxfps = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*3, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
         this.Smaxfpsnumber = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*4, text=maxfps, justify="center", size=20, font="Arial", color="white")
-        this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*5, width=150, height=20, 0, 10, 300, "#49545b", "white")
+        this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/10)*5, width=150, height=20, maxfps, 10, 300, "#49545b", "white")
         this.Szoom = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/10)*3, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
         
         this.mainmenutext = [this.title, this.resume, this.restart, this.ability, this.settings]
@@ -235,10 +235,8 @@ var pausemenu = {
                 this.settingsmenutext[i].update()
             }
 
-            if(this.settingsmenutext[3].value >= 9) {
-                maxfps = this.settingsmenutext[3].value
-            }
-            this.settingsmenutext[2].text = maxfps
+            this.tempfps = this.settingsmenutext[3].value
+            this.settingsmenutext[2].text = this.tempfps
         }
     },
 
@@ -552,8 +550,6 @@ function slider(x, y, width, height, value, min, max, barcolor, handlecolor, rou
                 this.active = false
             }
         }
-
-        console.debug(mousepos[1], (this.y - this.height/2), (this.y + this.height))
     }
 }
 

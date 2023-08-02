@@ -1,3 +1,3 @@
-var maxfps = 300;
-var zoom = 25;
+var maxfps = 144;
+var zoom = 100;
 var debug = false; 
