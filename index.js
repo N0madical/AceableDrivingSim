@@ -180,12 +180,12 @@ var pausemenu = {
             this.paused = false;
         }
     },
-
+//((-500) + this.blur*8)
     mainmenu : function() {
         if(pausemenu.menu == 1) {
             canvas = gameWindow.context;
             canvas.setTransform(1, 0, 0, 1, 0, 0);
-            canvas.translate((-500 + this.blur*8), ((gameWindow.canvas.height/2)));
+            canvas.translate(-425 + ((gameWindow.canvas.width/3.4) * (this.blur/this.maxblur)), ((gameWindow.canvas.height/2)));
             canvas.rotate(radians(5));
             canvas.fillStyle = "#1b2932"; 
             canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));        
@@ -193,19 +193,26 @@ var pausemenu = {
 
             canvas = gameWindow.context;
             canvas.setTransform(1, 0, 0, 1, 0, 0);
-            canvas.translate((-530 + this.blur*8), (this.selheight));
+            canvas.translate(-425 + ((gameWindow.canvas.width/3.7) * (this.blur/this.maxblur)), (this.selheight));
             canvas.fillStyle = "#49545b"; 
             canvas.globalAlpha = 0.5;
-            canvas.fillRect( 800/-2, (gameWindow.canvas.height*0.1)/-2, 800, (gameWindow.canvas.height*0.1));
+            canvas.fillRect( 800/-2, (gameWindow.canvas.height/10)/-2, 800, (gameWindow.canvas.height/10));
             canvas.globalAlpha = 1.0;
             canvas.restore();
 
             for(i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
-                this.mainmenutext[i].x = (-450 + this.blur*7);
+                this.mainmenutext[i].x = gameWindow.canvas.width/20 - ((1-(this.blur/this.maxblur))*this.mainmenutext[0].width*2);
+                if(i == 0) {
+                    this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+1.5)
+                } else if (i <= 2) {
+                    this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+3)
+                } else if (i <= 4) {
+                    this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+4)
+                }
                 this.mainmenutext[i].update()
 
-                if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.mainmenutext[i].y-50)) && (mousepos[1] <= (this.mainmenutext[i].y+50))) && (i != 0)) {
+                if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.mainmenutext[i].y-gameWindow.canvas.height/20)) && (mousepos[1] <= (this.mainmenutext[i].y+gameWindow.canvas.height/20))) && (i != 0)) {
                     if (Math.round(this.selheight) != this.mainmenutext[i].y){
                         this.selheight += (this.mainmenutext[i].y - this.selheight)/1.5
                     }
@@ -499,11 +506,13 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
     this.height = (this.size/3)*2;
 
     this.update = function() {
+        this.ssize = this.size * (gameWindow.canvas.width/1920)
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
-        canvas.font = (`${this.size}px ${this.font}`);
+        canvas.font = (`${this.ssize}px ${this.font}`);
         canvas.fillStyle = this.color;
         this.width = canvas.measureText(this.text).width
+        this.height = (this.ssize/3)*2
         if (this.justify == "center") {
             this.jpos = this.width/2;
         } else if (this.justify == "right") {
@@ -587,6 +596,8 @@ function updateGameWindow() {
         if (debug) {
             speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
             posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
+        } else {
+            fpscount.size = 15*(1920/gameWindow.canvas.width)
         }
         fps = fpsrec * 4;
         fpsrec = 0;
