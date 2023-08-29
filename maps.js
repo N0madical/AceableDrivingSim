@@ -67,12 +67,15 @@ maps = [
     // Parking lot map
     parkinglot = [
         //new testcirc(),
-        new terrain(0, 0, 0, 15, 20, "asphalt"),
+        new terrain(0, 0, 0, 45, 20, "asphalt"),
         new terrain(0, 0, 0, 100, 100, "grass"),
 
         new circle(true, -10, 8, 0, 8, "tree", 5),
         new circle(true, -10, 0, 70, 8, "tree", 5),
         new circle(true, -10, -8, 230, 8, "tree", 5),
+        new circle(true, 10, 8, 0, 8, "tree", 5),
+        new circle(true, 10, 0, 70, 8, "tree", 5),
+        new circle(true, 10, -8, 230, 8, "tree", 5),
 
         new rect(false, 5.625, -7.5, 45, 0.15, 5, "yellow"), 
         new rect(false, 5.625, -3.75, 45, 0.15, 5, "yellow"),
@@ -91,7 +94,10 @@ maps = [
         new rect(false, -5, 10, 90, 0.15, 5, "yellow"),
 
         new rect(false, -7.5, 0, 0, 0.5, 20, "dimgray", 3),
-        new rect(false, 7.5, 0, 0, 0.5, 20, "dimgray", 3),
+        new rect(false, -12.5, 0, 0, 0.5, 20, "dimgray", 3),
+        new circle(false, -10, -10, 0, 6, "dimgray", 3),
+
+        new rect(false, 10, 0, 0, 8.5, 20, "dimgray", 3),
 
         new parkingspot(false, 5.5, 1.8, 45, 2, 4)
     ],

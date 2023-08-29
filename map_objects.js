@@ -87,13 +87,20 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
         }
         this.opacity = 100;
         if(!pausemenu.paused) {
+            if(this.id == 24) {console.debug(this.layer)}
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
                     this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
                     this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
                     if (((this.pointx - this.x)**2) + ((this.pointy - this.y)**2) <= (this.diameter/2)**2)
-                    {
-                        if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 3}
+                    {   
+                        if (this.layer == player.layer) {
+                            if(this.i < player.distances.length/2) {if(player.speed > 0) {player.speed = 0}}
+                            else {if(player.speed < 0) {player.speed = 0}}
+                        }
+                        else if (this.layer == player.layer + 1) {player.reset()} 
+                        else {this.opacity -= 3}
+                        
                     }
                 }
             }
@@ -103,9 +110,9 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
             canvas.drawImage(this.fill, (this.diameter*(scalar)*(camera.czoom/100)) / -2, (this.diameter*(scalar)*(camera.czoom/100)) / -2, this.diameter*(scalar)*(camera.czoom/100), this.diameter*(scalar)*(camera.czoom/100));
             canvas.restore();
         } else {
+            canvas.fillStyle = this.fill; 
             canvas.beginPath();
             canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),0,2*Math.PI);
-            canvas.fillStyle = this.fill; 
             canvas.fill();
         }
         upcount++
@@ -164,8 +171,8 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
         } else {
             for(this.i = 0; this.i < this.tiley; this.i++) {
                 for(this.f = 0; this.f < this.tilex; this.f++) {
-                    this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*this.f))
-                    this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*this.i))
+                    this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*this.f)) * 0.998
+                    this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*this.i)) * 0.998
                     if((this.x2 - this.radlength < camera.cx + (gameWindow.canvas.width/(scalar*(camera.czoom/100)))) && (this.x2 + this.radlength > camera.cx - (gameWindow.canvas.width/(scalar*(camera.czoom/100))))) {
                         if((this.y2 - this.radlength < camera.cy + (gameWindow.canvas.height/(scalar*(camera.czoom/100)))) && (this.y2 + this.radlength > camera.cy - (gameWindow.canvas.height/(scalar*(camera.czoom/100))))) {
                             this.pos = camera.position(this.x2,this.y2,this.angle);
@@ -260,6 +267,6 @@ function car(type, logic) {
     }
 
     this.update = function() {
-
+        upcount++
     }
 }
