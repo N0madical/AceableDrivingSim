@@ -113,6 +113,7 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
             canvas.fillStyle = this.fill; 
             canvas.beginPath();
             canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),0,2*Math.PI);
+            canvas.closePath();
             canvas.fill();
         }
         upcount++

@@ -95,9 +95,9 @@ maps = [
 
         new rect(false, -7.5, 0, 0, 0.5, 20, "dimgray", 3),
         new rect(false, -12.5, 0, 0, 0.5, 20, "dimgray", 3),
-        new circle(false, -10, -10, 0, 6, "dimgray", 3),
+        new circle(false, -10, -10, 0, 6, "dimgray", 1),
 
-        new rect(false, 10, 0, 0, 8.5, 20, "dimgray", 3),
+        new rect(false, 10, 0, 0, 0.5, 20, "dimgray", 3),
 
         new parkingspot(false, 5.5, 1.8, 45, 2, 4)
     ],

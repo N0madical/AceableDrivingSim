@@ -292,39 +292,41 @@ function updateGameWindow() {
     // Load all objects, upcount allows objects to notify loader when they complete loading to avoid async overlap
     console.debug(updatelist)
 
-    if(updatelistcache != updatelist) {
-        updatelistcache = []
-        for (g = 1; g < 6; g++) {
-        
-            for (f = 0; f < updatelist.length; f++) {
-                if (updatelist[f].layer == g) {
-                    updatelistcache = updatelistcache.concat(updatelist[f])
-                    layercounts[g]++
-                }
-            }
-        }
-        updatelist = updatelistcache
-    }
     
-    upcount = 0
-    //upcountprev = 0
-    repeats = 0
-    sum = 0
-    for (h = 0; h < layercounts.length; h++) {
-        for(e = 0; e < h; e++) {
-            sum += layercounts[e]
-        }
-        console.debug(sum)
-        for(t = sum; t < (sum + layercounts[h]); t++) {
-            updatelist[t].update()
-        }
-        while(upcount < sum) {repeats++}
-        repeats = 0
-        if (repeats > 1000) {
-            console.error(`Error! Sprite ID ${updatelist[upcount].id} has timed out or is not returning updated status.`)
-            break
-        }
-    }
+
+    // if(updatelistcache != updatelist) {
+    //     updatelistcache = []
+    //     for (g = 1; g < 6; g++) {
+        
+    //         for (f = 0; f < updatelist.length; f++) {
+    //             if (updatelist[f].layer == g) {
+    //                 updatelistcache = updatelistcache.concat(updatelist[f])
+    //                 layercounts[g]++
+    //             }
+    //         }
+    //     }
+    //     updatelist = updatelistcache
+    // }
+    
+    // upcount = 0
+    // //upcountprev = 0
+    // repeats = 0
+    // sum = 0
+    // for (h = 0; h < layercounts.length; h++) {
+    //     for(e = 0; e < h; e++) {
+    //         sum += layercounts[e]
+    //     }
+    //     console.debug(sum)
+    //     for(t = sum; t < (sum + layercounts[h]); t++) {
+    //         updatelist[t].update()
+    //     }
+    //     //while(upcount < sum) {repeats++}
+    //     repeats = 0
+    //     if (repeats > 1000) {
+    //         console.error(`Error! Sprite ID ${updatelist[upcount].id} has timed out or is not returning updated status.`)
+    //         break
+    //     }
+    // }
 
     // while(upcount < layercounts[h]) {
     //     updatelist[upcount].update();
