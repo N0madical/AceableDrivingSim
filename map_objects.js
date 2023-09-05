@@ -61,7 +61,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
 }
 
 //Loads a circle or circular image on the canvas
-function circle(isimage, x, y, angle, diameter, fill, layer=2) {
+function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
     this.start = function() {
         this.x = x;
         this.y = y;
@@ -70,6 +70,7 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
         this.diameter = diameter;
         this.angle = angle;
         this.opacity = 100;
+        this.arc = arc;
         if (this.isimage) {
             this.fill = loadedtextures[fill];
         } else {
@@ -112,7 +113,7 @@ function circle(isimage, x, y, angle, diameter, fill, layer=2) {
         } else {
             canvas.fillStyle = this.fill; 
             canvas.beginPath();
-            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),0,2*Math.PI);
+            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),0,radians(this.arc));
             canvas.closePath();
             canvas.fill();
         }

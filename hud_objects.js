@@ -132,12 +132,13 @@ var pausemenu = {
 
         if(this.blur == this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps;}
 
-        pausebutton = gameWindow.context;
-        pausebutton.save()
-        pausebutton.fillStyle = this.pbcolor;
-        pausebutton.arc(0,0,((gameWindow.canvas.height/15)),0,2*Math.PI);
-        pausebutton.fill();
-        pausebutton.drawImage(this.pauseimage, gameWindow.canvas.height/120, gameWindow.canvas.height/120, gameWindow.canvas.height/30, gameWindow.canvas.height/30);
+        pausebuttoncanvas = gameWindow.context;
+        pausebuttoncanvas.fillStyle = this.pbcolor;
+        pausebuttoncanvas.beginPath();
+        pausebuttoncanvas.arc(0,0,((gameWindow.canvas.height/15)),0,2*Math.PI);
+        pausebuttoncanvas.closePath();
+        pausebuttoncanvas.fill();
+        pausebuttoncanvas.drawImage(this.pauseimage, gameWindow.canvas.height/120, gameWindow.canvas.height/120, gameWindow.canvas.height/30, gameWindow.canvas.height/30);
 
         bg = gameWindow.context;
         bg.fillStyle = "black";

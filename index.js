@@ -290,9 +290,16 @@ function updateGameWindow() {
     if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
     
     // Load all objects, upcount allows objects to notify loader when they complete loading to avoid async overlap
-    console.debug(updatelist)
 
-    
+    for (g = 1; g < 6; g++) {
+        for (f = 0; f < updatelist.length; f++) {
+            if (updatelist[f].layer == g) {
+                updatelist[f].update()
+            }
+        }
+    }
+
+    // console.debug(updatelist)
 
     // if(updatelistcache != updatelist) {
     //     updatelistcache = []
@@ -320,12 +327,14 @@ function updateGameWindow() {
     //     for(t = sum; t < (sum + layercounts[h]); t++) {
     //         updatelist[t].update()
     //     }
-    //     //while(upcount < sum) {repeats++}
-    //     repeats = 0
-    //     if (repeats > 1000) {
-    //         console.error(`Error! Sprite ID ${updatelist[upcount].id} has timed out or is not returning updated status.`)
-    //         break
-    //     }
+    //     // while(upcount < sum) {
+    //     //     repeats++
+    //     //     if (repeats > 1000) {
+    //     //         console.error(`Error! Sprite ID ${updatelist[upcount].id} has timed out or is not returning updated status.`)
+    //     //         break
+    //     //     }
+    //     // }
+    //     //repeats = 0
     // }
 
     // while(upcount < layercounts[h]) {
