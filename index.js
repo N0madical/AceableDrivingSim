@@ -21,6 +21,7 @@ let right = false;
 let up = false;
 let down = false;
 let esc = false;
+let r_key = false;
 let space = false;
 let parked = false
 var fps = maxfps;
@@ -263,6 +264,7 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[38] || gameWindow.keys[87])) {up = true} else {up = false}
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
     if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
+    if (gameWindow.keys && (gameWindow.keys[82])) {r_key = true} else {r_key = false}
     if (gameWindow.keys && (gameWindow.keys[32])) {space = true} else {space = false}
 
     if(pausemenu.paused){left=false; right=false; up=false; down=false;}

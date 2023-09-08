@@ -88,7 +88,6 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         }
         this.opacity = 100;
         if(!pausemenu.paused) {
-            if(this.id == 24) {console.debug(this.layer)}
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
                     this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
@@ -113,7 +112,7 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         } else {
             canvas.fillStyle = this.fill; 
             canvas.beginPath();
-            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),0,radians(this.arc));
+            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),radians(this.pos[2]),radians(this.arc+this.pos[2]));
             canvas.closePath();
             canvas.fill();
         }

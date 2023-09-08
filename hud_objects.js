@@ -5,11 +5,12 @@ var pausemenu = {
         this.menu = 0
         this.blur = 0;
         this.maxblur = 80;
-        this.blurstep = 2;
+        this.initblurstep = 2;
         this.selheight = -100;
         this.pbcolor = "#1b2932"
         this.tempfps = maxfps
         this.active = 0
+        this.blurstep = 2;
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
@@ -62,6 +63,12 @@ var pausemenu = {
             canvas.fillRect( 800/-2, (gameWindow.canvas.height/10)/-2, 800, (gameWindow.canvas.height/10));
             canvas.globalAlpha = 1.0;
             canvas.restore();
+
+            if (r_key == true) {
+                player.reset()
+                finishscreen.finished = false
+                this.paused = false;
+            }
 
             for(i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
@@ -120,6 +127,10 @@ var pausemenu = {
     },
 
     update : function() {
+        // if(this.paused != true) {
+        //     this.blurstep = this.initblurstep * (60/fps)
+        // }
+        console.debug(this.blurstep)
         if ((this.blur > 0) && (this.paused == false)) {
             this.blur -= this.blurstep;
             this.selheight = -100;
@@ -130,7 +141,7 @@ var pausemenu = {
             this.blur += this.blurstep;
         }
 
-        if(this.blur == this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps;}
+        if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps;}
 
         pausebuttoncanvas = gameWindow.context;
         pausebuttoncanvas.fillStyle = this.pbcolor;
