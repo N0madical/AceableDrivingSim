@@ -61,26 +61,32 @@ textures = [
 
     ],
 
+    road = [],
+
+    test = [],
+
 ]
 
 // Maps
 maps = [
     // Parking lot map
     parkinglot = [
-        //new testcirc(),
-        new terrain(-11, 0, 0, 5, 20, "grleaves"),
-        new terrain(11, 0, 0, 5, 20, "grleaves"),
+        //new rect(false, 0, 0, 45, 5, 5, "yellow", 2),
 
-        new terrain(0, 0, 0, 50, 42, "asphalt"),
-        new terrain(2, 20, 20, 5, 10, "asphalt"),
-        new terrain(-2, 21.75, -20, 5, 10, "asphalt"),
-        new terrain(0, 29.5, 0, 12, 10, "asphalt"),
-        new terrain(0, 23.5, 0, 2, 2, "asphalt"),
+        //new testcirc(),
+        // new terrain(-11, 0, 0, 5, 20, "grleaves"),
+        // new terrain(11, 0, 0, 5, 20, "grleaves"),
+
+        // new terrain(0, 0, 0, 50, 42, "asphalt"),
+        // new terrain(2, 20, 20, 5, 10, "asphalt"),
+        // new terrain(-2, 21.75, -20, 5, 10, "asphalt"),
+        // new terrain(0, 29.5, 0, 12, 10, "asphalt"),
+        // new terrain(0, 23.5, 0, 2, 2, "asphalt"),
         
-        new terrain(0, 0, 0, 90, 80, "grass"),
+        // new terrain(0, 0, 0, 90, 80, "grass"),
 
         new circle(true, -11, 8, 0, 8, "tree", 360, 5),
-        new circle(true, -11, 0, 70, 8, "tree", 360, 5),
+        new circle(true, -11, 0, 70, 8, "tree", 360, 5), // ID: 10
         new circle(true, -11, -8, 230, 8, "tree", 360, 5),
 
         new circle(true, 11, 8, 0, 8, "tree", 360, 5),
@@ -92,7 +98,7 @@ maps = [
         new circle(true, -27, -10, 230, 8, "tree", 360, 5),
         new circle(true, -22, 19, 70, 8, "tree", 360, 5),
         new circle(true, -22, -19, 230, 8, "tree", 360, 5),
-        new circle(true, -12, 23, 70, 8, "tree", 360, 5),
+        new circle(true, -12, 23, 70, 8, "tree", 360, 5), // ID: 20
         new circle(true, -12, -23, 230, 8, "tree", 360, 5),
 
         new circle(true, 27, 10, 0, 8, "tree", 360, 5),
@@ -104,7 +110,7 @@ maps = [
         new circle(true, 12, -23, 230, 8, "tree", 360, 5),
         new circle(true, 0, -23, 230, 8, "tree", 360, 5),
 
-        new rect(false, -23, -7.5, 45, 0.15, 5, "yellow"), 
+        new rect(false, -23, -7.5, 45, 0.15, 5, "yellow"), // ID: 30
         new rect(false, -23, -3.75, 45, 0.15, 5, "yellow"),
         new rect(false, -23, 0, 45, 0.15, 5, "yellow"), 
         new rect(false, -23, 3.75, 45, 0.15, 5, "yellow"),
@@ -116,7 +122,7 @@ maps = [
         new rect(false, -15.5, 3.75, -45, 0.15, 5, "yellow"),
         new rect(false, -15.5, 7.5, -45, 0.15, 5, "yellow"),
 
-        new rect(false, -6, -10, 90, 0.15, 5, "yellow"), 
+        new rect(false, -6, -10, 90, 0.15, 5, "yellow"), // ID: 40
         new rect(false, -6, -7.5, 90, 0.15, 5, "yellow"),
         new rect(false, -6, -5, 90, 0.15, 5, "yellow"), 
         new rect(false, -6, -2.5, 90, 0.15, 5, "yellow"), 
@@ -127,7 +133,7 @@ maps = [
         new rect(false, -6, 10, 90, 0.15, 5, "yellow"),
         
         new rect(false, 6, -10, 90, 0.15, 5, "yellow"), 
-        new rect(false, 6, -7.5, 90, 0.15, 5, "yellow"),
+        new rect(false, 6, -7.5, 90, 0.15, 5, "yellow"), // ID: 50
         new rect(false, 6, -5, 90, 0.15, 5, "yellow"), 
         new rect(false, 6, -2.5, 90, 0.15, 5, "yellow"), 
         new rect(false, 6, 0, 90, 0.15, 5, "yellow"), 
@@ -138,7 +144,7 @@ maps = [
 
         new rect(false, 14.75, -10.5, 90, 0.15, 3, "yellow"), 
         new rect(false, 15, -3.5, 90, 0.15, 2.5, "yellow"), 
-        new rect(false, 15, 3.5, 90, 0.15, 2.5, "yellow"),
+        new rect(false, 15, 3.5, 90, 0.15, 2.5, "yellow"), // ID: 60
         new rect(false, 14.75, 10.5, 90, 0.15, 3, "yellow"),
 
         new rect(false, 23.25, -11.5, 90, 0.15, 3, "yellow"), 
@@ -152,7 +158,7 @@ maps = [
         new rect(false, -8.5, 0, 0, 0.5, 20, "dimgray", 3),
         new rect(false, -13.5, 0, 0, 0.5, 20, "dimgray", 3),
         new circle(isimage=false, x=-11, y=-10, angle=0, diameter=5.5, fill="dimgray", arc=180, layer=3),
-        new circle(isimage=false, x=-11, y=10, angle=180, diameter=5.5, fill="dimgray", arc=180, layer=3),
+        new circle(isimage=false, x=-11, y=10, angle=180, diameter=5.5, fill="dimgray", arc=180, layer=3), // ID: 70
 
         new rect(false, 8.5, 0, 0, 0.5, 20, "dimgray", 3),
         new rect(false, 13.5, 0, 0, 0.5, 20, "dimgray", 3),
@@ -161,10 +167,10 @@ maps = [
 
         new rect(false, -24.5, 0, 0, 0.5, 30, "dimgray", 3),
         new rect(false, 24.5, 0, 0, 0.5, 30, "dimgray", 3),
-        new rect(false, -21.5, 17.75, 45, 0.5, 8.5, "dimgray", 3),
-        new rect(false, 21.5, 17.75, -45, 0.5, 8.5, "dimgray", 3),
-        new rect(false, -21.5, -17.75, -45, 0.5, 8.5, "dimgray", 3),
-        new rect(false, 21.5, -17.75, 45, 0.5, 8.5, "dimgray", 3),
+        new rect(false, -21.5, 17.75, -45, 0.5, 8.5, "dimgray", 3),
+        new rect(false, 21.5, 17.75, 45, 0.5, 8.5, "dimgray", 3),
+        new rect(false, -21.5, -17.75, 45, 0.5, 8.5, "dimgray", 3),
+        new rect(false, 21.5, -17.75, -45, 0.5, 8.5, "dimgray", 3),
         new rect(false, 0, -20.75, 0, 38, 0.5, "dimgray", 3),
         new rect(false, 11, 20.75, 0, 15, 0.5, "dimgray", 3),
         new rect(false, -11, 20.75, 0, 15, 0.5, "dimgray", 3),
@@ -215,4 +221,9 @@ maps = [
 
     // Road map (WIP)
     road = [],
+
+    test = [
+        new terrain(0, 0, 0, 100, 100, "grass"),
+        new rect(false, 0, 10, 270, 10, 0.5, "dimgray", 4)
+    ]
 ]

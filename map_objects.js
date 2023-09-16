@@ -6,11 +6,14 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         this.y = y;
         this.isimage = isimage
         this.layer = layer;
-        this.angle = angle;
+        this.angle = angle + 0.00001;
         this.width = width;
         this.height = height;
         this.opacity = 100;
         this.pointrec = [0,0]
+        this.radius = ((Math.sqrt((this.width)**2 + (this.height)**2))/2)
+        this.poscorner = [(this.x + (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y + (sin(this.angle+invtan(this.height/this.width))*this.radius))]
+        this.negcorner = [(this.x - (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y - (sin(this.angle+invtan(this.height/this.width))*this.radius))]
         if (this.isimage) {
             this.fill = loadedtextures[fill];
         } else {
@@ -19,29 +22,38 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
     }
 
     this.update = function() {
+        if(this.id == 0) {
+            console.debug(this.corners)
+        }
         canvas = gameWindow.context;
         canvas.save();
-        this.pos = camera.position(this.x,this.y,this.angle)
+        this.pos = camera.position(this.x,this.y,360-this.angle)
         canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
         canvas.rotate(radians(this.pos[2]));
         this.opacity = 100;
-        if(!pausemenu.paused) {
+        if(!pausemenu.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
             if(this.layer > player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
                     this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
                     this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
-                    if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
-                    {
-                        if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
-                    }
+                    this.touch = false
+                    if(this.angle > 0 && this.angle < 90) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}} 
+                    else if(this.angle > 90 && this.angle < 180) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}}
+                    else if(this.angle > 180 && this.angle < 270) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
+                    else {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
+                    if (this.touch) {if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}}
                 }
             }
             if(this.layer == player.layer) {
                 for (this.i = 0; this.i < player.wheelangles.length; this.i++) {
                     this.pointx = camera.cx + (sin(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
                     this.pointy = camera.cy + (cos(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
-                    if ((this.x - this.width/2 <= this.pointx && this.pointx <= this.x + this.width/2) && (this.y - this.height/2 <= this.pointy && this.pointy <= this.y + this.height/2))
-                    {
+                    this.touch = false
+                    if(this.angle > 0 && this.angle < 90) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}} 
+                    else if(this.angle > 90 && this.angle < 180) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}}
+                    else if(this.angle > 180 && this.angle < 270) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
+                    else {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
+                    if (this.touch) {
                         if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
                         if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
                     }
@@ -58,6 +70,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         canvas.restore();
         upcount++
     }
+    
 }
 
 //Loads a circle or circular image on the canvas

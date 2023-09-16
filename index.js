@@ -2,7 +2,6 @@
 // Code Starts Here
 
 // Starting Config
-var map = 1;
 player_position = [0,0,0]
 
 // Defining Variables
@@ -364,9 +363,9 @@ function updateGameWindow() {
 function degrees(radians) {return (radians * (180/Math.PI)) % 360}
 function radians(degrees) {return degrees * (Math.PI/180)}
 function round(number, points) {return (Math.round(number * Math.pow(10,points))/Math.pow(10,points))}
-function cos(theta) {return Math.cos(theta * Math.PI/180)} //Cos in degrees
-function sin(theta) {return Math.sin(theta * Math.PI/180)} //Sin in degrees
-function tan(theta) {return Math.tan(theta * Math.PI/180)} //Tan in degrees
+function cos(theta) {return round(Math.cos(theta * Math.PI/180),10)} //Cos in degrees
+function sin(theta) {return round(Math.sin(theta * Math.PI/180),10)} //Sin in degrees
+function tan(theta) {return round(Math.tan(theta * Math.PI/180),10)} //Tan in degrees
 function invtan(imp) {return Math.atan(imp) * 180/Math.PI} //Inverse tan in degrees
 function invtan2(imp1,imp2) {return Math.atan2(imp1,imp2) * 180/Math.PI}
 function loadsprites(map, maps) {

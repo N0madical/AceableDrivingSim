@@ -127,10 +127,6 @@ var pausemenu = {
     },
 
     update : function() {
-        // if(this.paused != true) {
-        //     this.blurstep = this.initblurstep * (60/fps)
-        // }
-        console.debug(this.blurstep)
         if ((this.blur > 0) && (this.paused == false)) {
             this.blur -= this.blurstep;
             this.selheight = -100;
@@ -141,7 +137,7 @@ var pausemenu = {
             this.blur += this.blurstep;
         }
 
-        if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps;}
+        if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps; this.blurstep = this.initblurstep * (60/fps);}
 
         pausebuttoncanvas = gameWindow.context;
         pausebuttoncanvas.fillStyle = this.pbcolor;
