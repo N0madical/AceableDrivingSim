@@ -137,7 +137,7 @@ var pausemenu = {
             this.blur += this.blurstep;
         }
 
-        if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps; this.blurstep = this.initblurstep * (60/fps);}
+        if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps; this.blurstep = this.initblurstep;}
 
         pausebuttoncanvas = gameWindow.context;
         pausebuttoncanvas.fillStyle = this.pbcolor;
@@ -176,6 +176,7 @@ var finishscreen = {
         this.yoffset = -100
         this.finished = false
         this.score = 0;
+        this.parkedcount = 0
 
         this.spacebar = new Image(); this.spacebar.src = "textures/spacebar.png";
         this.tabbg = new Image(); this.tabbg.src = "textures/tabbg.png";
@@ -204,6 +205,7 @@ var finishscreen = {
                 this.yoffset += (-100 - this.yoffset)/10
             }
         }
+        this.parkedcount -= 1
 
         if(this.yoffset > -99) {
             canvas.setTransform(1, 0, 0, 1, 0, 0);
@@ -224,7 +226,9 @@ var finishscreen = {
             this.tabimage = this.tabbg
         }
 
-        if (parked && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && (mousedown == 1))) && (pausemenu.paused == false)) {
+        console.debug(parked)
+
+        if ((this.parkedcount > 0) && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && (mousedown == 1))) && (pausemenu.paused == false)) {
             this.finished = true
         }
 
@@ -254,21 +258,21 @@ function carborder() {
         this.x = gameWindow.canvas.width/2
         this.y = gameWindow.canvas.height/2
         for (i = 0; i < this.distances.length; i++) {
-            this.newx = this.x + (sin(i*16) * this.distances[i])
-            this.newy = this.y + (cos(i*16) * this.distances[i])
+            this.newx = this.x + (sin(((-i*(16))+180)%360) * this.distances[i])
+            this.newy = this.y + (cos(((-i*(16))+180)%360) * this.distances[i])
 
             bg = gameWindow.context;
             bg.fillStyle = "red";
             bg.fillRect(this.newx,this.newy,5,5);
         }
-        for (this.f = 0; this.f < 1; this.f++) {
-            this.newx = this.x + (player.wheeldistance * sin(player.wheelangles[this.f]+90))*scalar
-            this.newy = this.y + (player.wheeldistance * cos(player.wheelangles[this.f]+90))*scalar
+        // for (this.f = 0; this.f < 1; this.f++) {
+        //     this.newx = this.x + (player.wheeldistance * sin(player.wheelangles[this.f]+90))*scalar
+        //     this.newy = this.y + (player.wheeldistance * cos(player.wheelangles[this.f]+90))*scalar
 
-            bg = gameWindow.context;
-            bg.fillStyle = "red";
-            bg.fillRect(this.newx,this.newy,5,5);
-        }
+        //     bg = gameWindow.context;
+        //     bg.fillStyle = "red";
+        //     bg.fillRect(this.newx,this.newy,5,5);
+        // }
 
         bg = gameWindow.context;
         bg.fillStyle = "red";

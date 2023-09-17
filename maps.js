@@ -77,19 +77,18 @@ textures = [
 maps = [
     // Parking lot map
     parkinglot = [
-        //new rect(false, 0, 0, 45, 5, 5, "yellow", 2),
+        //new rect(false, 0, 10, 0, 2, 2, "yellow", 4),
 
-        //new testcirc(),
-        // new terrain(-11, 0, 0, 5, 20, "grleaves"),
-        // new terrain(11, 0, 0, 5, 20, "grleaves"),
+        new terrain(0, 0, 0, 90, 80, "grass"),
 
-        // new terrain(0, 0, 0, 50, 42, "asphalt"),
-        // new terrain(2, 20, 20, 5, 10, "asphalt"),
-        // new terrain(-2, 21.75, -20, 5, 10, "asphalt"),
-        // new terrain(0, 29.5, 0, 12, 10, "asphalt"),
-        // new terrain(0, 23.5, 0, 2, 2, "asphalt"),
-        
-        // new terrain(0, 0, 0, 90, 80, "grass"),
+        new terrain(0, 0, 0, 50, 42, "asphalt"),
+        new terrain(2, 20, 20, 5, 10, "asphalt"),
+        new terrain(-2, 21.75, -20, 5, 10, "asphalt"),
+        new terrain(0, 29.5, 0, 12, 10, "asphalt"),
+        new terrain(0, 23.5, 0, 2, 2, "asphalt"),
+
+        new terrain(-11, 0, 0, 5, 20, "grleaves"),
+        new terrain(11, 0, 0, 5, 20, "grleaves"),
 
         new circle(true, -11, 8, 0, 8, "tree", 360, 5),
         new circle(true, -11, 0, 70, 8, "tree", 360, 5), // ID: 10

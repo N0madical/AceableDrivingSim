@@ -196,9 +196,9 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
                             this.pos = camera.position(this.x2,this.y2,this.angle);
                             canvas.save();
                             //canvas.imageSmoothingEnabled = false;
-                            if (this.layer == 1) {
-                                canvas.globalCompositeOperation='destination-over'
-                            }
+                            // if (this.layer == 1) {
+                            //     canvas.globalCompositeOperation='destination-over'
+                            // }
                             canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
                             canvas.rotate(radians(this.pos[2]));
                             if((this.x2 + this.iwidth/2) > (this.x + (this.width/2))){this.trimx = (((this.x + (this.width/2)) - (this.x2 + this.iwidth/2)))} else {this.trimx = 0}
@@ -266,6 +266,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
             }
             if(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) <= 2)  {
                 parked = true
+                finishscreen.parkedcount = 5
                 finishscreen.score = Math.round(Math.abs(-(Math.abs(this.idealangle - camera.cangle)%180)/(36/2)+5))
                 if(this.reverse == false) {
                     if(Math.abs(this.idealangle - camera.cangle) > 90) {
