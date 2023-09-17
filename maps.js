@@ -53,6 +53,7 @@ textures = [
         ["cardarkblue", "textures/cardarkblue.png"],
         ["carlightblue", "textures/carlightblue.png"],
         ["cargray", "textures/cargray.png"],
+        ["road", "textures/road.png"]
     ],
     
     parkinglot = [
@@ -83,6 +84,8 @@ maps = [
         new terrain(0, 0, 0, 90, 80, "grass"),
 
         new terrain(0, 0, 0, 50, 42, "asphalt"),
+
+        new terrain(0, 30.5, 0, 90, 8, "road"),
 
         new terrain(-11, 0, 0, 5, 20, "grleaves"),
         new terrain(11, 0, 0, 5, 20, "grleaves"),
