@@ -59,6 +59,7 @@ textures = [
         ["lightpole", "textures/lightpole.png"],
         ["tree", "textures/tree.png"],
         ["grleaves", "textures/leaves_grass.jpg"],
+        ["driveway", "textures/driveway.png"]
     ],
     
     parkinglot2 = [
@@ -82,13 +83,11 @@ maps = [
         new terrain(0, 0, 0, 90, 80, "grass"),
 
         new terrain(0, 0, 0, 50, 42, "asphalt"),
-        new terrain(2, 20, 20, 5, 10, "asphalt"),
-        new terrain(-2, 21.75, -20, 5, 10, "asphalt"),
-        new terrain(0, 29.5, 0, 12, 10, "asphalt"),
-        new terrain(0, 23.5, 0, 2, 2, "asphalt"),
 
         new terrain(-11, 0, 0, 5, 20, "grleaves"),
         new terrain(11, 0, 0, 5, 20, "grleaves"),
+
+        new rect(true, 0, 25.5, 0, 10, 10, "driveway", 3),
 
         new circle(true, -11, 8, 0, 8, "tree", 360, 5),
         new circle(true, -11, 0, 70, 8, "tree", 360, 5), // ID: 10
@@ -214,8 +213,8 @@ maps = [
         new rect(false, -21.5, -17.75, 45, 0.5, 8.5, "dimgray", 3),
         new rect(false, 21.5, -17.75, -45, 0.5, 8.5, "dimgray", 3),
         new rect(false, 0, -20.75, 0, 38, 0.5, "dimgray", 3),
-        new rect(false, 11, 20.75, 0, 15, 0.5, "dimgray", 3),
-        new rect(false, -11, 20.75, 0, 15, 0.5, "dimgray", 3),
+        new rect(false, 11.2, 20.75, 0, 16, 0.5, "dimgray", 3),
+        new rect(false, -11.2, 20.75, 0, 16, 0.5, "dimgray", 3),
     ],
 
     parkinglot2 = [
