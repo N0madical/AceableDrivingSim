@@ -12,7 +12,7 @@
     // Description: Places a rectangle on the canvas with a color or texture
 
 // 2: Circle Object, 
-    // Format: "new circle(useimagetexture, x-position, y-position, rotation angle, diameter, texture/color, layer),"
+    // Format: "new circle(useimagetexture, x-position, y-position, rotation angle, radius, texture/color, layer),"
     // Description: Places a circle on the canvas with a color or texture
 
 // 3: Repeating Terrain, 
@@ -47,6 +47,12 @@ textures = [
     global = [
         ["asphalt", "textures/crasphalt.jpg"],
         ["grass", "textures/grass.jpg"],
+        ["car", "textures/car.png"],
+        ["carblack", "textures/carblack.png"],
+        ["carblue", "textures/carblue.png"],
+        ["cardarkblue", "textures/cardarkblue.png"],
+        ["carlightblue", "textures/carlightblue.png"],
+        ["cargray", "textures/cargray.png"],
     ],
     
     parkinglot = [
@@ -131,9 +137,46 @@ maps = [
         new rect(false, -6, 5, 90, 0.15, 5, "yellow"),
         new rect(false, -6, 7.5, 90, 0.15, 5, "yellow"),
         new rect(false, -6, 10, 90, 0.15, 5, "yellow"),
+
+        new parkingspot(false, -5.75, -8.75, 90, 2, 4),
+        new rect(true, -6, -6.25, 90, 2.3, 5, "carblue", 4, -0.5),
+        new rect(true, -6.1, -3.75, 90, 2.3, 5, "cardarkblue", 4, -0.5),
+        new rect(true, -5.7, -1.25, 90, 2.3, 5, "car", 4, -0.5),
+        new parkingspot(false, -5.75, 1.25, 90, 2, 4),
+        new rect(true, -6.3, 3.75, 90, 2.3, 5, "carlightblue", 4, -0.5),
+        new rect(true, -6.1, 6.25, 90, 2.3, 5, "car", 4, -0.5),
+        new parkingspot(false, -5.75, 8.75, 90, 2, 4),
+
+        new rect(true, 6.1, -8.75, 270, 2.3, 5, "carlightblue", 4, -0.5),
+        new rect(true, 6.2, -6.25, 270, 2.3, 5, "cargray", 4, -0.5),
+        new parkingspot(false, 5.75, -3.75, 90, 2, 4),
+        new rect(true, 5.6, -1.25, 270, 2.3, 5, "carblack", 4, -0.5),
+        new rect(true, 6, 1.25, 270, 2.3, 5, "cargray", 4, -0.5),
+        new parkingspot(false, 5.75, 3.75, 90, 2, 4),
+        new rect(true, 6.1, 6.25, 270, 2.3, 5, "carlightblue", 4, -0.5),
+        new parkingspot(false, 5.75, 8.75, 90, 2, 4),
+
+        new rect(true, 15.25, -6.25, 180, 2.3, 5, "cardarkblue", 4, -0.5),
+        new parkingspot(false, 15.1, 0, 0, 2, 5),
+        new rect(true, 15, 6.25, 180, 2.3, 5, "carblue", 4, -0.5),
+
+        new rect(true, 22.9, -8.5, 180, 2.3, 5, "car", 4, -0.5),
+        new parkingspot(false, 22.9, -2.9, 0, 2, 5),
+        new rect(true, 23, 2.75, 180, 2.3, 5, "carblack", 4, -0.5),
+        new rect(true, 22.75, 8.5, 180, 2.3, 5, "carlightblue", 4, -0.5),
+
+        new rect(true, -15.5, -5.5, 315, 2.3, 5, "cargray", 4, -0.5),
+        new rect(true, -15, -1.25, 315, 2.3, 5, "carblack", 4, -0.5),
+        new rect(true, -15.25, 2, 315, 2.3, 5, "cargray", 4, -0.5),
+        new rect(true, -15.5, 5.5, 315, 2.3, 5, "carlightblue", 4, -0.5),
+
+        new rect(true, -23, -5.5, 45, 2.3, 5, "car", 4, -0.5),
+        new rect(true, -22.75, -2, 45, 2.3, 5, "carblack", 4, -0.5),
+        new parkingspot(true, -22.5, 1.3, 45, 2, 5),
+        new rect(true, -22.5, 5, 45, 2.3, 5, "carblue", 4, -0.5),
         
         new rect(false, 6, -10, 90, 0.15, 5, "yellow"), 
-        new rect(false, 6, -7.5, 90, 0.15, 5, "yellow"), // ID: 50
+        new rect(false, 6, -7.5, 90, 0.15, 5, "yellow"),
         new rect(false, 6, -5, 90, 0.15, 5, "yellow"), 
         new rect(false, 6, -2.5, 90, 0.15, 5, "yellow"), 
         new rect(false, 6, 0, 90, 0.15, 5, "yellow"), 
@@ -174,8 +217,6 @@ maps = [
         new rect(false, 0, -20.75, 0, 38, 0.5, "dimgray", 3),
         new rect(false, 11, 20.75, 0, 15, 0.5, "dimgray", 3),
         new rect(false, -11, 20.75, 0, 15, 0.5, "dimgray", 3),
-
-        new parkingspot(false, 6, 1.25, 90, 2, 4)
     ],
 
     parkinglot2 = [
@@ -224,6 +265,6 @@ maps = [
 
     test = [
         new terrain(0, 0, 0, 100, 100, "grass"),
-        new rect(false, 0, 10, 270, 10, 0.5, "dimgray", 4)
+        new circle(false, 0, 10, 0, 5, "dimgray", 360, 3),
     ]
 ]

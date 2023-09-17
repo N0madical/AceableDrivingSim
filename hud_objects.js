@@ -184,7 +184,7 @@ var finishscreen = {
 
         this.tabimage = this.tabbg
 
-        this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=30, font="Arial", color="white")
+        this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
 
         this.textrender = [
             new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-200, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
@@ -197,7 +197,8 @@ var finishscreen = {
         if(parked) {
             if (Math.round(this.yoffset) < 0){
                 this.yoffset += (0 - this.yoffset)/4
-            }      
+            }     
+            parked = false 
         } else {
             if (Math.round(this.yoffset) > -100 ){
                 this.yoffset += (-100 - this.yoffset)/10
@@ -207,8 +208,10 @@ var finishscreen = {
         if(this.yoffset > -99) {
             canvas.setTransform(1, 0, 0, 1, 0, 0);
             car = gameWindow.context;
-            car.drawImage(this.tabimage, (gameWindow.canvas.width/2)-300, -30 + this.yoffset, 600, 100);
-            car.drawImage(this.spacebar, (gameWindow.canvas.width/2)-190, 10 + this.yoffset, 160, (180/4));
+            car.drawImage(this.tabimage, (gameWindow.canvas.width/2)-(400*(gameWindow.canvas.width/1920)), -30 + this.yoffset, 800*(gameWindow.canvas.width/1920), 100);
+            if(gameWindow.canvas.width >= 1500) {
+                car.drawImage(this.spacebar, (gameWindow.canvas.width/2)-(250*(gameWindow.canvas.width/1920)), (5 + this.yoffset), 160*((gameWindow.canvas.width/1920)*1.3), (180/4)*((gameWindow.canvas.width/1920)*1.3));
+            }
 
             this.complete.y = 30 + this.yoffset;
             this.complete.x = (gameWindow.canvas.width/2)

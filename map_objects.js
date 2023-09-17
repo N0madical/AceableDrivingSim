@@ -1,5 +1,5 @@
 // Loads a rectangle or rectangular image on the canvas
-function rect(isimage, x, y, angle, width, height, fill, layer=2) {
+function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0) {
     // Allow for shape to be a color or image
     this.start = function() {
         this.x = x;
@@ -10,8 +10,8 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         this.width = width;
         this.height = height;
         this.opacity = 100;
-        this.pointrec = [0,0]
-        this.radius = ((Math.sqrt((this.width)**2 + (this.height)**2))/2)
+        this.colmod = colisionmod;
+        this.radius = ((Math.sqrt((this.width+this.colmod)**2 + (this.height+this.colmod)**2))/2)
         this.poscorner = [(this.x + (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y + (sin(this.angle+invtan(this.height/this.width))*this.radius))]
         this.negcorner = [(this.x - (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y - (sin(this.angle+invtan(this.height/this.width))*this.radius))]
         if (this.isimage) {
@@ -103,17 +103,21 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         if(!pausemenu.paused) {
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
-                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle + this.angle) % 360) * (player.distances[this.i]/scalar))
-                    if (((this.pointx - this.x)**2) + ((this.pointy - this.y)**2) <= (this.diameter/2)**2)
+                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                    if (Math.sqrt(((this.pointx - this.x)**2) + ((this.pointy - this.y)**2)) <= (this.diameter/2)) {
+                        if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
+                    }
+                }
+                for (this.i = 0; this.i < player.wheelangles.length; this.i++) {
+                    this.pointx = camera.cx + (sin(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
+                    this.pointy = camera.cy + (cos(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
+                    if (Math.sqrt(((this.x - this.pointx)**2) + ((this.y - this.pointy)**2)) <= (this.diameter/2))
                     {   
                         if (this.layer == player.layer) {
-                            if(this.i < player.distances.length/2) {if(player.speed > 0) {player.speed = 0}}
-                            else {if(player.speed < 0) {player.speed = 0}}
+                            if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
+                            if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
                         }
-                        else if (this.layer == player.layer + 1) {player.reset()} 
-                        else {this.opacity -= 3}
-                        
                     }
                 }
             }
@@ -257,6 +261,9 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         canvas.restore();
 
         if(!pausemenu.paused) {
+            if(this.id == 50) {
+                console.debug(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)))
+            }
             if(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) <= 2)  {
                 parked = true
                 finishscreen.score = Math.round(Math.abs(-(Math.abs(this.idealangle - camera.cangle)%180)/(36/2)+5))
@@ -265,8 +272,6 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
                         finishscreen.score = 0
                     }
                 }
-            } else {
-                parked = false
             }
         }
 
