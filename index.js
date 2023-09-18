@@ -115,6 +115,17 @@ var gameWindow = {
         window.addEventListener('mousemove', function(e) {mousepos = [e.pageX, e.pageY]})
         window.addEventListener('mousedown', function(e) {mousedown = 1})
         window.addEventListener('mouseup', function(e) {mousedown = 0})
+
+        absolute = 0;
+        alpha = 0;
+        beta = 0;
+        gamma = 0;
+        window.addEventListener("deviceorientation", function(e) {
+            absolute = e.absolute;
+            alpha = e.alpha;
+            beta = e.beta;
+            gamma = e.gamma;
+        }, true);
     },
 
     // Wipe Canvas To Create Refresh Effect
@@ -250,7 +261,8 @@ function updateGameWindow() {
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
-        fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
+        //fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
+        fpscount.text = `Absolute: ${absolute}, Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
         if (debug) {
             speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
             posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
