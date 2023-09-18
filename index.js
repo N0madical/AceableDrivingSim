@@ -1,17 +1,14 @@
 // --------------------------------------------------------------
 // Code Starts Here
 
-// Starting Config
-player_position = [0,0,0]
-
 // Defining Variables
+player_position = [0,0,0]
+zoom = 100;
 
 // Initiating Variables
 var lasttime = 0;
 var fpsrec = 0;
 var scalar = 50;
-
-laglist = [];
 
 let mousepos = [0,0]
 let mousedown = 0
@@ -31,22 +28,27 @@ var upcount = 0;
 
 // Launch The Game On Window Load
 window.onload = function() {
-
+    // Import Settings
+    player_position = configs[map-1][0];
+    zoom = configs[map-1][1];
+    
+    // Start The Game
     gameWindow.start(player_position[0], player_position[1], player_position[2], zoom);
     player.start();
+
+    // Load Debug HUD (If applicable)
     if (debug) {
         fpscount = new displaytext(50, 50, "FPS: Error", "left", size=30);
         speedometer = new displaytext(50, 100, "Speed: Error", "left", size=30);
         posdebug = new displaytext(50, 150, "Position: Error", "left", size=30);
+        border = new carborder();
     } else {
         fpscount = new displaytext(gameWindow.canvas.width-2, 10, "FPS: Error", "right", size=15);
     }
-    
-    border = new carborder();
 
     // Sprides to be loaded on all maps
     if(debug) {
-        spritelist = [player, fpscount, speedometer, posdebug, finishscreen, pausemenu]
+        spritelist = [player, border, fpscount, speedometer, posdebug, finishscreen, pausemenu]
     } else {
         spritelist = [player, fpscount, finishscreen, pausemenu]
     }
@@ -60,6 +62,7 @@ window.onload = function() {
     pausemenu.start();
     finishscreen.start();
 
+    // Add IDs and Layers if Undefined
     for(i = 0; i < updatelist.length; i++) {
         if (typeof updatelist[i].layer == 'undefined') {
             updatelist[i].layer = 5
@@ -151,6 +154,7 @@ var player = {
         this.acceleration = 4
 
         // Defining Starting Variables On Creation
+        this.paused = false;
         this.width = 2.3;
         this.height = 5;
         this.speed = 0;
@@ -168,12 +172,13 @@ var player = {
     // Move The Sprite When Update Is Called
     update : function() {
         // Update Camera Position (WIP)
-        if(!pausemenu.paused) {
+        if(!this.paused) {
             this.turnrad = this.wheelbase/tan(this.turndeg)
             this.arcdeg = degrees(this.speed/this.turnrad)
             this.theta = 90 - ((180-this.arcdeg)/2)
             this.angularspeed = sin(this.arcdeg)/(sin((180-this.arcdeg)/2)/this.turnrad)
             camera.cangle += (this.speed/radians(this.turnrad))/fps
+            this.prevloc = [camera.cx, camera.cy]
             if(this.turndeg != 0 && this.speed != 0) {
                 camera.cx += (this.angularspeed * (sin(camera.cangle)))/fps
                 camera.cy += (this.angularspeed * (cos(camera.cangle)))/fps
@@ -181,6 +186,7 @@ var player = {
                 camera.cx += ((this.speed * (sin(camera.cangle))))/fps
                 camera.cy += ((this.speed * (cos(camera.cangle))))/fps
             }
+            if(isNaN(camera.cx) || isNaN(camera.cy)) {camera.cx = this.prevloc[0]; camera.cy = this.prevloc[1];}
 
             // Slow Down Effect
             if (!up && !down) {
@@ -221,11 +227,13 @@ var player = {
     },
 
     reset : function() {
-        camera.cx = 0;
-        camera.cy = 0;
-        camera.cangle = 0;
+        camera.cx = player_position[0];
+        camera.cy = player_position[1];
+        camera.cangle = player_position[2];
         this.speed = 0;
         this.turndeg = 0;
+        finishscreen.starsize = 10
+        this.paused = false
     }
 }
 
@@ -266,7 +274,7 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[82])) {r_key = true} else {r_key = false}
     if (gameWindow.keys && (gameWindow.keys[32])) {space = true} else {space = false}
 
-    if(pausemenu.paused){left=false; right=false; up=false; down=false;}
+    if(player.paused){left=false; right=false; up=false; down=false;}
 
     //############# Keycode Finder ############
     // if (gameWindow.keys) {
@@ -280,7 +288,7 @@ function updateGameWindow() {
     gameWindow.clear();
 
     // Affect player when buttons pressed
-    if(!pausemenu.paused) {
+    if(!player.paused && fps > 8) {
         if (left && (player.turndeg > (player.maxturndeg*-1))) {player.turndeg -= (120/fps); }
         if (right && (player.turndeg < (player.maxturndeg))) {player.turndeg += (120/fps); }
         if (up && (player.speed < 10)) {if(player.speed >= 0) {player.speed += (player.acceleration/fps)} else {player.speed += 10/fps}}
@@ -288,7 +296,7 @@ function updateGameWindow() {
     }
     
     // Pause Menu (WIP)
-    if(esc) {pausemenu.toggle(); console.debug("Esc pressed")}
+    if(esc) {pausemenu.toggle(); console.info("Esc pressed")}
     
     // Load all objects, upcount allows objects to notify loader when they complete loading to avoid async overlap
 
@@ -362,7 +370,7 @@ function updateGameWindow() {
 // Custom Functions
 function degrees(radians) {return (radians * (180/Math.PI)) % 360}
 function radians(degrees) {return degrees * (Math.PI/180)}
-function round(number, points) {return (Math.round(number * Math.pow(10,points))/Math.pow(10,points))}
+function round(number, points=0) {return (Math.round(number * Math.pow(10,points))/Math.pow(10,points))}
 function cos(theta) {return round(Math.cos(theta * Math.PI/180),10)} //Cos in degrees
 function sin(theta) {return round(Math.sin(theta * Math.PI/180),10)} //Sin in degrees
 function tan(theta) {return round(Math.tan(theta * Math.PI/180),10)} //Tan in degrees
@@ -402,4 +410,9 @@ function clickbox(x, y, width, height) {
     } else {
         return 0
     }
+}
+function average(list) {
+    this.sum = 0
+    for(this.i = 0; this.i <= list.length-1; this.i++) {this.sum += list[i]}
+    return this.sum/list.length
 }

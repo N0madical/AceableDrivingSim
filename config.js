@@ -3,7 +3,6 @@
 
 //--- Values
 var map = 1;
-var maxfps = 60;
-var zoom = 25;
+var maxfps = 165;
 var debug = false; 
 //---

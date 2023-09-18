@@ -41,6 +41,28 @@
 
 // ########################################################################
 
+//Loading Configs
+configs = [
+    parkinglot = [
+        startpos = [1.5,0,0],
+        startzoom = 100,
+    ],
+
+    parkinglot2 = [
+        startpos = [0,0,0],
+        startzoom = 100,
+    ],
+
+    road = [
+        startpos = [0,0,0],
+        startzoom = 100,
+    ],
+
+    test = [
+        startpos = [0,0,0],
+        startzoom = 100,
+    ],
+]
 
 //Loading Textures
 textures = [
@@ -60,7 +82,8 @@ textures = [
         ["lightpole", "textures/lightpole.png"],
         ["tree", "textures/tree.png"],
         ["grleaves", "textures/leaves_grass.jpg"],
-        ["driveway", "textures/driveway.png"]
+        ["driveway", "textures/driveway.png"],
+        ["arrow", "textures/arrow.png"],
     ],
     
     parkinglot2 = [
@@ -91,6 +114,18 @@ maps = [
         new terrain(11, 0, 0, 5, 20, "grleaves"),
 
         new rect(true, 0, 25.5, 0, 10, 10, "driveway", 3),
+        new rect(true, 1.5, -8, 0, 2, 3, "arrow", 2),
+        new rect(true, -1.5, -8, 180, 2, 3, "arrow", 2),
+        new rect(true, 1.5, 8, 0, 2, 3, "arrow", 2),
+        new rect(true, -1.5, 8, 180, 2, 3, "arrow", 2),
+        new rect(true, -19.25, -8, 0, 2, 3, "arrow", 2),
+        new rect(true, -19.25, 8, 0, 2, 3, "arrow", 2),
+        new rect(true, 19.25, -8, 180, 2, 3, "arrow", 2),
+        new rect(true, 19.25, 8, 180, 2, 3, "arrow", 2),
+        new rect(true, 11, 16, 270, 2, 3, "arrow", 2),
+        new rect(true, -11, 16, 270, 2, 3, "arrow", 2),
+        new rect(true, 11, -16, 90, 2, 3, "arrow", 2),
+        new rect(true, -11, -16, 90, 2, 3, "arrow", 2),
 
         new circle(true, -11, 8, 0, 8, "tree", 360, 5),
         new circle(true, -11, 0, 70, 8, "tree", 360, 5), // ID: 10
@@ -173,7 +208,7 @@ maps = [
 
         new rect(true, -23, -5.5, 45, 2.3, 5, "car", 4, -0.5),
         new rect(true, -22.75, -2, 45, 2.3, 5, "carblack", 4, -0.5),
-        new parkingspot(true, -22.5, 1.3, 45, 2, 5),
+        new parkingspot(false, -22.5, 1.3, 45, 2, 5),
         new rect(true, -22.5, 5, 45, 2.3, 5, "carblue", 4, -0.5),
         
         new rect(false, 6, -10, 90, 0.15, 5, "yellow"), 
@@ -266,6 +301,6 @@ maps = [
 
     test = [
         new terrain(0, 0, 0, 100, 100, "grass"),
-        new circle(false, 0, 10, 0, 5, "dimgray", 360, 3),
+        new parkingspot(false, 5, 5, 0, 2, 5)
     ]
 ]

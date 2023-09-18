@@ -22,16 +22,13 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0)
     }
 
     this.update = function() {
-        if(this.id == 0) {
-            console.debug(this.corners)
-        }
         canvas = gameWindow.context;
         canvas.save();
         this.pos = camera.position(this.x,this.y,360-this.angle)
         canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
         canvas.rotate(radians(this.pos[2]));
         this.opacity = 100;
-        if(!pausemenu.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
+        if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
             if(this.layer > player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
                     this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
@@ -100,7 +97,7 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
             canvas.rotate(radians(this.pos[2]));
         }
         this.opacity = 100;
-        if(!pausemenu.paused) {
+        if(!player.paused) {
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
                     this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
@@ -234,7 +231,13 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         this.toggle = 0;
         this.opacity = 50;
         this.yoffset = -100
+        this.sensdistance = 5
 
+        this.AccOfAtt = 0
+        this.Shifts = 0
+        this.DirCng = 0
+        this.prevxy = [0,0]
+        this.acclist = []
     }
 
     this.update = function() {
@@ -245,7 +248,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         }
         canvas = gameWindow.context;
         canvas.save();
-        this.pos = camera.position(this.x,this.y,this.angle);
+        this.pos = camera.position(this.x,this.y,-this.angle);
         canvas.globalAlpha = (this.opacity/100)
         canvas.fillStyle = this.fill;
         if (this.circle) {
@@ -260,17 +263,44 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         canvas.globalAlpha = 1
         canvas.restore();
 
-        if(!pausemenu.paused) {
-            if(this.id == 50) {
-                console.debug(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)))
+        if(!player.paused) {
+            this.distance = Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2))
+
+            if(this.distance <= this.sensdistance) {
+                this.cirx = camera.cx + (player.turnrad*cos(camera.cangle))
+                this.ciry = camera.cy - (player.turnrad*sin(camera.cangle))
+                this.calc1 = [this.x - this.cirx, this.y - this.ciry]
+                this.calc2 = [this.cirx + (this.calc1[0]/Math.sqrt((this.calc1[0]**2) + (this.calc1[1]**2))) * Math.abs(player.turnrad), this.ciry + (this.calc1[1]/Math.sqrt((this.calc1[0]**2) + (this.calc1[1]**2))) * Math.abs(player.turnrad)]
+                this.AccOfAtt = 1 - ((Math.sqrt((this.x - this.calc2[0])**2 + (this.y - this.calc2[1])**2))/this.sensdistance)
+                if((round(camera.cx,2) != this.prevxy[0]) || (round(camera.cy,2) != this.prevxy[1])) {
+                    this.prevxy = [round(camera.cx,2), round(camera.cy,2)]
+                    if(this.AccOfAtt >= 0.6) {this.acclist.push((this.AccOfAtt-0.6)*2.5)
+                    } else {this.acclist.push(0)}
+                }
+            } else if ((Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) >= this.sensdistance + 5) || ([player.cx, player.cy, player.cangle] == player_position)) {
+                this.acclist = []
             }
-            if(Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) <= 2)  {
+
+            if(this.distance <= 2)  {
                 parked = true
                 finishscreen.parkedcount = 5
-                finishscreen.score = Math.round(Math.abs(-(Math.abs(this.idealangle - camera.cangle)%180)/(36/2)+5))
+                finishscreen.score_accuracy = average(this.acclist)
+                this.direction = Math.abs(-(Math.abs((-this.idealangle) - camera.cangle)%180)+90)/90
+
+                if(this.direction >= 0.6) {finishscreen.score_direction = (this.direction-0.6)*2.5} 
+                else {finishscreen.score_direction = 0}
+
+                this.xdistance = 1-(Math.abs(cos(this.idealangle+invtan((camera.cy-this.y)/(camera.cx-this.x)))*this.distance)/2)
+                // if((this.xdistance >= ((this.width/2)-((player.width/2)*0.9))) && (this.xdistance <= (this.width/2))) {finishscreen.score_distance = (1-((this.xdistance-((this.width/2)-((player.width/2)*0.9)))/((player.width/2)*0.9)))*finishscreen.score_direction}
+                // else if (this.xdistance <= ((this.width/2)-((player.width/2)*0.9))) {finishscreen.score_distance = 1*finishscreen.score_direction}
+                // else {finishscreen.score_distance = 0}
+                if(this.xdistance >= 0.6) {finishscreen.score_distance = (this.xdistance-0.6)*2.5}
+                else {finishscreen.score_distance = 0}
+                
+
                 if(this.reverse == false) {
                     if(Math.abs(this.idealangle - camera.cangle) > 90) {
-                        finishscreen.score = 0
+                        finishscreen.score_direction = 0
                     }
                 }
             }

@@ -36,12 +36,14 @@ var pausemenu = {
     },
 
     toggle : function() {
-        if (this.blur == 0) {
+        if (this.blur <= 0.25) {
             pausemenu.menu = 1;
             this.paused = true;
+            player.paused = true;
         }
-        if (this.blur == this.maxblur) {
+        if (this.blur >= this.maxblur - 0.25) {
             this.paused = false;
+            player.paused = false;
         }
     },
 //((-500) + this.blur*8)
@@ -49,7 +51,7 @@ var pausemenu = {
         if(pausemenu.menu == 1) {
             canvas = gameWindow.context;
             canvas.setTransform(1, 0, 0, 1, 0, 0);
-            canvas.translate(-425 + ((gameWindow.canvas.width/3.4) * (this.blur/this.maxblur)), ((gameWindow.canvas.height/2)));
+            canvas.translate(-475 + ((gameWindow.canvas.width/3.4) * (this.blur/this.maxblur)), ((gameWindow.canvas.height/2)));
             canvas.rotate(radians(5));
             canvas.fillStyle = "#1b2932"; 
             canvas.fillRect( 800/-2, (gameWindow.canvas.height*1.5)/-2, 800, (gameWindow.canvas.height*1.5));        
@@ -57,7 +59,7 @@ var pausemenu = {
 
             canvas = gameWindow.context;
             canvas.setTransform(1, 0, 0, 1, 0, 0);
-            canvas.translate(-425 + ((gameWindow.canvas.width/3.7) * (this.blur/this.maxblur)), (this.selheight));
+            canvas.translate(-475 + ((gameWindow.canvas.width/3.7) * (this.blur/this.maxblur)), (this.selheight));
             canvas.fillStyle = "#49545b"; 
             canvas.globalAlpha = 0.5;
             canvas.fillRect( 800/-2, (gameWindow.canvas.height/10)/-2, 800, (gameWindow.canvas.height/10));
@@ -72,7 +74,7 @@ var pausemenu = {
 
             for(i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
-                this.mainmenutext[i].x = gameWindow.canvas.width/20 - ((1-(this.blur/this.maxblur))*this.mainmenutext[0].width*2);
+                this.mainmenutext[i].x = gameWindow.canvas.width/22 - ((1-(this.blur/this.maxblur))*this.mainmenutext[0].width*2);
                 if(i == 0) {
                     this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+1.5)
                 } else if (i <= 2) {
@@ -116,8 +118,8 @@ var pausemenu = {
                 this.settingsmenutext[i].update()
             }
 
-            this.tempfps = this.Smaxfpsslider.value
-            this.Smaxfpsnumber.text = this.tempfps
+            maxfps = this.Smaxfpsslider.value
+            this.Smaxfpsnumber.text = maxfps
 
             camera.czoom = this.Szoomslider.value
             this.Szoomnumber.text = `${camera.czoom}%`
@@ -127,17 +129,22 @@ var pausemenu = {
     },
 
     update : function() {
-        if ((this.blur > 0) && (this.paused == false)) {
-            this.blur -= this.blurstep;
+        if ((this.blur != 0) && (this.paused == false)) {
+            this.blur += (0 - this.blur)/(fps/10);
+            if(this.blur <= 0.25){this.blur = 0}
             this.selheight = -100;
         } else if ((this.blur <= 0) && (this.paused == false)) {
             pausemenu.menu = 0;
         }
-        if ((this.blur < this.maxblur) && (this.paused == true)) {
-            this.blur += this.blurstep;
+        if ((this.blur != this.maxblur) && (this.paused == true)){
+            this.blur += (this.maxblur - this.blur)/(fps/10)
+            if(this.blur >= this.maxblur-0.25){this.blur = this.maxblur}
         }
+        // if ((this.blur < this.maxblur) && (this.paused == true)) {
+        //     this.blur += this.blurstep;
+        // }
 
-        if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps; this.blurstep = this.initblurstep;}
+        //if(this.blur >= this.maxblur) { maxfps = 30 } else {maxfps = this.tempfps; this.blurstep = this.initblurstep;}
 
         pausebuttoncanvas = gameWindow.context;
         pausebuttoncanvas.fillStyle = this.pbcolor;
@@ -176,7 +183,12 @@ var finishscreen = {
         this.yoffset = -100
         this.finished = false
         this.score = 0;
+        this.score_accuracy = 0;
+        this.score_direction = 0;
+        this.score_distance = 0;
         this.parkedcount = 0
+
+        this.starsize = 10
 
         this.spacebar = new Image(); this.spacebar.src = "textures/spacebar.png";
         this.tabbg = new Image(); this.tabbg.src = "textures/tabbg.png";
@@ -188,9 +200,12 @@ var finishscreen = {
         this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
 
         this.textrender = [
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-200, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-100, text="Level Complete", justify="center", size=50, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+75, text="Score:", justify="center", size=50, font="Arial", color="white")
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-300, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-200, text="Level Complete", justify="center", size=50, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-50, text="Score:", justify="center", size=50, font="Arial", color="white"),
+            this.acctext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+400, text="Accuracy:", justify="center", size=50, font="Arial", color="white"),
+            this.dirtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+500, text="Angle:", justify="center", size=50, font="Arial", color="white"),
+            this.fittext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+600, text="Left/Right:", justify="center", size=50, font="Arial", color="white"),
         ]
     },
 
@@ -226,26 +241,36 @@ var finishscreen = {
             this.tabimage = this.tabbg
         }
 
-        console.debug(parked)
-
         if ((this.parkedcount > 0) && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && (mousedown == 1))) && (pausemenu.paused == false)) {
             this.finished = true
         }
 
         if(this.finished) {
+            player.paused = true
+
             canvas = gameWindow.context
             canvas.fillStyle = "black";
             canvas.globalAlpha = 0.8;
             canvas.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
             canvas.globalAlpha = 1.0;
 
+            this.acctext.text = `Pull-In Accuracy: ${round(this.score_accuracy*100)}%`
+            this.dirtext.text = `Angle Accuracy: ${round(this.score_direction*100)}%`
+            this.fittext.text = `Left/Right Accuracy: ${round(this.score_distance*100)}%`
+
             for(this.i = 0; this.i < this.textrender.length; this.i++) {
                 this.textrender[this.i].x = (gameWindow.canvas.width/2)
                 this.textrender[this.i].update();
             }
 
-            for(this.i = 0; this.i < this.score; this.i++) {
-                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((this.score * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2 + 100, 200, 200);
+            this.score = (this.score_accuracy+this.score_direction+this.score_distance)/3
+
+            if (Math.round(this.starsize) != 200){
+                this.starsize += (200 - this.starsize)/(fps/10)
+            }
+
+            for(this.i = 0; this.i < Math.round(this.score*5); this.i++) {
+                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((round(this.score*5) * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2, this.starsize, this.starsize);
             }
         }
         upcount++;
