@@ -294,7 +294,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
                 // if((this.xdistance >= ((this.width/2)-((player.width/2)*0.9))) && (this.xdistance <= (this.width/2))) {finishscreen.score_distance = (1-((this.xdistance-((this.width/2)-((player.width/2)*0.9)))/((player.width/2)*0.9)))*finishscreen.score_direction}
                 // else if (this.xdistance <= ((this.width/2)-((player.width/2)*0.9))) {finishscreen.score_distance = 1*finishscreen.score_direction}
                 // else {finishscreen.score_distance = 0}
-                if(this.xdistance >= 0.6) {finishscreen.score_distance = (this.xdistance-0.6)*2.5}
+                if(this.xdistance >= 0.6) {finishscreen.score_distance = ((this.xdistance-0.6)*2.5)*this.direction}
                 else {finishscreen.score_distance = 0}
                 
 
