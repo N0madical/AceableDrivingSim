@@ -200,12 +200,12 @@ var finishscreen = {
         this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
 
         this.textrender = [
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*3, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*5, text="Level Complete", justify="center", size=50, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*9, text="Score:", justify="center", size=50, font="Arial", color="white"),
-            this.acctext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*15, text="Accuracy:", justify="center", size=50, font="Arial", color="white"),
-            this.dirtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*16.5, text="Angle:", justify="center", size=50, font="Arial", color="white"),
-            this.fittext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*18, text="Left/Right:", justify="center", size=50, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*3, text="Congratulations!", justify="center", size=125, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*5, text="Level Complete", justify="center", size=35, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*9, text="Score:", justify="center", size=35, font="Arial", color="white"),
+            this.acctext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*15, text="Accuracy:", justify="center", size=35, font="Arial", color="white"),
+            this.dirtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*16.5, text="Angle:", justify="center", size=35, font="Arial", color="white"),
+            this.fittext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*18, text="Left/Right:", justify="center", size=35, font="Arial", color="white"),
         ]
     },
 
@@ -272,7 +272,7 @@ var finishscreen = {
 
             this.score = (this.score_accuracy+this.score_direction+this.score_distance)/3
 
-            this.maxstarsize = gameWindow.canvas.height/5
+            this.maxstarsize = gameWindow.canvas.height/6
             if (Math.round(this.starsize) != this.maxstarsize){
                 this.starsize += (this.maxstarsize - this.starsize)/(fps/10)
             }
