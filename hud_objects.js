@@ -200,16 +200,23 @@ var finishscreen = {
         this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
 
         this.textrender = [
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-300, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-200, text="Level Complete", justify="center", size=50, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)-50, text="Score:", justify="center", size=50, font="Arial", color="white"),
-            this.acctext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+400, text="Accuracy:", justify="center", size=50, font="Arial", color="white"),
-            this.dirtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+500, text="Angle:", justify="center", size=50, font="Arial", color="white"),
-            this.fittext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2)+600, text="Left/Right:", justify="center", size=50, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*3, text="Congratulations!", justify="center", size=150, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*5, text="Level Complete", justify="center", size=50, font="Arial", color="white"),
+            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*9, text="Score:", justify="center", size=50, font="Arial", color="white"),
+            this.acctext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*15, text="Accuracy:", justify="center", size=50, font="Arial", color="white"),
+            this.dirtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*16.5, text="Angle:", justify="center", size=50, font="Arial", color="white"),
+            this.fittext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*18, text="Left/Right:", justify="center", size=50, font="Arial", color="white"),
         ]
     },
 
     update : function() {
+        this.textrender[0].y = (gameWindow.canvas.height/20)*3
+        this.textrender[1].y = (gameWindow.canvas.height/20)*5
+        this.textrender[2].y = (gameWindow.canvas.height/20)*9
+        this.textrender[3].y = (gameWindow.canvas.height/20)*15
+        this.textrender[4].y = (gameWindow.canvas.height/20)*16.5
+        this.textrender[5].y = (gameWindow.canvas.height/20)*18
+
         if(parked) {
             if (Math.round(this.yoffset) < 0){
                 this.yoffset += (0 - this.yoffset)/4
@@ -225,12 +232,12 @@ var finishscreen = {
         if(this.yoffset > -99) {
             canvas.setTransform(1, 0, 0, 1, 0, 0);
             car = gameWindow.context;
-            car.drawImage(this.tabimage, (gameWindow.canvas.width/2)-(400*(gameWindow.canvas.width/1920)), -30 + this.yoffset, 800*(gameWindow.canvas.width/1920), 100);
+            car.drawImage(this.tabimage, (gameWindow.canvas.width/2)-(400*(gameWindow.canvas.width/1920)), (gameWindow.canvas.height/30) + this.yoffset -100, 800*(gameWindow.canvas.width/1920), 150);
             if(gameWindow.canvas.width >= 1500) {
                 car.drawImage(this.spacebar, (gameWindow.canvas.width/2)-(250*(gameWindow.canvas.width/1920)), (5 + this.yoffset), 160*((gameWindow.canvas.width/1920)*1.3), (180/4)*((gameWindow.canvas.width/1920)*1.3));
             }
 
-            this.complete.y = 30 + this.yoffset;
+            this.complete.y = gameWindow.canvas.height/30 + this.yoffset;
             this.complete.x = (gameWindow.canvas.width/2)
             this.complete.update();
         }
@@ -265,12 +272,13 @@ var finishscreen = {
 
             this.score = (this.score_accuracy+this.score_direction+this.score_distance)/3
 
-            if (Math.round(this.starsize) != 200){
-                this.starsize += (200 - this.starsize)/(fps/10)
+            this.maxstarsize = gameWindow.canvas.height/5
+            if (Math.round(this.starsize) != this.maxstarsize){
+                this.starsize += (this.maxstarsize - this.starsize)/(fps/10)
             }
 
             for(this.i = 0; this.i < Math.round(this.score*5); this.i++) {
-                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((round(this.score*5) * 150)/2 + 25)) + (this.i*150), gameWindow.canvas.height/2, this.starsize, this.starsize);
+                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((((round(this.score*5)+1)/2) * (this.maxstarsize*0.75)) - (this.maxstarsize*0.25))) + (this.i*(this.maxstarsize*0.75)), (gameWindow.canvas.height/20)*9, this.starsize, this.starsize);
             }
         }
         upcount++;
@@ -282,7 +290,7 @@ function carborder() {
     this.update = function() {
         this.x = gameWindow.canvas.width/2
         this.y = gameWindow.canvas.height/2
-        for (i = 0; i < this.distances.length; i++) {
+        for (i = 0; i < (this.distances.length-1); i++) {
             this.newx = this.x + (sin(((-i*(16))+180)%360) * this.distances[i])
             this.newy = this.y + (cos(((-i*(16))+180)%360) * this.distances[i])
 
@@ -299,9 +307,9 @@ function carborder() {
         //     bg.fillRect(this.newx,this.newy,5,5);
         // }
 
-        bg = gameWindow.context;
-        bg.fillStyle = "red";
-        bg.fillRect(((maps[0][19].pointrec[0]*scalar)+gameWindow.canvas.width/2)-camera.cx*scalar,((maps[0][19].pointrec[1]*scalar)+gameWindow.canvas.height/2)-camera.cy*scalar,50,50);
+        // bg = gameWindow.context;
+        // bg.fillStyle = "red";
+        // bg.fillRect(((maps[0][19].pointrec[0]*scalar)+gameWindow.canvas.width/2)-camera.cx*scalar,((maps[0][19].pointrec[1]*scalar)+gameWindow.canvas.height/2)-camera.cy*scalar,50,50);
         upcount++
     }
 }

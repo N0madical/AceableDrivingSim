@@ -281,7 +281,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
                 this.acclist = []
             }
 
-            if(this.distance <= 2)  {
+            if((this.distance <= 2) && (player.speed <= 0.5))  {
                 parked = true
                 finishscreen.parkedcount = 5
                 finishscreen.score_accuracy = average(this.acclist)

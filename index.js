@@ -130,15 +130,13 @@ var gameWindow = {
             window.addEventListener('devicemotion', handleOrientation);
         }
 
-        absolute = 0;
         alpha = 0;
         beta = 0;
         gamma = 0;
-        function handleOrientation(e) {
-            absolute = e.absolute;
-            alpha = e.alpha;
-            beta = e.beta;
-            gamma = e.gamma;
+        function handleOrientation(event) {
+            alpha = event.alpha;
+            beta = event.beta;
+            gamma = event.gamma;
         };
     },
 
@@ -275,8 +273,8 @@ function updateGameWindow() {
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
-        //fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
-        fpscount.text = `Absolute: ${absolute}, Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
+        fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
+        //fpscount.text = `Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
         if (debug) {
             speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
             posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
@@ -288,7 +286,11 @@ function updateGameWindow() {
     }
 
     if(debug == false) {
-        fpscount.x = gameWindow.canvas.width-2
+        if((mousepos[0] >= gameWindow.canvas.width-100) && (mousepos[1] <= 20)) {
+            fpscount.x = gameWindow.canvas.width-2
+        } else {
+            fpscount.x = gameWindow.canvas.width+200
+        }
     }
 
     // Defining and Detecting Keypresses
