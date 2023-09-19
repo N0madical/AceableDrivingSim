@@ -146,7 +146,7 @@ var gameWindow = {
     },
 }
 
-// Camera object controlls placement of all objects relative to player
+// Camera object controls placement of all objects relative to player
 var camera = {
     start : function(x, y, angle, zoom) {
         this.cx = x;
@@ -249,6 +249,7 @@ var player = {
         upcount++
     },
 
+    //Reset the game & Player
     reset : function() {
         camera.cx = player_position[0];
         camera.cy = player_position[1];
@@ -273,6 +274,8 @@ function updateGameWindow() {
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
         lasttime = d.getTime();
+
+        // Update debug text
         fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
         //fpscount.text = `Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
         if (debug) {
@@ -284,7 +287,6 @@ function updateGameWindow() {
         fps = fpsrec * 4;
         fpsrec = 0;
     }
-
     if(debug == false) {
         if((mousepos[0] >= gameWindow.canvas.width-100) && (mousepos[1] <= 20)) {
             fpscount.x = gameWindow.canvas.width-2
