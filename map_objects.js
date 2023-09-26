@@ -234,8 +234,6 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         this.sensdistance = 5
 
         this.AccOfAtt = 0
-        this.Shifts = 0
-        this.DirCng = 0
         this.prevxy = [0,0]
         this.acclist = []
     }

@@ -22,6 +22,7 @@ let space = false;
 let parked = false
 var fps = maxfps;
 let loadedtextures = {}
+var loadopac = 100;
 
 // Debug Timer
 var upcount = 0;
@@ -185,6 +186,8 @@ var player = {
         this.layer = 3;
         this.carimage = new Image();
         this.carimage.src = "textures/car.png";
+        this.expimage = new Image();
+        this.expimage.src = "textures/explosion.png"
         this.distances = [127, 120, 88, 70, 51, 48, 47, 49, 59, 82, 118, 123, 123, 102, 72, 58, 52, 50, 52, 72, 78, 114, 128]
         this.wheeldistance = Math.sqrt(Math.pow(this.height/3,2) + Math.pow(this.width/3,2))
         this.wheelangles = [30,150,210,330]
@@ -247,6 +250,16 @@ var player = {
 
         // Let the renderer know rendering is complete
         upcount++
+    },
+
+    explosion : function() {
+        this.i = Math.floor(Math.random() * 360)
+        exp = gameWindow.context;
+        exp.save();
+        exp.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
+        exp.rotate(radians(this.turndeg));
+        exp.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
+        exp.restore();
     },
 
     //Reset the game & Player
@@ -337,6 +350,15 @@ function updateGameWindow() {
             }
         }
     }
+
+    if((fps > 8) && (loadopac >= 1)) {
+        if (Math.round(loadopac) != 0){
+            loadopac += (0 - loadopac)/10
+            document.getElementById("loadingscreen").style.opacity = `${loadopac/100}`
+        }
+        if(loadopac < 1) {document.getElementById("loadingscreen").remove()}
+    }
+    
 
     // console.debug(updatelist)
 

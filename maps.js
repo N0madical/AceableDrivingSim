@@ -301,6 +301,9 @@ maps = [
 
     test = [
         new terrain(0, 0, 0, 100, 100, "grass"),
-        new parkingspot(false, 5, 5, 0, 2, 5)
+        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
+        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
+        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
+        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
     ]
 ]
