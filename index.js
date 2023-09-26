@@ -351,6 +351,15 @@ function updateGameWindow() {
         }
     }
 
+    loaded = true
+    for(f = 0; f < global.length; f++) {
+        console.debug(loadedtextures[global[f][0]].width)
+        if(loadedtextures[global[f][0]].width == 0) {
+            loaded = false
+        }
+    }
+
+    //console.debug(loaded)
     if((fps > 8) && (loadopac >= 1)) {
         if (Math.round(loadopac) != 0){
             loadopac += (0 - loadopac)/10
