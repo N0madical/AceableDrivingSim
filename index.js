@@ -23,6 +23,7 @@ let parked = false
 var fps = maxfps;
 let loadedtextures = {}
 var loadopac = 100;
+var loadcount = 0;
 
 // Debug Timer
 var upcount = 0;
@@ -351,16 +352,8 @@ function updateGameWindow() {
         }
     }
 
-    loaded = true
-    for(f = 0; f < global.length; f++) {
-        console.debug(loadedtextures[global[f][0]].width)
-        if(loadedtextures[global[f][0]].width == 0) {
-            loaded = false
-        }
-    }
-
     //console.debug(loaded)
-    if((fps > 8) && (loadopac >= 1)) {
+    if((fps > 8) && (loadopac >= 1) && (loadcount == global.length)) {
         if (Math.round(loadopac) != 0){
             loadopac += (0 - loadopac)/10
             document.getElementById("loadingscreen").style.opacity = `${loadopac/100}`
@@ -441,6 +434,7 @@ function loadsprites(map, maps) {
     for (i = 0; i < textures[0].length; i++) {
         f = new Image();
         f.src = textures[0][i][1]
+        f.onload = function() {loadcount++}
         loadedtextures[textures[0][i][0]] = f
     }
 
