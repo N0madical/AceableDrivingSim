@@ -2,6 +2,7 @@
 function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0) {
     // Allow for shape to be a color or image
     this.start = function() {
+        this.type = 1;
         this.x = x;
         this.y = y;
         this.isimage = isimage
@@ -67,12 +68,22 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0)
         canvas.restore();
         upcount++
     }
+
+    this.testpoint = function(tstx, tsty) {
+        this.weirdangle = this.angle
+        if(this.weirdangle > 0 && this.weirdangle < 90) {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}} 
+        else if(this.weirdangle > 90 && this.weirdangle < 180) {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}}
+        else if(this.weirdangle > 180 && this.weirdangle < 270) {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
+        else {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
+        return false
+    }
     
 }
 
 //Loads a circle or circular image on the canvas
 function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
     this.start = function() {
+        this.type = 2;
         this.x = x;
         this.y = y;
         this.isimage = isimage
@@ -132,11 +143,16 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         }
         upcount++
     }
+
+    this.testpoint = function(tstx, tsty) {
+        if (Math.sqrt(((tstx - this.x)**2) + ((tsty - this.y)**2)) <= (this.diameter/2)) {return true} else {return false}
+    }
 }
 
 // Loads a repeating texture on the canvas
 function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=100) {
     this.start = function() {
+        this.type = 3;
         this.x = x;
         this.y = y;
         this.layer = layer;
@@ -218,6 +234,7 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
 // Parking space object
 function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
     this.start = function() {
+        this.type = 4;
         this.circle = iscircle
         this.x = x;
         this.y = y;
@@ -308,13 +325,115 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
     }
 }
 
-function car(type, logic) {
+function car(cartype, x, y, angle, speed, turn, logicID=0, layer=2) {
     this.start = function() {
-        this.type = type
-        this.logic = logic
+        this.type = 5;
+        this.fill = loadedcartextures[cartype][0];
+        this.width = loadedcartextures[cartype][1];
+        this.height = loadedcartextures[cartype][2];
+        this.speed = speed
+        this.turndeg = turn;
+        this.layer = layer
+        this.logicid = logicID - 1
+        this.x = x 
+        this.y = y
+        this.angle = angle + 0.00001
+        this.logicactive = false
     }
 
     this.update = function() {
+        this.turnrad = this.height/tan(this.turndeg)
+        if(fps >= 8) {
+            this.arcdeg = degrees(this.speed/this.turnrad)
+            this.theta = 90 - ((180-this.arcdeg)/2)
+            this.angularspeed = sin(this.arcdeg)/(sin((180-this.arcdeg)/2)/this.turnrad)
+            this.angle += (this.speed/radians(this.turnrad))/fps
+            this.angle = this.angle%360
+            if(this.turndeg != 0 && this.speed != 0) {
+                this.x -= (this.angularspeed * (sin(this.angle)))/fps
+                this.y += (this.angularspeed * (cos(this.angle)))/fps
+            } else {
+                this.x -= ((this.speed * (sin(this.angle))))/fps
+                this.y += ((this.speed * (cos(this.angle))))/fps
+            }
+        }
+        
+        
+        canvas = gameWindow.context;
+        canvas.save();
+        this.pos = camera.position(this.x,this.y,360-this.angle)
+        canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
+        canvas.rotate(radians(this.pos[2]));
+
+        if(this.logicid >= 0) {
+
+            for(i = 0; i < carscripts[this.logicid].length; i++) {
+
+                this.scactive = false
+
+                this.pathintersect = carscripts[this.logicid][i][0]
+                this.pathtype = carscripts[this.logicid][i][1]
+                this.pathdist = carscripts[this.logicid][i][2]
+                this.result = carscripts[this.logicid][i][3]
+
+                if(this.pathtype == 1) {
+                    this.pathpoint = [this.x + (this.pathdist * sin(this.angle)), this.y + (this.pathdist * cos(this.angle))]
+                } else {
+                    this.pathpoint = [this.x + (this.turnrad * cos(degrees(this.pathdist/this.turnrad))), this.y + (this.turnrad * sin(degrees(this.pathdist/this.turnrad)))]
+                }
+                
+                if(this.pathintersect == 1) {
+                    this.layersel = 4
+                } else if (this.pathintersect == 2) { 
+                    this.layersel = 3
+                } else if (this.pathintersect == 3) { 
+                    this.layersel = 2
+                } else if (this.pathintersect == 4) { 
+                    this.layersel = 5
+                }
+
+                if(this.pathintersect == 0 && !this.logicactive) {
+                    if(this.pathtype == 1 && round(this.x) == this.pathdist) {
+                        this.scactive = true
+                    } else if (this.pathtype == 2 && round(this.y) == this.pathdist) {
+                        this.scactive = true
+                    } else if (this.pathtype == 3 && round(this.angle) == this.pathdist) {
+                        this.scactive = true
+                    } else if (this.pathtype == 3 && round(this.speed) == this.pathdist) {
+                        this.scactive = true
+                    }
+                }
+
+                if (this.pathintersect == 1 || this.pathintersect == 2 || this.pathintersect == 3 || this.pathintersect == 4) {
+                    for (j = 0; j < maps[map-1].length; j++) {
+                        if(maps[map-1][j].type == 1 || maps[map-1][j].type == 2) {
+                            if(maps[map-1][j].layer == this.layersel) {
+                                if(maps[map-1][j].testpoint(this.pathpoint[0], this.pathpoint[1])) {
+                                    this.scactive = true
+                                    this.logicactive = true
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+
+                if(this.scactive == true) {
+                    this.x += this.result[0]
+                    this.y += this.result[1]
+                    this.turndeg = this.result[2]
+                    if((this.result[4] == true && this.recspeed >= 0) || (this.result[4] == false)) {
+                        this.speed += this.result[3]
+                    } else {
+                        this.speed -= this.result[3]
+                    }
+                } else {
+                    this.logicactive = false
+                }
+            }
+        }
+        canvas.drawImage(this.fill, (this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+        canvas.restore();
         upcount++
     }
 }

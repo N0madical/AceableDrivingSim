@@ -59,9 +59,14 @@ configs = [
     ],
 
     test = [
-        startpos = [0,0,0],
-        startzoom = 100,
+        startpos = [5,0,0],
+        startzoom = 50,
     ],
+]
+
+cartextures = [
+    ["textures/car.png", 2.3, 5],
+    ["textures/carblue.png", 2.3, 5],
 ]
 
 //Loading Textures
@@ -174,6 +179,8 @@ maps = [
         new rect(false, -6, 7.5, 90, 0.15, 5, "yellow"),
         new rect(false, -6, 10, 90, 0.15, 5, "yellow"),
 
+        new car(type=0, x=0, y=-5, angle=180, speed=4, turn=0, logicID=1),
+
         new parkingspot(false, -5.75, -8.75, 90, 2, 4),
         new rect(true, -6, -6.25, 90, 2.3, 5, "carblue", 4, -0.5),
         new rect(true, -6.1, -3.75, 90, 2.3, 5, "cardarkblue", 4, -0.5),
@@ -253,6 +260,8 @@ maps = [
         new rect(false, 0, -20.75, 0, 38, 0.5, "dimgray", 3),
         new rect(false, 11.2, 20.75, 0, 16, 0.5, "dimgray", 3),
         new rect(false, -11.2, 20.75, 0, 16, 0.5, "dimgray", 3),
+
+        //new rect(false, 0, 8, 0, 5, 0.5, "orange", 4)
     ],
 
     parkinglot2 = [
@@ -300,10 +309,23 @@ maps = [
     road = [],
 
     test = [
-        new terrain(0, 0, 0, 100, 100, "grass"),
-        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
-        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
-        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
-        new rect(false, 0, 5, Math.random() * 360, 0.5, 5, "dimgray", 3),
+        new car(type=0, x=0, y=20, angle=180, speed=2, turn=0, logicID=1),
+        new rect(false, 0, 10, 0, 10, 0.5, "dimgray", 3),
+    ]
+]
+
+
+//Object Syntax: [
+//         Interaction Object (Options: 0 = at position, 1 = Wall, 2 = Curb, 3 = Terrain, 4 = Cover, 5 = NPC Car, 6 = Player Car, Array = IDs), 
+//         Path(1 = Streight Path, 2 = Real Path) OR Check(1=x, 2=y, 3=angle, 4=velocity), 
+//         Distance Along Path OR Check Value,
+//         Resulting [X,Y,Angle,Velocity] Change, 
+//         Repeats (Optional)
+//        ]
+
+carscripts = [
+    script1 = [
+        [2, 1, 5, [0,0,60,0, false]],
+        [0, 3, 0, [0,0,0,0, false]],
     ]
 ]

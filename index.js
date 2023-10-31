@@ -22,6 +22,7 @@ let space = false;
 let parked = false
 var fps = maxfps;
 let loadedtextures = {}
+let loadedcartextures = []
 var loadopac = 100;
 var loadcount = 0;
 
@@ -179,6 +180,7 @@ var player = {
         this.acceleration = 4
 
         // Defining Starting Variables On Creation
+        this.type = 0;
         this.paused = false;
         this.width = 2.3;
         this.height = 5;
@@ -431,6 +433,12 @@ function tan(theta) {return round(Math.tan(theta * Math.PI/180),10)} //Tan in de
 function invtan(imp) {return Math.atan(imp) * 180/Math.PI} //Inverse tan in degrees
 function invtan2(imp1,imp2) {return Math.atan2(imp1,imp2) * 180/Math.PI}
 function loadsprites(map, maps) {
+    for (i = 0; i < cartextures.length; i++) {
+        f = new Image();
+        f.src = cartextures[i][0]
+        loadedcartextures.push([f,cartextures[i][1],cartextures[i][2]])
+    }
+
     for (i = 0; i < textures[0].length; i++) {
         f = new Image();
         f.src = textures[0][i][1]
