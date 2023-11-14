@@ -179,7 +179,7 @@ maps = [
         new rect(false, -6, 7.5, 90, 0.15, 5, "yellow"),
         new rect(false, -6, 10, 90, 0.15, 5, "yellow"),
 
-        new car(type=0, x=0, y=-5, angle=180, speed=4, turn=0, logicID=1),
+        new car(type=0, x=0, y=10, angle=0, speed=3, turn=0, collisionmod=-1, logicID=1),
 
         new parkingspot(false, -5.75, -8.75, 90, 2, 4),
         new rect(true, -6, -6.25, 90, 2.3, 5, "carblue", 4, -0.5),
@@ -309,8 +309,8 @@ maps = [
     road = [],
 
     test = [
-        new car(type=0, x=0, y=20, angle=180, speed=2, turn=0, logicID=1),
-        new rect(false, 0, 10, 0, 10, 0.5, "dimgray", 3),
+        new car(type=0, x=0, y=0, angle=-90, speed=-2, turn=0, logicID=2),
+        new rect(false, -10, 3, 45, 10, 0.5, "dimgray", 3),
     ]
 ]
 
@@ -318,14 +318,27 @@ maps = [
 //Object Syntax: [
 //         Interaction Object (Options: 0 = at position, 1 = Wall, 2 = Curb, 3 = Terrain, 4 = Cover, 5 = NPC Car, 6 = Player Car, Array = IDs), 
 //         Path(1 = Streight Path, 2 = Real Path) OR Check(1=x, 2=y, 3=angle, 4=velocity), 
-//         Distance Along Path OR Check Value,
-//         Resulting [X,Y,Angle,Velocity] Change, 
-//         Repeats (Optional)
+//         Distance Along Path OR [Check Value,range],
+//         Resulting [X,Y,Angle,Velocity, angletype(false = turn, true = angle), ifDirectional] Change, 
+//         Exclusive (Optional)
+//         Repeats (Optional) #Cancels all following actions
 //        ]
 
 carscripts = [
     script1 = [
-        [2, 1, 5, [0,0,60,0, false]],
-        [0, 3, 0, [0,0,0,0, false]],
-    ]
+        [2, 1, 7, [0,0,-60,0, 1, false], true],
+        [0, 3, [0,2], [0,0,0,0, 1, false]],
+        [0, 3, [90,2], [0,0,0,0, 1, false]],
+        [0, 3, [180,2], [0,0,0,0, 1, false]],
+        [0, 3, [270,2], [0,0,0,0, 1, false]],
+    ],
+    script2 = [
+        [0, 3, [0,1], [0,0,0,0, 1, false]],
+        [0, 3, [0,1], [0,0,0,0, 3, false]],
+        //[0, 3, [90,1], [0,0,0,0, false]],
+        [0, 3, [180,1], [0,0,0,0, 1, false]],
+        [0, 3, [180,1], [0,0,180,0, 3, false]],
+        //[0, 3, [270,1], [0,0,0,0, false]],
+        [2, 1, 5, [0,0,70,0, 1, false]],
+    ],
 ]

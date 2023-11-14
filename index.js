@@ -25,6 +25,8 @@ let loadedtextures = {}
 let loadedcartextures = []
 var loadopac = 100;
 var loadcount = 0;
+let mobileTouch = [[-1, -1, 0], [-1, -1, 0], [-1, -1, 0]]
+let allpos = [[-1, -1, 0], [-1, -1, 0], [-1, -1, 0], [-1, -1, 0]];
 
 // Debug Timer
 var upcount = 0;
@@ -118,6 +120,10 @@ var gameWindow = {
         window.addEventListener('mousemove', function(e) {mousepos = [e.pageX, e.pageY]})
         window.addEventListener('mousedown', function(e) {mousedown = 1})
         window.addEventListener('mouseup', function(e) {mousedown = 0})
+
+        window.addEventListener("touchstart", touchHandler);
+        window.addEventListener("touchmove", touchHandler);
+        window.addEventListener("touchend", touchEnd);
 
         if (typeof DeviceMotionEvent.requestPermission === 'function') {
             // Handle iOS 13+ devices.
@@ -329,6 +335,9 @@ function updateGameWindow() {
     //             console.debug(`Key ${i} pressed`);
     //     }
     // }
+
+    // Coagulating touch and mouse
+    allpos = [[mousepos[0], mousepos[1], mousedown]].concat(mobileTouch)
     
     // Refresh Game Window
     gameWindow.clear();
@@ -432,6 +441,8 @@ function sin(theta) {return round(Math.sin(theta * Math.PI/180),10)} //Sin in de
 function tan(theta) {return round(Math.tan(theta * Math.PI/180),10)} //Tan in degrees
 function invtan(imp) {return Math.atan(imp) * 180/Math.PI} //Inverse tan in degrees
 function invtan2(imp1,imp2) {return Math.atan2(imp1,imp2) * 180/Math.PI}
+function mod(n1, n2) {return ((n1 % n2) + n2) % n2};
+function mod360(n1) {return ((n1 % 360) + 360) % 360};
 function loadsprites(map, maps) {
     for (i = 0; i < cartextures.length; i++) {
         f = new Image();

@@ -84,21 +84,22 @@ var pausemenu = {
                 }
                 this.mainmenutext[i].update()
 
-                if ((mousepos[0] <= 500) && ((mousepos[1] >= (this.mainmenutext[i].y-gameWindow.canvas.height/20)) && (mousepos[1] <= (this.mainmenutext[i].y+gameWindow.canvas.height/20))) && (i != 0)) {
-                    if (Math.round(this.selheight) != this.mainmenutext[i].y){
-                        this.selheight += (this.mainmenutext[i].y - this.selheight)/1.5
-                    }
-                    
-
-                    if(mousedown == 1 && pausemenu.paused == 1) {
-                        if(i == 1) {
-                            pausemenu.toggle()
-                        } else if (i == 2) {
-                            player.reset()
-                            finishscreen.finished = false
-                            pausemenu.toggle()
-                        } else if (i == 4) {
-                            pausemenu.menu = 2
+                for(this.j = 0; this.j < allpos.length; this.j++) {
+                    if ((allpos[this.j][0] <= 500) && ((allpos[this.j][1] >= (this.mainmenutext[i].y-gameWindow.canvas.height/20)) && (allpos[this.j][1] <= (this.mainmenutext[i].y+gameWindow.canvas.height/20))) && (i != 0)) {
+                        if (Math.round(this.selheight) != this.mainmenutext[i].y){
+                            this.selheight += (this.mainmenutext[i].y - this.selheight)/1.5
+                        }
+                        
+                        if(allpos[this.j][2] == 1 && pausemenu.paused == 1) {
+                            if(i == 1) {
+                                pausemenu.toggle()
+                            } else if (i == 2) {
+                                player.reset()
+                                finishscreen.finished = false
+                                pausemenu.toggle()
+                            } else if (i == 4) {
+                                pausemenu.menu = 2
+                            }
                         }
                     }
                 }
@@ -165,14 +166,17 @@ var pausemenu = {
         pausemenu.settingsmenu()
 
         if(!pausemenu.paused) {
-            if((mousepos[0] <= gameWindow.canvas.height/20) && (mousepos[1] <= gameWindow.canvas.height/20)) {
-                this.pbcolor = "#49545b"
-                if (mousedown == 1) {
-                    pausemenu.toggle()
+            for(this.o = 0; this.o < allpos.length; this.o++) {
+                if((allpos[this.o][0] <= gameWindow.canvas.height/20) && (allpos[this.o][1] <= gameWindow.canvas.height/20)) {
+                    this.pbcolor = "#49545b"
+                    if (allpos[this.o][2] == 1) {
+                        pausemenu.toggle()
+                    }
+                } else {
+                    this.pbcolor = "#1b2932"
                 }
-            } else {
-                this.pbcolor = "#1b2932"
             }
+            
         }
         upcount++;
     },

@@ -1,5 +1,5 @@
 // Loads a rectangle or rectangular image on the canvas
-function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0) {
+function rect(isimage, x, y, angle, width, height, fill, layer=2) {
     // Allow for shape to be a color or image
     this.start = function() {
         this.type = 1;
@@ -11,8 +11,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0)
         this.width = width;
         this.height = height;
         this.opacity = 100;
-        this.colmod = colisionmod;
-        this.radius = ((Math.sqrt((this.width+this.colmod)**2 + (this.height+this.colmod)**2))/2)
+        this.radius = ((Math.sqrt((this.width)**2 + (this.height)**2))/2)
         this.poscorner = [(this.x + (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y + (sin(this.angle+invtan(this.height/this.width))*this.radius))]
         this.negcorner = [(this.x - (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y - (sin(this.angle+invtan(this.height/this.width))*this.radius))]
         if (this.isimage) {
@@ -70,11 +69,10 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2, colisionmod=0)
     }
 
     this.testpoint = function(tstx, tsty) {
-        this.weirdangle = this.angle
-        if(this.weirdangle > 0 && this.weirdangle < 90) {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}} 
-        else if(this.weirdangle > 90 && this.weirdangle < 180) {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}}
-        else if(this.weirdangle > 180 && this.weirdangle < 270) {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
-        else {if (((tan(this.weirdangle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.weirdangle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.weirdangle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.weirdangle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
+        if(this.angle > 0 && this.angle < 90) {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}} 
+        else if(this.angle > 90 && this.angle < 180) {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}}
+        else if(this.angle > 180 && this.angle < 270) {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
+        else {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
         return false
     }
     
@@ -325,7 +323,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
     }
 }
 
-function car(cartype, x, y, angle, speed, turn, logicID=0, layer=2) {
+function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=2) {
     this.start = function() {
         this.type = 5;
         this.fill = loadedcartextures[cartype][0];
@@ -338,17 +336,20 @@ function car(cartype, x, y, angle, speed, turn, logicID=0, layer=2) {
         this.x = x 
         this.y = y
         this.angle = angle + 0.00001
-        this.logicactive = false
+        this.colmod = colisionmod;
+        this.radius = ((Math.sqrt((this.width+this.colmod)**2 + (this.height+this.colmod)**2))/2)
+        this.exclusiveactive = false
     }
 
     this.update = function() {
         this.turnrad = this.height/tan(this.turndeg)
+
         if(fps >= 8) {
             this.arcdeg = degrees(this.speed/this.turnrad)
             this.theta = 90 - ((180-this.arcdeg)/2)
             this.angularspeed = sin(this.arcdeg)/(sin((180-this.arcdeg)/2)/this.turnrad)
             this.angle += (this.speed/radians(this.turnrad))/fps
-            this.angle = this.angle%360
+            this.angle = mod360(this.angle)
             if(this.turndeg != 0 && this.speed != 0) {
                 this.x -= (this.angularspeed * (sin(this.angle)))/fps
                 this.y += (this.angularspeed * (cos(this.angle)))/fps
@@ -366,72 +367,103 @@ function car(cartype, x, y, angle, speed, turn, logicID=0, layer=2) {
         canvas.rotate(radians(this.pos[2]));
 
         if(this.logicid >= 0) {
-
+            this.exclusiveactive = false
             for(i = 0; i < carscripts[this.logicid].length; i++) {
+                if(this.exclusiveactive == false) {
+                    //console.debug(this.angle)
+                    this.scactive = false
 
-                this.scactive = false
+                    this.pathintersect = carscripts[this.logicid][i][0]
+                    this.pathtype = carscripts[this.logicid][i][1]
+                    this.pathdist = carscripts[this.logicid][i][2]
+                    this.result = carscripts[this.logicid][i][3]
 
-                this.pathintersect = carscripts[this.logicid][i][0]
-                this.pathtype = carscripts[this.logicid][i][1]
-                this.pathdist = carscripts[this.logicid][i][2]
-                this.result = carscripts[this.logicid][i][3]
-
-                if(this.pathtype == 1) {
-                    this.pathpoint = [this.x + (this.pathdist * sin(this.angle)), this.y + (this.pathdist * cos(this.angle))]
-                } else {
-                    this.pathpoint = [this.x + (this.turnrad * cos(degrees(this.pathdist/this.turnrad))), this.y + (this.turnrad * sin(degrees(this.pathdist/this.turnrad)))]
-                }
-                
-                if(this.pathintersect == 1) {
-                    this.layersel = 4
-                } else if (this.pathintersect == 2) { 
-                    this.layersel = 3
-                } else if (this.pathintersect == 3) { 
-                    this.layersel = 2
-                } else if (this.pathintersect == 4) { 
-                    this.layersel = 5
-                }
-
-                if(this.pathintersect == 0 && !this.logicactive) {
-                    if(this.pathtype == 1 && round(this.x) == this.pathdist) {
-                        this.scactive = true
-                    } else if (this.pathtype == 2 && round(this.y) == this.pathdist) {
-                        this.scactive = true
-                    } else if (this.pathtype == 3 && round(this.angle) == this.pathdist) {
-                        this.scactive = true
-                    } else if (this.pathtype == 3 && round(this.speed) == this.pathdist) {
-                        this.scactive = true
+                    if(this.pathtype == 1) {
+                        this.pathpoint = [this.x - (this.pathdist * sin(this.angle)), this.y + (this.pathdist * cos(this.angle))]
+                    } else {
+                        this.pathpoint = [this.x - (this.turnrad * cos(degrees(this.pathdist/this.turnrad))), this.y + (this.turnrad * sin(degrees(this.pathdist/this.turnrad)))]
                     }
-                }
+                    
+                    if(this.pathintersect == 1) {
+                        this.layersel = 4
+                    } else if (this.pathintersect == 2) { 
+                        this.layersel = 3
+                    } else if (this.pathintersect == 3) { 
+                        this.layersel = 2
+                    } else if (this.pathintersect == 4) { 
+                        this.layersel = 5
+                    }
 
-                if (this.pathintersect == 1 || this.pathintersect == 2 || this.pathintersect == 3 || this.pathintersect == 4) {
-                    for (j = 0; j < maps[map-1].length; j++) {
-                        if(maps[map-1][j].type == 1 || maps[map-1][j].type == 2) {
-                            if(maps[map-1][j].layer == this.layersel) {
-                                if(maps[map-1][j].testpoint(this.pathpoint[0], this.pathpoint[1])) {
-                                    this.scactive = true
-                                    this.logicactive = true
-                                }
-                            }
-                            
+                    if(this.pathintersect == 0 && !this.logicactive) {
+                        if(this.pathtype == 1 && this.x >= this.pathdist[0] - this.pathdist[1] && this.x <= this.pathdist[0] + this.pathdist[1]) {
+                            this.scactive = true
+                            this.x = this.pathdist[0]
+                        } else if (this.pathtype == 2 && this.y >= this.pathdist[0] - this.pathdist[1] && this.y <= this.pathdist[0] + this.pathdist[1]) {
+                            this.scactive = true
+                            this.y = this.pathdist[0]
+                        } else if (this.pathtype == 3 && (mod360(this.angle)) >= this.pathdist[0] - this.pathdist[1] && (mod360(this.angle)) <= this.pathdist[0] + this.pathdist[1]) {
+                            this.scactive = true
+                            this.angle = this.pathdist[0]
+                        } else if (this.pathtype == 4 && this.speed >= this.pathdist[0] - this.pathdist[1] && this.speed <= this.pathdist[0] + this.pathdist[1]) {
+                            this.scactive = true
+                            this.speed = this.pathdist[0]
                         }
                     }
-                }
 
-                if(this.scactive == true) {
-                    this.x += this.result[0]
-                    this.y += this.result[1]
-                    this.turndeg = this.result[2]
-                    if((this.result[4] == true && this.recspeed >= 0) || (this.result[4] == false)) {
-                        this.speed += this.result[3]
-                    } else {
-                        this.speed -= this.result[3]
+                    if (this.pathintersect == 1 || this.pathintersect == 2 || this.pathintersect == 3 || this.pathintersect == 4) {
+                        for (j = 0; j < maps[map-1].length; j++) {
+                            if(maps[map-1][j].type == 1 || maps[map-1][j].type == 2) {
+                                if(maps[map-1][j].layer == this.layersel) {
+                                    if(maps[map-1][j].testpoint(this.pathpoint[0], this.pathpoint[1])) {
+                                        this.scactive = true
+                                        this.logicactive = true
+                                    }
+                                }
+                                
+                            }
+                        }
                     }
-                } else {
-                    this.logicactive = false
+
+                    if(this.scactive == true) {
+                        this.exclusiveactive = carscripts[this.logicid][i][4]
+                        this.x += this.result[0]
+                        this.y += this.result[1]
+                        if (this.result[4] == 1) {
+                            this.turndeg = this.result[2]
+                            //console.debug(this.turndeg, this.angle, this.angle%360)
+                        } else if (this.result[4] == 2) {
+                            this.angle += this.result[2]
+                        } else {
+                            this.angle = this.result[2]
+                        }
+                        if((this.result[5] == true && this.recspeed >= 0) || (this.result[5] == false)) {
+                            this.speed += this.result[3]
+                        } else {
+                            this.speed -= this.result[3]
+                        }
+                    } else {
+                        this.logicactive = false
+                    }
                 }
             }
         }
+
+        if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
+            this.poscorner = [(this.x + (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y + (sin(this.angle+invtan(this.height/this.width))*this.radius))]
+            this.negcorner = [(this.x - (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y - (sin(this.angle+invtan(this.height/this.width))*this.radius))]
+            this.offset = 90
+            for (this.i = 0; this.i < player.distances.length; this.i++) {
+                this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                this.touch = false
+                if(this.angle >= this.offset && this.angle < this.offset+90) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}} 
+                else if(this.angle >= this.offset+90 && this.angle < this.offset+180) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}}
+                else if(this.angle >= this.offset+180 && this.angle < this.offset+270) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
+                else {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
+                if (this.touch) {player.reset()}
+            }
+        }
+
         canvas.drawImage(this.fill, (this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
         canvas.restore();
         upcount++
