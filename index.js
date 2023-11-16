@@ -139,6 +139,8 @@ var gameWindow = {
             window.addEventListener('devicemotion', handleOrientation);
         }
 
+        document.addEventListener("touchmove", function(e) { e.preventDefault() });
+
         alpha = 0;
         beta = 0;
         gamma = 0;
