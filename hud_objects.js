@@ -150,10 +150,11 @@ var pausemenu = {
         pausebuttoncanvas = gameWindow.context;
         pausebuttoncanvas.fillStyle = this.pbcolor;
         pausebuttoncanvas.beginPath();
-        pausebuttoncanvas.arc(0,0,((gameWindow.canvas.height/15)),0,2*Math.PI);
+        this.pbscale = (80*(((gameWindow.canvas.width+gameWindow.canvas.height)**0.5)/55))
+        pausebuttoncanvas.arc(0,0,this.pbscale,0,2*Math.PI);
         pausebuttoncanvas.closePath();
         pausebuttoncanvas.fill();
-        pausebuttoncanvas.drawImage(this.pauseimage, gameWindow.canvas.height/120, gameWindow.canvas.height/120, gameWindow.canvas.height/30, gameWindow.canvas.height/30);
+        pausebuttoncanvas.drawImage(this.pauseimage, gameWindow.canvas.height/120, gameWindow.canvas.height/120, this.pbscale*0.5, this.pbscale*0.5);
 
         bg = gameWindow.context;
         bg.fillStyle = "black";
@@ -167,7 +168,7 @@ var pausemenu = {
 
         if(!pausemenu.paused) {
             for(this.o = 0; this.o < allpos.length; this.o++) {
-                if((allpos[this.o][0] <= gameWindow.canvas.height/20) && (allpos[this.o][1] <= gameWindow.canvas.height/20)) {
+                if((allpos[this.o][0] <= this.pbscale) && (allpos[this.o][1] <= this.pbscale)) {
                     this.pbcolor = "#49545b"
                     if (allpos[this.o][2] == 1) {
                         pausemenu.toggle()

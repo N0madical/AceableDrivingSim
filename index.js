@@ -35,7 +35,7 @@ var upcount = 0;
 window.onload = function() {
     // Import Settings
     player_position = configs[map-1][0];
-    zoom = configs[map-1][1];
+    zoom = configs[map-1][1]
     
     // Start The Game
     gameWindow.start(player_position[0], player_position[1], player_position[2], zoom);
@@ -74,7 +74,7 @@ window.onload = function() {
         }
 
         updatelist[i].id = i
-    }
+    };
 
 }
 
@@ -161,7 +161,7 @@ var camera = {
         this.cx = x;
         this.cy = y;
         this.cangle = angle;
-        this.czoom = zoom;
+        this.czoom = zoom * ((gameWindow.canvas.height**0.5)/(1080**0.5));
     },
 
     // Objects use the position function to get position relative to player
