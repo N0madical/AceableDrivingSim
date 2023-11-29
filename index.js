@@ -354,6 +354,15 @@ function updateGameWindow() {
     
     // Pause Menu (WIP)
     if(esc) {pausemenu.toggle(); console.info("Esc pressed")}
+
+    if(mobileTouch[0][2] == 1 && !pausemenu.controlschosen) {
+        pausemenu.controls()
+    }
+
+    // //Check for dialog
+    // if(pausemenu.menu == -1) {
+    //     pausemenu.controlsdialog()
+    // }
     
     // Load all objects, upcount allows objects to notify loader when they complete loading to avoid async overlap
 

@@ -11,6 +11,7 @@ var pausemenu = {
         this.tempfps = maxfps
         this.active = 0
         this.blurstep = 2;
+        this.controlschosen = false;
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
@@ -29,9 +30,14 @@ var pausemenu = {
         this.Szoomnumber = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*7, text=`${camera.czoom}%`, justify="center", size=20, font="Arial", color="white")
         this.Szoomslider = new slider(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*8, width=150, height=20, zoom, 25, 200, "#49545b", "white", 5)
         this.Sdebugtext = new displaytext(x=((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2)) + gameWindow.canvas.width/1.11, y=((gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2)) + gameWindow.canvas.height/1.12, text=`Debug: ${debug}`, justify="right", size=10, font="Arial", color="white")
-        
+
+        this.controlstitle = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/4), text=`Choose Your Conrols Type`, justify="center", size=80, font="Arial", color="white")
+        this.choosecontrols = new displaytext(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
+        this.choosemotion = new displaytext(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
+
         this.mainmenutext = [this.title, this.resume, this.restart, this.ability, this.settings]
         this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom, this.Szoomnumber, this.Szoomslider, this.Sdebugtext]
+        this.choosesettingsdialog = [this.controlstitle, this.choosecontrols, this.choosemotion]
         //updatelist = updatelist.concat(this.menutext)
     },
 
@@ -46,7 +52,13 @@ var pausemenu = {
             player.paused = false;
         }
     },
-//((-500) + this.blur*8)
+
+    controls : function() {
+        pausemenu.menu = -1
+        this.paused = true;
+        player.paused = true;
+    },
+
     mainmenu : function() {
         if(pausemenu.menu == 1) {
             canvas = gameWindow.context;
@@ -104,6 +116,30 @@ var pausemenu = {
                     }
                 }
             }
+        }
+    },
+
+    configmenu : function() {
+        if(this.menu == -1) {
+            canvas = gameWindow.context;
+            canvas.fillStyle = "#1b2932"; 
+            canvas.globalAlpha = ((this.blur * (100/this.maxblur))/100)
+            canvas.fillRect((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2), (gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/3), gameWindow.canvas.width/1.1, gameWindow.canvas.height/1.8)
+            canvas.globalAlpha = 1
+
+            canvas.fillStyle = "#49545b"; 
+            canvas.globalAlpha = 1
+            canvas.fillRect((gameWindow.canvas.width/2)-(gameWindow.canvas.width/2.5)-(gameWindow.canvas.width/50), (gameWindow.canvas.height/2)-(gameWindow.canvas.height/5), gameWindow.canvas.width/2.5, gameWindow.canvas.height/2.5)
+            canvas.fillRect((gameWindow.canvas.width/2)+(gameWindow.canvas.width/50), (gameWindow.canvas.height/2)-(gameWindow.canvas.height/5), gameWindow.canvas.width/2.5, gameWindow.canvas.height/2.5)
+
+            for (i = 0; i < this.choosesettingsdialog.length; i++) {
+                this.choosesettingsdialog[i].update()
+            }
+
+            this.choosecontrols.x = (gameWindow.canvas.width/2)-(gameWindow.canvas.width/4.5)
+            this.choosemotion.x = (gameWindow.canvas.width/2)+(gameWindow.canvas.width/4.5)
+
+            this.controlschosen = true;
         }
     },
 
@@ -165,6 +201,8 @@ var pausemenu = {
         pausemenu.mainmenu()
 
         pausemenu.settingsmenu()
+
+        pausemenu.configmenu()
 
         if(!pausemenu.paused) {
             for(this.o = 0; this.o < allpos.length; this.o++) {
