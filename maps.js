@@ -342,3 +342,21 @@ carscripts = [
         [2, 1, 5, [0,0,70,0, 1, false]],
     ],
 ]
+
+//GUI
+//hudRect: x, y, width, height, color, autoresize, transparency
+//hudText: text, x, y, size, align, color, alpha, font
+guipages = [
+    hud = [
+        fpscount = new hudText("FPS: Error", 99.5, 0.5, size=15, justify="right"),
+    ],
+    debughud = [
+        speedometer = new hudText("Speed: Error", 0.5, 1, size=30),
+        posdebug = new hudText("Position: Error", 0.5, 1.5, size=30),
+        border = new carborder(),
+    ],
+    square = [
+        new hudRect(50, 50, 50, 50, "black", true),
+        new hudText("Hello There!", 50, 50, 30, justify="center"),
+    ],
+]

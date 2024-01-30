@@ -16,24 +16,24 @@ var pausemenu = {
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
 
-        this.title = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Paused", justify="left", size=100, font="Arial", color="white")
-        this.resume = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
-        this.restart = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "left", size=50, font="Arial", color="white")
-        this.ability = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
-        this.settings = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "left", size=50, font="Arial", color="white")
+        this.title = new hudText(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Paused", justify="left", size=100, font="Arial", color="white")
+        this.resume = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
+        this.restart = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "left", size=50, font="Arial", color="white")
+        this.ability = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
+        this.settings = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "left", size=50, font="Arial", color="white")
 
-        this.settingstitle = new displaytext(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/20)*3), text="Settings", justify="center", size=100, font="Arial", color="white")
-        this.Smaxfps = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*6, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
-        this.Smaxfpsnumber = new displaytext(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*7, text=maxfps, justify="center", size=20, font="Arial", color="white")
+        this.settingstitle = new hudText(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/20)*3), text="Settings", justify="center", size=100, font="Arial", color="white")
+        this.Smaxfps = new hudText(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*6, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
+        this.Smaxfpsnumber = new hudText(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*7, text=maxfps, justify="center", size=20, font="Arial", color="white")
         this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*8, width=150, height=20, maxfps, 10, 300, "#49545b", "white", 5)
-        this.Szoom = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*6, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
-        this.Szoomnumber = new displaytext(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*7, text=`${camera.czoom}%`, justify="center", size=20, font="Arial", color="white")
+        this.Szoom = new hudText(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*6, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
+        this.Szoomnumber = new hudText(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*7, text=`${camera.czoom}%`, justify="center", size=20, font="Arial", color="white")
         this.Szoomslider = new slider(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*8, width=150, height=20, zoom, 25, 200, "#49545b", "white", 5)
-        this.Sdebugtext = new displaytext(x=((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2)) + gameWindow.canvas.width/1.11, y=((gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2)) + gameWindow.canvas.height/1.12, text=`Debug: ${debug}`, justify="right", size=10, font="Arial", color="white")
+        this.Sdebugtext = new hudText(x=((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2)) + gameWindow.canvas.width/1.11, y=((gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2)) + gameWindow.canvas.height/1.12, text=`Debug: ${debug}`, justify="right", size=10, font="Arial", color="white")
 
-        this.controlstitle = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/4), text=`Choose Your Conrols Type`, justify="center", size=80, font="Arial", color="white")
-        this.choosecontrols = new displaytext(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
-        this.choosemotion = new displaytext(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
+        this.controlstitle = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/4), text=`Choose Your Conrols Type`, justify="center", size=80, font="Arial", color="white")
+        this.choosecontrols = new hudText(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
+        this.choosemotion = new hudText(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
 
         this.mainmenutext = [this.title, this.resume, this.restart, this.ability, this.settings]
         this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom, this.Szoomnumber, this.Szoomslider, this.Sdebugtext]
@@ -240,15 +240,15 @@ var finishscreen = {
 
         this.tabimage = this.tabbg
 
-        this.complete = new displaytext(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
+        this.complete = new hudText(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
 
         this.textrender = [
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*3, text="Congratulations!", justify="center", size=125, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*5, text="Level Complete", justify="center", size=35, font="Arial", color="white"),
-            new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*9, text="Score:", justify="center", size=35, font="Arial", color="white"),
-            this.acctext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*15, text="Accuracy:", justify="center", size=35, font="Arial", color="white"),
-            this.dirtext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*16.5, text="Angle:", justify="center", size=35, font="Arial", color="white"),
-            this.fittext = new displaytext(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*18, text="Left/Right:", justify="center", size=35, font="Arial", color="white"),
+            new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*3, text="Congratulations!", justify="center", size=125, font="Arial", color="white"),
+            new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*5, text="Level Complete", justify="center", size=35, font="Arial", color="white"),
+            new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*9, text="Score:", justify="center", size=35, font="Arial", color="white"),
+            this.acctext = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*15, text="Accuracy:", justify="center", size=35, font="Arial", color="white"),
+            this.dirtext = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*16.5, text="Angle:", justify="center", size=35, font="Arial", color="white"),
+            this.fittext = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*18, text="Left/Right:", justify="center", size=35, font="Arial", color="white"),
         ]
     },
 
@@ -357,8 +357,30 @@ function carborder() {
     }
 }
 
+function hudRect(x, y, width, height, color, resize=true, alpha=1) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.resize = resize;
+    this.alpha = alpha;
+
+    this.update = function() {
+        this.realwidth = (this.resize) ? (this.width*(gameWindow.canvas.width/(100))):(this.width*(1920/(100)))
+        this.realheight = (this.resize) ? (this.height*(gameWindow.canvas.height/(100))):(this.height*(1080/(100)))
+        this.realx = (this.x*(gameWindow.canvas.width/100))-(this.realwidth/2)
+        this.realy = (this.y*(gameWindow.canvas.height/100))-(this.realheight/2)
+        this.canvas = gameWindow.context
+        this.canvas.fillStyle = this.color;
+        this.canvas.globalAlpha = this.alpha;
+        this.canvas.fillRect(this.realx,this.realy,this.realwidth,this.realheight);
+        this.canvas.globalAlpha = 1.0;
+    }
+}
+
 // Loads text into the player HUD
-function displaytext(x, y, text, justify, size, font="Arial", color="white") {
+function hudText(text, x, y, size, justify="left", color="white", alpha=1, font="Arial") {
     this.x = x;
     this.y = y;
     this.text = text;
@@ -366,7 +388,7 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
     this.size = size;
     this.font = font;
     this.color = color;
-    this.alpha = 100;
+    this.alpha = alpha;
     this.width = this.size;
     this.height = (this.size/3)*2;
 
@@ -385,11 +407,14 @@ function displaytext(x, y, text, justify, size, font="Arial", color="white") {
         } else {
             this.jpos = 0;
         }
-        canvas.globalAlpha = (this.alpha/100);
+        canvas.globalAlpha = this.alpha;
+        this.realx = this.x*(gameWindow.canvas.width/100)
+        this.realy = this.y*(gameWindow.canvas.height/100)
 
-        canvas.fillText(this.text, this.x - this.jpos, this.y + this.height/2);
+        canvas.fillText(this.text, this.realx - this.jpos, this.realy + this.height/2);
         canvas.globalAlpha = 1;
         upcount++
+        if(this.text == "IAmText"){console.debug(this.realx, this.realy, this.alpha)}
     }
 }
 

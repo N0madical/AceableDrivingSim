@@ -43,20 +43,11 @@ window.onload = function() {
 
     // Load Debug HUD (If applicable)
     if (debug) {
-        fpscount = new displaytext(50, 50, "FPS: Error", "left", size=30);
-        speedometer = new displaytext(50, 100, "Speed: Error", "left", size=30);
-        posdebug = new displaytext(50, 150, "Position: Error", "left", size=30);
-        border = new carborder();
-    } else {
-        fpscount = new displaytext(gameWindow.canvas.width-2, 10, "FPS: Error", "right", size=15);
+        fpscount.x = 0.5; fpscount.y = 0.5; fpscount.size = 30
     }
 
     // Sprides to be loaded on all maps
-    if(debug) {
-        spritelist = [player, border, fpscount, speedometer, posdebug, finishscreen, pausemenu]
-    } else {
-        spritelist = [player, fpscount, finishscreen, pausemenu]
-    }
+    spritelist = [player, finishscreen, pausemenu]
     
     // Import selected map
     updatelist = maps[map-1].concat(spritelist);
@@ -203,7 +194,7 @@ var player = {
         this.wheeldistance = Math.sqrt(Math.pow(this.height/3,2) + Math.pow(this.width/3,2))
         this.wheelangles = [30,150,210,330]
 
-        this.finished = new displaytext()
+        this.finished = new hudText()
     },
 
     // Move The Sprite When Update Is Called
@@ -441,6 +432,8 @@ function updateGameWindow() {
     //     updatelist[upcount].update();
     // }
 
+    updateAll(square, hud)
+
 }
 
 // Custom Functions
@@ -500,4 +493,11 @@ function average(list) {
     this.sum = 0
     for(this.i = 0; this.i <= list.length-1; this.i++) {this.sum += list[i]}
     return this.sum/list.length
+}
+function updateAll(...list) {
+    for(let j in list) {
+        for(let i in list[j]) {
+            list[j][i].update()
+        }
+    }
 }
