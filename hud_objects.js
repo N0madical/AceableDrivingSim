@@ -16,12 +16,6 @@ var pausemenu = {
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
 
-        this.title = new hudText(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/10)*1.5), text="Paused", justify="left", size=100, font="Arial", color="white")
-        this.resume = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*4, text="Resume Game", "left", size=50, font="Arial", color="white")
-        this.restart = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*5, text="Restart Game", "left", size=50, font="Arial", color="white")
-        this.ability = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*7, text="Accessability", "left", size=50, font="Arial", color="white")
-        this.settings = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/10)*8, text="Settings", "left", size=50, font="Arial", color="white")
-
         this.settingstitle = new hudText(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/20)*3), text="Settings", justify="center", size=100, font="Arial", color="white")
         this.Smaxfps = new hudText(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*6, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
         this.Smaxfpsnumber = new hudText(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*7, text=maxfps, justify="center", size=20, font="Arial", color="white")
@@ -35,7 +29,6 @@ var pausemenu = {
         this.choosecontrols = new hudText(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
         this.choosemotion = new hudText(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
 
-        this.mainmenutext = [this.title, this.resume, this.restart, this.ability, this.settings]
         this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom, this.Szoomnumber, this.Szoomslider, this.Sdebugtext]
         this.choosesettingsdialog = [this.controlstitle, this.choosecontrols, this.choosemotion]
         //updatelist = updatelist.concat(this.menutext)
@@ -60,6 +53,7 @@ var pausemenu = {
     },
 
     mainmenu : function() {
+        this.mainmenutext = mainmenutext
         if(pausemenu.menu == 1) {
             canvas = gameWindow.context;
             canvas.setTransform(1, 0, 0, 1, 0, 0);
@@ -86,20 +80,14 @@ var pausemenu = {
 
             for(i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
-                this.mainmenutext[i].x = gameWindow.canvas.width/22 - ((1-(this.blur/this.maxblur))*this.mainmenutext[0].width*2);
-                if(i == 0) {
-                    this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+1.5)
-                } else if (i <= 2) {
-                    this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+3)
-                } else if (i <= 4) {
-                    this.mainmenutext[i].y = (gameWindow.canvas.height/10)*(i+4)
-                }
+                console.debug(this.blur)
+                this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;
                 this.mainmenutext[i].update()
 
                 for(this.j = 0; this.j < allpos.length; this.j++) {
-                    if ((allpos[this.j][0] <= 500) && ((allpos[this.j][1] >= (this.mainmenutext[i].y-gameWindow.canvas.height/20)) && (allpos[this.j][1] <= (this.mainmenutext[i].y+gameWindow.canvas.height/20))) && (i != 0)) {
-                        if (Math.round(this.selheight) != this.mainmenutext[i].y){
-                            this.selheight += (this.mainmenutext[i].y - this.selheight)/1.5
+                    if ((allpos[this.j][0] <= 500) && ((allpos[this.j][1] >= (this.mainmenutext[i].realy-gameWindow.canvas.height/20)) && (allpos[this.j][1] <= (this.mainmenutext[i].realy+gameWindow.canvas.height/20))) && (i != 0)) {
+                        if (Math.round(this.selheight) != this.mainmenutext[i].realy){
+                            this.selheight += (this.mainmenutext[i].realy - this.selheight)/5
                         }
                         
                         if(allpos[this.j][2] == 1 && pausemenu.paused == 1) {
@@ -414,7 +402,6 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
         canvas.fillText(this.text, this.realx - this.jpos, this.realy + this.height/2);
         canvas.globalAlpha = 1;
         upcount++
-        if(this.text == "IAmText"){console.debug(this.realx, this.realy, this.alpha)}
     }
 }
 

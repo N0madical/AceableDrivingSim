@@ -348,12 +348,19 @@ carscripts = [
 //hudText: text, x, y, size, align, color, alpha, font
 guipages = [
     hud = [
-        fpscount = new hudText("FPS: Error", 99.5, 0.5, size=15, justify="right"),
+        fpscount = new hudText("FPS: Error", 99.5, 1.25, size=15, justify="right"),
     ],
     debughud = [
         speedometer = new hudText("Speed: Error", 0.5, 1, size=30),
         posdebug = new hudText("Position: Error", 0.5, 1.5, size=30),
         border = new carborder(),
+    ],
+    mainmenutext = [
+        new hudText("Paused", 20, 10, 100, justify="left"),
+        new hudText("Resume Game", 20, 30, 50, justify="left"),
+        new hudText("Restart Game", 20, 50, 50, justify="left"),
+        new hudText("Accessability", 20, 70, 50, justify="left"),
+        new hudText("Settings", 20, 90, 50, justify="left"),
     ],
     square = [
         new hudRect(50, 50, 50, 50, "black", true),

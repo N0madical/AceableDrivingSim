@@ -44,6 +44,7 @@ window.onload = function() {
     // Load Debug HUD (If applicable)
     if (debug) {
         fpscount.x = 0.5; fpscount.y = 0.5; fpscount.size = 30
+        console.debug("hi")
     }
 
     // Sprides to be loaded on all maps
@@ -296,17 +297,15 @@ function updateGameWindow() {
         if (debug) {
             speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
             posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
-        } else {
-            fpscount.size = 15*(1920/gameWindow.canvas.width)
         }
         fps = fpsrec * 4;
         fpsrec = 0;
     }
     if(debug == false) {
         if((mousepos[0] >= gameWindow.canvas.width-100) && (mousepos[1] <= 20)) {
-            fpscount.x = gameWindow.canvas.width-2
+            fpscount.alpha = 1
         } else {
-            fpscount.x = gameWindow.canvas.width+200
+            fpscount.alpha = 0
         }
     }
 
@@ -432,7 +431,7 @@ function updateGameWindow() {
     //     updatelist[upcount].update();
     // }
 
-    updateAll(square, hud)
+    updateAll(hud)
 
 }
 
