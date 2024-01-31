@@ -345,9 +345,9 @@ function updateGameWindow() {
     // Pause Menu (WIP)
     if(esc) {pausemenu.toggle(); console.info("Esc pressed")}
 
-    if(mobileTouch[0][2] == 1 && !pausemenu.controlschosen) {
-        pausemenu.controls()
-    }
+    // if(mobileTouch[0][2] == 1 && !pausemenu.controlschosen) {
+    //     pausemenu.controls()
+    // }
 
     // //Check for dialog
     // if(pausemenu.menu == -1) {
