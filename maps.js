@@ -344,8 +344,9 @@ carscripts = [
 ]
 
 //GUI
-//hudRect: x, y, width, height, color, autoresize, transparency
+//hudRect: x, y, width, height, color, image, autoresize, transparency
 //hudText: text, x, y, size, align, color, alpha, font
+//hudSlider: x, y, width, height, value, min, max, barcolor, handlecolor, step
 guipages = [
     hud = [
         fpscount = new hudText("FPS: Error", 99.5, 1.25, size=15, justify="right"),
@@ -362,8 +363,33 @@ guipages = [
         new hudText("Accessability", 20, 70, 50, justify="left"),
         new hudText("Settings", 20, 90, 50, justify="left"),
     ],
-    square = [
-        new hudRect(50, 50, 50, 50, "black", true),
-        new hudText("Hello There!", 50, 50, 30, justify="center"),
+    settingsmenutext = [
+        new hudRect(50, 50, 80, 80, "#1b2932"),
+        new hudText("Settings", 50, 20, 100, "center"),
+        new hudSlider(30, 40, 10, 2, maxfps, 30, 300, "#49545b", "white", 5),
+        new hudSlider(70, 40, 10, 2, zoom, 50, 200, "#49545b", "white", 5),
+        new hudText("Max Fps: -", 30, 35, 30, "center"),
+        new hudText("Zoom: -", 70, 35, 30, "center"),
+        new hudText("Debug: -", 89, 88, 10, "right"),
+        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "testFunction"),
     ],
+    acctext = [
+        new hudRect(50, 50, 80, 80, "#1b2932"),
+        new hudText("Accessibility", 50, 20, 100, "center"),
+        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "testFunction"),
+    ],
+    finishscreentext = [
+        new hudRect(50, 50, 100, 100, "#000000", false, "both", 0.8),
+        new hudText("Congratulations!", 50, 15, 100, "center"),
+        new hudText("Level Complete!", 50, 22, 20, "center"),
+        new hudText("Score:", 50, 43, 30, "center"),
+        new hudText("Pull-In Accuracy:", 50, 75, 30, "center"),
+        new hudText("Angle Accuracy:", 50, 80, 30, "center"),
+        new hudText("Left/Right Accuracy:", 50, 85, 30, "center"),
+        new hudRect(40, 50, 5.625, 10, "star.png", true, "equal"),
+        new hudRect(45, 50, 5.625, 10, "star.png", true, "equal"),
+        new hudRect(50, 50, 5.625, 10, "star.png", true, "equal"),
+        new hudRect(55, 50, 5.625, 10, "star.png", true, "equal"),
+        new hudRect(60, 50, 5.625, 10, "star.png", true, "equal"),
+    ]
 ]

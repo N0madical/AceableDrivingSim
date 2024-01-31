@@ -16,20 +16,10 @@ var pausemenu = {
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
 
-        this.settingstitle = new hudText(x=(gameWindow.canvas.width/2), y=((gameWindow.canvas.height/20)*3), text="Settings", justify="center", size=100, font="Arial", color="white")
-        this.Smaxfps = new hudText(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*6, text="Set Max FPS", justify="center", size=40, font="Arial", color="white")
-        this.Smaxfpsnumber = new hudText(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*7, text=maxfps, justify="center", size=20, font="Arial", color="white")
-        this.Smaxfpsslider = new slider(x=(gameWindow.canvas.width/4)*1, y=(gameWindow.canvas.height/20)*8, width=150, height=20, maxfps, 10, 300, "#49545b", "white", 5)
-        this.Szoom = new hudText(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*6, text="Set View Zoom", justify="center", size=40, font="Arial", color="white")
-        this.Szoomnumber = new hudText(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*7, text=`${camera.czoom}%`, justify="center", size=20, font="Arial", color="white")
-        this.Szoomslider = new slider(x=(gameWindow.canvas.width/4)*3, y=(gameWindow.canvas.height/20)*8, width=150, height=20, zoom, 25, 200, "#49545b", "white", 5)
-        this.Sdebugtext = new hudText(x=((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2)) + gameWindow.canvas.width/1.11, y=((gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2)) + gameWindow.canvas.height/1.12, text=`Debug: ${debug}`, justify="right", size=10, font="Arial", color="white")
+        // this.controlstitle = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/4), text=`Choose Your Conrols Type`, justify="center", size=80, font="Arial", color="white")
+        // this.choosecontrols = new hudText(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
+        // this.choosemotion = new hudText(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
 
-        this.controlstitle = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/4), text=`Choose Your Conrols Type`, justify="center", size=80, font="Arial", color="white")
-        this.choosecontrols = new hudText(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
-        this.choosemotion = new hudText(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
-
-        this.settingsmenutext = [this.settingstitle, this.Smaxfps, this.Smaxfpsnumber, this.Smaxfpsslider, this.Szoom, this.Szoomnumber, this.Szoomslider, this.Sdebugtext]
         this.choosesettingsdialog = [this.controlstitle, this.choosecontrols, this.choosemotion]
         //updatelist = updatelist.concat(this.menutext)
     },
@@ -80,7 +70,6 @@ var pausemenu = {
 
             for(i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
-                console.debug(this.blur)
                 this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;
                 this.mainmenutext[i].update()
 
@@ -99,6 +88,8 @@ var pausemenu = {
                                 pausemenu.toggle()
                             } else if (i == 4) {
                                 pausemenu.menu = 2
+                            } else if (i == 3) {
+                                pausemenu.menu = 3
                             }
                         }
                     }
@@ -133,23 +124,21 @@ var pausemenu = {
 
     settingsmenu : function() {
         if(this.menu == 2) {
-            canvas = gameWindow.context;
-            canvas.fillStyle = "#1b2932"; 
-            canvas.globalAlpha = ((this.blur * (100/this.maxblur))/100)
-            canvas.fillRect((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2), (gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/2), gameWindow.canvas.width/1.1, gameWindow.canvas.height/1.1)
-            canvas.globalAlpha = 1
+            updateAll(settingsmenutext)
 
-            for (i = 0; i < this.settingsmenutext.length; i++) {
-                this.settingsmenutext[i].update()
-            }
+            maxfps = settingsmenutext[2].value
+            settingsmenutext[4].text = `Max Fps: ${maxfps}`
 
-            maxfps = this.Smaxfpsslider.value
-            this.Smaxfpsnumber.text = maxfps
+            camera.czoom = settingsmenutext[3].value
+            settingsmenutext[5].text = `Zoom: ${camera.czoom}%`
 
-            camera.czoom = this.Szoomslider.value
-            this.Szoomnumber.text = `${camera.czoom}%`
+            settingsmenutext[6].text = `Debug: ${debug}`
+        }
+    },
 
-            this.Sdebugtext.text = `Debug: ${debug}`
+    accmenu : function() {
+        if(this.menu == 3) {
+            updateAll(acctext)
         }
     },
 
@@ -189,6 +178,7 @@ var pausemenu = {
         pausemenu.mainmenu()
 
         pausemenu.settingsmenu()
+        pausemenu.accmenu()
 
         pausemenu.configmenu()
 
@@ -241,6 +231,7 @@ var finishscreen = {
     },
 
     update : function() {
+
         this.textrender[0].y = (gameWindow.canvas.height/20)*3
         this.textrender[1].y = (gameWindow.canvas.height/20)*5
         this.textrender[2].y = (gameWindow.canvas.height/20)*9
@@ -284,17 +275,12 @@ var finishscreen = {
         }
 
         if(this.finished) {
+            updateAll(finishscreentext)
             player.paused = true
 
-            canvas = gameWindow.context
-            canvas.fillStyle = "black";
-            canvas.globalAlpha = 0.8;
-            canvas.fillRect(0,0,gameWindow.canvas.width,gameWindow.canvas.height);
-            canvas.globalAlpha = 1.0;
-
-            this.acctext.text = `Pull-In Accuracy: ${round(this.score_accuracy*100)}%`
-            this.dirtext.text = `Angle Accuracy: ${round(this.score_direction*100)}%`
-            this.fittext.text = `Left/Right Accuracy: ${round(this.score_distance*100)}%`
+            finishscreentext[4].text = `Pull-In Accuracy: ${Round(this.score_accuracy*100)}%`
+            finishscreentext[5].text = `Angle Accuracy: ${Round(this.score_direction*100)}%`
+            finishscreentext[6].text = `Left/Right Accuracy: ${Round(this.score_distance*100)}%`
 
             for(this.i = 0; this.i < this.textrender.length; this.i++) {
                 this.textrender[this.i].x = (gameWindow.canvas.width/2)
@@ -303,14 +289,14 @@ var finishscreen = {
 
             this.score = (this.score_accuracy+this.score_direction+this.score_distance)/3
 
-            this.maxstarsize = gameWindow.canvas.height/6
-            if (Math.round(this.starsize) != this.maxstarsize){
-                this.starsize += (this.maxstarsize - this.starsize)/(fps/10)
-            }
+            // this.maxstarsize = gameWindow.canvas.height/6
+            // if (Math.round(this.starsize) != this.maxstarsize){
+            //     this.starsize += (this.maxstarsize - this.starsize)/(fps/10)
+            // }
 
-            for(this.i = 0; this.i < Math.round(this.score*5); this.i++) {
-                canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((((round(this.score*5)+1)/2) * (this.maxstarsize*0.75)) - (this.maxstarsize*0.25))) + (this.i*(this.maxstarsize*0.75)), (gameWindow.canvas.height/20)*9, this.starsize, this.starsize);
-            }
+            // for(this.i = 0; this.i < Math.round(this.score*5); this.i++) {
+            //     canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((((round(this.score*5)+1)/2) * (this.maxstarsize*0.75)) - (this.maxstarsize*0.25))) + (this.i*(this.maxstarsize*0.75)), (gameWindow.canvas.height/20)*9, this.starsize, this.starsize);
+            // }
         }
         upcount++;
     },
@@ -345,30 +331,54 @@ function carborder() {
     }
 }
 
-function hudRect(x, y, width, height, color, resize=true, alpha=1) {
+function hudRect(x, y, width, height, fill, image=false, resize="both", alpha=1, clickevent="", args=[]) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.color = color;
+    this.image = image;
+    this.clickevent = clickevent;
+    this.clickdown = false;
+    this.lastclick = 1;
+    if(this.image) {
+        this.fill = new Image();
+        this.fill.src = `textures/${fill}`
+    } else {
+        this.fill = fill;
+    }
     this.resize = resize;
     this.alpha = alpha;
 
     this.update = function() {
         this.realwidth = (this.resize) ? (this.width*(gameWindow.canvas.width/(100))):(this.width*(1920/(100)))
-        this.realheight = (this.resize) ? (this.height*(gameWindow.canvas.height/(100))):(this.height*(1080/(100)))
+        this.realheight = (this.resize == "both") ? (this.height*(gameWindow.canvas.height/(100))):(this.resize == "equal") ? (this.height*((gameWindow.canvas.width*(1080/1920))/(100))):(this.height*(1080/(100)))
         this.realx = (this.x*(gameWindow.canvas.width/100))-(this.realwidth/2)
         this.realy = (this.y*(gameWindow.canvas.height/100))-(this.realheight/2)
         this.canvas = gameWindow.context
-        this.canvas.fillStyle = this.color;
         this.canvas.globalAlpha = this.alpha;
-        this.canvas.fillRect(this.realx,this.realy,this.realwidth,this.realheight);
+        if(this.image) {
+            canvas.drawImage(this.fill, this.realx, this.realy, this.realwidth, this.realheight);
+        } else {
+            this.canvas.fillStyle = this.fill;
+            this.canvas.fillRect(this.realx,this.realy,this.realwidth,this.realheight);
+        }
         this.canvas.globalAlpha = 1.0;
+
+        if(this.clickevent != "") {
+            if((this.realx) <= allpos[0][0] && (this.realx + this.realwidth) >= allpos[0][0] && 
+               (this.realy) <= allpos[0][1] && (this.realy + this.realheight) >= allpos[0][1]) 
+            {
+                if(this.lastclick == 0 && allpos[0][2] == 1) {window[clickevent](...args)} 
+                this.lastclick = allpos[0][2]
+            } else {
+                this.lastclick = 1
+            }
+        }
     }
 }
 
 // Loads text into the player HUD
-function hudText(text, x, y, size, justify="left", color="white", alpha=1, font="Arial") {
+function hudText(text, x, y, size, justify="left", color="white", alpha=1, font="Arial", clickevent="", args=[]) {
     this.x = x;
     this.y = y;
     this.text = text;
@@ -377,8 +387,10 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
     this.font = font;
     this.color = color;
     this.alpha = alpha;
-    this.width = this.size;
-    this.height = (this.size/3)*2;
+    this.clickevent = clickevent;
+    this.args = args;
+    this.realwidth = this.size;
+    this.realheight = (this.size/3)*2;
 
     this.update = function() {
         this.ssize = this.size * (gameWindow.canvas.width/1920)
@@ -386,12 +398,12 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
         canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.font = (`${this.ssize}px ${this.font}`);
         canvas.fillStyle = this.color;
-        this.width = canvas.measureText(this.text).width
-        this.height = (this.ssize/3)*2
+        this.realwidth = canvas.measureText(this.text).width
+        this.realheight = (this.ssize/3)*2
         if (this.justify == "center") {
-            this.jpos = this.width/2;
+            this.jpos = this.realwidth/2;
         } else if (this.justify == "right") {
-            this.jpos = this.width;
+            this.jpos = this.realwidth;
         } else {
             this.jpos = 0;
         }
@@ -399,13 +411,25 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
         this.realx = this.x*(gameWindow.canvas.width/100)
         this.realy = this.y*(gameWindow.canvas.height/100)
 
-        canvas.fillText(this.text, this.realx - this.jpos, this.realy + this.height/2);
+        canvas.fillText(this.text, this.realx - this.jpos, this.realy + this.realheight/2);
         canvas.globalAlpha = 1;
         upcount++
+
+        if(this.clickevent != "") {
+            console.debug(this.text, allpos[0][0], this.realx, this.realx + this.realwidth)
+            if((this.realx - this.realwidth/2) <= allpos[0][0] && (this.realx + this.realwidth/2) >= allpos[0][0] && 
+               (this.realy - this.realheight/2) <= allpos[0][1] && (this.realy + this.realheight/2) >= allpos[0][1]) 
+            {
+                if(this.lastclick == 0 && allpos[0][2] == 1) {window[clickevent](...args)} 
+                this.lastclick = allpos[0][2]
+            } else {
+                this.lastclick = 1
+            }
+        }
     }
 }
 
-function slider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1) {
+function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1) {
     this.x = x
     this.y = y
     this.width = width
@@ -417,32 +441,37 @@ function slider(x, y, width, height, value, min, max, barcolor, handlecolor, ste
     this.color2 = handlecolor
     this.active = false
     this.step = step
+    this.resize = true
 
     this.update = function() {
+        this.realx = this.x*(gameWindow.canvas.width/100)
+        this.realy = this.y*(gameWindow.canvas.height/100)
+        this.realwidth = (this.resize) ? (this.width*(gameWindow.canvas.width/(100))):(this.width*(1920/(100)))
+        this.realheight = (this.resize) ? (this.height*(gameWindow.canvas.height/(100))):(this.height*(1080/(100)))
+
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
 
         canvas.fillStyle = this.color1
-        canvas.fillRect(this.x - this.width/2, this.y - this.height/(4*2), this.width, this.height/4);
+        canvas.fillRect(this.realx - this.realwidth/2, this.realy - this.realheight/(4*2), this.realwidth, this.realheight/4);
         
         canvas.fillStyle = this.color2
         canvas.beginPath();
-        canvas.arc((this.x - this.width/2) + ((this.width/(this.max - this.min))*this.value), this.y, this.height, 0, 2*Math.PI);
+        canvas.arc((this.realx - this.realwidth/2) + ((this.realwidth/(this.max - this.min))*(this.value-this.min)), this.realy, this.realheight, 0, 2*Math.PI);
         canvas.fill();
 
-        if((mousepos[0] > (this.x - this.width/2)) && (mousepos[0] < (this.x + this.width/2)) && (mousepos[1] < (this.y + this.height*1.5)) && (mousepos[1] > (this.y - (this.height/2)*1.5)) && (mousedown == true)) {
+        if((mousepos[0] > (this.realx - this.realwidth/2)) && (mousepos[0] < (this.realx + this.realwidth/2)) && (mousepos[1] < (this.realy + this.realheight*1.5)) && (mousepos[1] > (this.realy - (this.realheight/2)*1.5)) && (mousedown == true)) {
             this.active = true
         }
         if(this.active) {
             if(this.step < 1) {
-                this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width))),String(this.step).length-2)
+                this.nextvalue = Round((this.min + ((mousepos[0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),String(this.step).length-2)
             } else if (this.step > 1) {
-                this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width)))/this.step,0)*this.step
+                this.nextvalue = Round((this.min + ((mousepos[0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth)))/this.step,0)*this.step
             } else {
-                this.nextvalue = round((this.min + ((mousepos[0] - (this.x - this.width/2))*((this.max - this.min)/this.width))),0)
+                this.nextvalue = Round((this.min + ((mousepos[0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),0)
             }
             
-
             if((this.nextvalue >= this.min) && (this.nextvalue <= this.max)) {
                 this.value = this.nextvalue
             } else if (this.nextvalue <= this.min) {
