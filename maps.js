@@ -379,12 +379,12 @@ guipages = [
         new hudText("Max Fps: -", 30, 35, 30, "center"),
         new hudText("Zoom: -", 70, 35, 30, "center"),
         new hudText("Debug: -", 89, 88, 10, "right"),
-        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "testFunction"),
+        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     acctext = [
         new hudRect(50, 50, 80, 80, "#1b2932"),
         new hudText("Accessibility", 50, 20, 100, "center"),
-        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "testFunction"),
+        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     finishscreentext = [
         new hudRect(50, 50, 100, 100, "#000000", false, "both", 0.8),

@@ -437,16 +437,16 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
         canvas.arc((this.realx - this.realwidth/2) + ((this.realwidth/(this.max - this.min))*(this.value-this.min)), this.realy, this.realheight, 0, 2*Math.PI);
         canvas.fill();
 
-        if((mousepos[0] > (this.realx - this.realwidth/2)) && (mousepos[0] < (this.realx + this.realwidth/2)) && (mousepos[1] < (this.realy + this.realheight*1.5)) && (mousepos[1] > (this.realy - (this.realheight/2)*1.5)) && (mousedown == true)) {
+        if((allpos[0][0] > (this.realx - this.realwidth/2)) && (allpos[0][0] < (this.realx + this.realwidth/2)) && (allpos[0][1] < (this.realy + this.realheight*1.5)) && (allpos[0][1] > (this.realy - (this.realheight/2)*1.5)) && (allpos[0][2])) {
             this.active = true
         }
         if(this.active) {
             if(this.step < 1) {
-                this.nextvalue = Round((this.min + ((mousepos[0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),String(this.step).length-2)
+                this.nextvalue = Round((this.min + ((allpos[0][0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),String(this.step).length-2)
             } else if (this.step > 1) {
-                this.nextvalue = Round((this.min + ((mousepos[0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth)))/this.step,0)*this.step
+                this.nextvalue = Round((this.min + ((allpos[0][0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth)))/this.step,0)*this.step
             } else {
-                this.nextvalue = Round((this.min + ((mousepos[0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),0)
+                this.nextvalue = Round((this.min + ((allpos[0][0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),0)
             }
             
             if((this.nextvalue >= this.min) && (this.nextvalue <= this.max)) {

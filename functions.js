@@ -85,3 +85,7 @@ function setControls(type) {
     pausemenu.controlschosen = true;
     pausemenu.toggle()
 }
+
+function pausemenutoggle() {
+    pausemenu.toggle()
+}
