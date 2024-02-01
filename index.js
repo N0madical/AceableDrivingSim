@@ -272,7 +272,7 @@ var player = {
         camera.cangle = player_position[2];
         this.speed = 0;
         this.turndeg = 0;
-        finishscreen.starsize = 10
+        finishscreen.reset()
         this.paused = false
     }
 }
@@ -295,8 +295,8 @@ function updateGameWindow() {
         fpscount.text = `FPS: ${fpsrec * 4} / ${maxfps}`;
         //fpscount.text = `Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
         if (debug) {
-            speedometer.text = `Speed: ${round(player.speed,1)}mps : ${round(player.speed*3.6,1)}kmph : ${round(player.speed*2.237,1)}mph, Turn Angle: ${round(player.turndeg,1)}°, Turn Radius: ${round(player.turnrad,1)}, Res. Angle: ${round((player.speed/player.turnrad),1)}°`
-            posdebug.text = `Position: ${round(camera.cx,1)}, ${round(camera.cy,1)}, ${round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
+            speedometer.text = `Speed: ${Round(player.speed,1)}mps : ${Round(player.speed*3.6,1)}kmph : ${Round(player.speed*2.237,1)}mph, Turn Angle: ${Round(player.turndeg,1)}°, Turn Radius: ${Round(player.turnrad,1)}, Res. Angle: ${Round((player.speed/player.turnrad),1)}°`
+            posdebug.text = `Position: ${Round(camera.cx,1)}, ${Round(camera.cy,1)}, ${Round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
         }
         fps = fpsrec * 4;
         fpsrec = 0;
@@ -329,7 +329,12 @@ function updateGameWindow() {
     // }
 
     // Coagulating touch and mouse
-    allpos = [[mousepos[0], mousepos[1], mousedown]].concat(mobileTouch)
+    if(mobileTouch[0][0] == -1) {
+        allpos = [[mousepos[0], mousepos[1], mousedown]]
+    } else {
+        allpos = mobileTouch
+    }
+    
     
     // Refresh Game Window
     gameWindow.clear();
@@ -345,9 +350,9 @@ function updateGameWindow() {
     // Pause Menu (WIP)
     if(esc) {pausemenu.toggle(); console.info("Esc pressed")}
 
-    // if(mobileTouch[0][2] == 1 && !pausemenu.controlschosen) {
-    //     pausemenu.controls()
-    // }
+    if(mobileTouch[0][2] == 1 && !pausemenu.controlschosen) {
+        pausemenu.openmenu(-1)
+    }
 
     // //Check for dialog
     // if(pausemenu.menu == -1) {

@@ -356,6 +356,14 @@ guipages = [
         posdebug = new hudText("Position: Error", 0.5, 1.5, size=30),
         border = new carborder(),
     ],
+    choosecontrolstext = [
+        new hudRect(50, 50, 60, 60, "#1b2932"),
+        new hudRect(36, 57, 1, 35, "#49545b", false, "both", 1, "setControls", ("0")),
+        new hudRect(64, 57, 1, 35, "#49545b", false, "both", 1, "setControls", ("1")),
+        new hudText("Select Your Controls", 50, 28, 80, "center"),
+        new hudText("Touch", 36, 38, 40, "center"),
+        new hudText("Touch & Tilt", 64, 38, 40, "center"),
+    ],
     mainmenutext = [
         new hudText("Paused", 20, 10, 100, justify="left"),
         new hudText("Resume Game", 20, 30, 50, justify="left"),
@@ -386,10 +394,15 @@ guipages = [
         new hudText("Pull-In Accuracy:", 50, 75, 30, "center"),
         new hudText("Angle Accuracy:", 50, 80, 30, "center"),
         new hudText("Left/Right Accuracy:", 50, 85, 30, "center"),
-        new hudRect(40, 50, 5.625, 10, "star.png", true, "equal"),
-        new hudRect(45, 50, 5.625, 10, "star.png", true, "equal"),
-        new hudRect(50, 50, 5.625, 10, "star.png", true, "equal"),
-        new hudRect(55, 50, 5.625, 10, "star.png", true, "equal"),
-        new hudRect(60, 50, 5.625, 10, "star.png", true, "equal"),
-    ]
+        new hudRect(40, 50, 0, 0, "star.png", true, "equal"),
+        new hudRect(45, 50, 0, 0, "star.png", true, "equal"),
+        new hudRect(50, 50, 0, 0, "star.png", true, "equal"),
+        new hudRect(55, 50, 0, 0, "star.png", true, "equal"),
+        new hudRect(60, 50, 0, 0, "star.png", true, "equal"),
+    ],
+    popuptext = [
+        new hudRect(50, 0, 45, 18, "tabbg.png", true, "both"),
+        new hudRect(42.5, 4.5, 11, 8, "spacebar.png", true, "both"),
+        new hudText(text="Press   SpaceBar   or Click Here to Finish", x=50, y=4, size=40, justify="center", color="white", font="Arial"),
+    ],
 ]

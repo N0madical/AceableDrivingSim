@@ -15,13 +15,6 @@ var pausemenu = {
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
-
-        // this.controlstitle = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/4), text=`Choose Your Conrols Type`, justify="center", size=80, font="Arial", color="white")
-        // this.choosecontrols = new hudText(x=(gameWindow.canvas.width/2) - 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Screen Controls`, justify="center", size=80, font="Arial", color="white")
-        // this.choosemotion = new hudText(x=(gameWindow.canvas.width/2) + 300, y=(gameWindow.canvas.height/2) - (gameWindow.canvas.height/7), text=`Motion Controls`, justify="center", size=80, font="Arial", color="white")
-
-        this.choosesettingsdialog = [this.controlstitle, this.choosecontrols, this.choosemotion]
-        //updatelist = updatelist.concat(this.menutext)
     },
 
     toggle : function() {
@@ -34,6 +27,12 @@ var pausemenu = {
             this.paused = false;
             player.paused = false;
         }
+    },
+
+    openmenu : function(menu) {
+        pausemenu.menu = menu;
+        this.paused = true;
+        player.paused = true;
     },
 
     controls : function() {
@@ -100,31 +99,20 @@ var pausemenu = {
 
     configmenu : function() {
         if(this.menu == -1) {
-            canvas = gameWindow.context;
-            canvas.fillStyle = "#1b2932"; 
-            canvas.globalAlpha = ((this.blur * (100/this.maxblur))/100)
-            canvas.fillRect((gameWindow.canvas.width/2)-((gameWindow.canvas.width/1.1)/2), (gameWindow.canvas.height/2)-((gameWindow.canvas.height/1.1)/3), gameWindow.canvas.width/1.1, gameWindow.canvas.height/1.8)
-            canvas.globalAlpha = 1
-
-            canvas.fillStyle = "#49545b"; 
-            canvas.globalAlpha = 1
-            canvas.fillRect((gameWindow.canvas.width/2)-(gameWindow.canvas.width/2.5)-(gameWindow.canvas.width/50), (gameWindow.canvas.height/2)-(gameWindow.canvas.height/5), gameWindow.canvas.width/2.5, gameWindow.canvas.height/2.5)
-            canvas.fillRect((gameWindow.canvas.width/2)+(gameWindow.canvas.width/50), (gameWindow.canvas.height/2)-(gameWindow.canvas.height/5), gameWindow.canvas.width/2.5, gameWindow.canvas.height/2.5)
-
-            for (i = 0; i < this.choosesettingsdialog.length; i++) {
-                this.choosesettingsdialog[i].update()
+            for(let i in choosecontrolstext) {
+                choosecontrolstext[i].alpha = this.blur/100
             }
-
-            this.choosecontrols.x = (gameWindow.canvas.width/2)-(gameWindow.canvas.width/4.5)
-            this.choosemotion.x = (gameWindow.canvas.width/2)+(gameWindow.canvas.width/4.5)
-
-            this.controlschosen = true;
+            choosecontrolstext[1].width = animate(choosecontrolstext[1].width, true, true, 25, 10, 5)
+            choosecontrolstext[2].width = animate(choosecontrolstext[2].width, true, true, 25, 10, 5)
+            updateAll(choosecontrolstext)
         }
     },
 
     settingsmenu : function() {
         if(this.menu == 2) {
-            updateAll(settingsmenutext)
+            for(let i in settingsmenutext) {
+                settingsmenutext[i].alpha = (this.blur/100)*1.25
+            }
 
             maxfps = settingsmenutext[2].value
             settingsmenutext[4].text = `Max Fps: ${maxfps}`
@@ -133,11 +121,17 @@ var pausemenu = {
             settingsmenutext[5].text = `Zoom: ${camera.czoom}%`
 
             settingsmenutext[6].text = `Debug: ${debug}`
+
+            updateAll(settingsmenutext)
         }
     },
 
     accmenu : function() {
         if(this.menu == 3) {
+            for(let i in acctext) {
+                acctext[i].alpha = (this.blur/100)*1.25
+            }
+
             updateAll(acctext)
         }
     },
@@ -210,6 +204,7 @@ var finishscreen = {
         this.parkedcount = 0
 
         this.starsize = 10
+        this.starcount = 7
 
         this.spacebar = new Image(); this.spacebar.src = "textures/spacebar.png";
         this.tabbg = new Image(); this.tabbg.src = "textures/tabbg.png";
@@ -217,51 +212,33 @@ var finishscreen = {
         this.star = new Image(); this.star.src = "textures/star.png";
 
         this.tabimage = this.tabbg
-
-        this.complete = new hudText(x=(gameWindow.canvas.width/2), y=(30), text="Press   SpaceBar   or Click Here to Finish", justify="center", size=40, font="Arial", color="white")
-
-        this.textrender = [
-            new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*3, text="Congratulations!", justify="center", size=125, font="Arial", color="white"),
-            new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*5, text="Level Complete", justify="center", size=35, font="Arial", color="white"),
-            new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*9, text="Score:", justify="center", size=35, font="Arial", color="white"),
-            this.acctext = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*15, text="Accuracy:", justify="center", size=35, font="Arial", color="white"),
-            this.dirtext = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*16.5, text="Angle:", justify="center", size=35, font="Arial", color="white"),
-            this.fittext = new hudText(x=(gameWindow.canvas.width/2), y=(gameWindow.canvas.height/20)*18, text="Left/Right:", justify="center", size=35, font="Arial", color="white"),
-        ]
     },
 
     update : function() {
-
-        this.textrender[0].y = (gameWindow.canvas.height/20)*3
-        this.textrender[1].y = (gameWindow.canvas.height/20)*5
-        this.textrender[2].y = (gameWindow.canvas.height/20)*9
-        this.textrender[3].y = (gameWindow.canvas.height/20)*15
-        this.textrender[4].y = (gameWindow.canvas.height/20)*16.5
-        this.textrender[5].y = (gameWindow.canvas.height/20)*18
-
-        if(parked) {
-            if (Math.round(this.yoffset) < 0){
-                this.yoffset += (0 - this.yoffset)/4
-            }     
-            parked = false 
-        } else {
-            if (Math.round(this.yoffset) > -100 ){
-                this.yoffset += (-100 - this.yoffset)/10
-            }
-        }
+        // if(parked) {
+        //     if (Math.round(this.yoffset) < 0){
+        //         this.yoffset += (0 - this.yoffset)/4
+        //     }     
+        //     parked = false 
+        // } else {
+        //     if (Math.round(this.yoffset) > -100 ){
+        //         this.yoffset += (-100 - this.yoffset)/10
+        //     }
+        // }
         this.parkedcount -= 1
 
-        if(this.yoffset > -99) {
-            canvas.setTransform(1, 0, 0, 1, 0, 0);
-            car = gameWindow.context;
-            car.drawImage(this.tabimage, (gameWindow.canvas.width/2)-(400*(gameWindow.canvas.width/1920)), (gameWindow.canvas.height/30) + this.yoffset -100, 800*(gameWindow.canvas.width/1920), 150);
-            if(gameWindow.canvas.width >= 1500) {
-                car.drawImage(this.spacebar, (gameWindow.canvas.width/2)-(250*(gameWindow.canvas.width/1920)), (5 + this.yoffset), 160*((gameWindow.canvas.width/1920)*1.3), (180/4)*((gameWindow.canvas.width/1920)*1.3));
+        this.opos = [0, 4.5, 4]
+        if(parked) {
+            for(let i = 0; i < popuptext.length; i++) {
+                popuptext[i].y = animate(popuptext[i].y, true, true, this.opos[i], 5, 20)
             }
-
-            this.complete.y = gameWindow.canvas.height/30 + this.yoffset;
-            this.complete.x = (gameWindow.canvas.width/2)
-            this.complete.update();
+            updateAll(popuptext);
+            parked = false
+        } else {
+            for(let i = 0; i < popuptext.length; i++) {
+                popuptext[i].y = animate(popuptext[i].y, false, true, -10, 5, 20)
+            }
+            updateAll(popuptext);
         }
 
         if ((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300)) && (pausemenu.paused == false)) {
@@ -282,24 +259,25 @@ var finishscreen = {
             finishscreentext[5].text = `Angle Accuracy: ${Round(this.score_direction*100)}%`
             finishscreentext[6].text = `Left/Right Accuracy: ${Round(this.score_distance*100)}%`
 
-            for(this.i = 0; this.i < this.textrender.length; this.i++) {
-                this.textrender[this.i].x = (gameWindow.canvas.width/2)
-                this.textrender[this.i].update();
-            }
-
             this.score = (this.score_accuracy+this.score_direction+this.score_distance)/3
 
-            // this.maxstarsize = gameWindow.canvas.height/6
-            // if (Math.round(this.starsize) != this.maxstarsize){
-            //     this.starsize += (this.maxstarsize - this.starsize)/(fps/10)
-            // }
-
-            // for(this.i = 0; this.i < Math.round(this.score*5); this.i++) {
-            //     canvas.drawImage(this.star, (gameWindow.canvas.width/2)-(((((round(this.score*5)+1)/2) * (this.maxstarsize*0.75)) - (this.maxstarsize*0.25))) + (this.i*(this.maxstarsize*0.75)), (gameWindow.canvas.height/20)*9, this.starsize, this.starsize);
-            // }
+            finishscreentext[this.starcount].width = animate(finishscreentext[this.starcount].width, true, true, 5.625, 5, 1)
+            finishscreentext[this.starcount].height = animate(finishscreentext[this.starcount].height, true, true, 10, 5, 1)
+            if(finishscreentext[this.starcount].width >= 5.625 && finishscreentext[this.starcount].height >= 10 && this.starcount < (Round(this.score*5) + 6)) {
+                this.starcount++
+            }
         }
         upcount++;
     },
+
+    reset : function() {
+        for(let i = 7; i < (7+5); i++) {
+            finishscreentext[i].width = 0
+            finishscreentext[i].height = 0
+        }
+        this.starcount = 7
+        this.starsize = 0
+    }
 }
 
 function carborder() {
@@ -416,10 +394,9 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
         upcount++
 
         if(this.clickevent != "") {
-            console.debug(this.text, allpos[0][0], this.realx, this.realx + this.realwidth)
             if((this.realx - this.realwidth/2) <= allpos[0][0] && (this.realx + this.realwidth/2) >= allpos[0][0] && 
                (this.realy - this.realheight/2) <= allpos[0][1] && (this.realy + this.realheight/2) >= allpos[0][1]) 
-            {
+            {   
                 if(this.lastclick == 0 && allpos[0][2] == 1) {window[clickevent](...args)} 
                 this.lastclick = allpos[0][2]
             } else {

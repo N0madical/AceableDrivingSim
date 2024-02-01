@@ -1,5 +1,4 @@
 // Custom Functions
-function testFunction() {pausemenu.toggle()}
 
 //Math
 function degrees(radians) {return (radians * (180/Math.PI)) % 360}
@@ -70,13 +69,19 @@ function clickbox(x, y, width, height) {
 }
 
 //Animations
-function aZoom(value, direction, type, limit, step, round=0) {
+function animate(value, direction, type, limit, step, round=0) {
     let returnvar
+    returnvar = (type) ? Round(value + (limit - value)/(step*(fps/60)), round): (direction) ? Round(value + (step*(60/fps)), round):Round(value - (step*(60/fps)), round)
     if(direction) {
-        returnvar = (type) ? Round(value + (limit - value)/(step*(fps/60)), round):Round(value + (step*(60/fps)), round)
         return (returnvar == value || returnvar == undefined || returnvar > limit) ? limit:returnvar
     } else {
-        returnvar = (type) ? Round(value - (limit - value)/(step*(fps/60)), round):Round(value - (step*(60/fps)), round)
         return (returnvar == value || returnvar == undefined || returnvar < limit) ? limit:returnvar
     }
+}
+
+// Button Functions
+function setControls(type) {
+    mobilecontrols = type
+    pausemenu.controlschosen = true;
+    pausemenu.toggle()
 }
