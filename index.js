@@ -9,6 +9,7 @@ zoom = 100;
 var lasttime = 0;
 var fpsrec = 0;
 var scalar = 50;
+let orientOffset = 0;
 
 let mousepos = [0,0]
 let mousedown = 0
@@ -248,8 +249,15 @@ var player = {
         wheelR.restore();
 
         car = gameWindow.context;
-        car.fillStyle = "purple";
-        car.drawImage(this.carimage, (gameWindow.canvas.width/2)-((this.width/2)*(scalar)*(camera.czoom/100)), (gameWindow.canvas.height/2)-((this.height/2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+        car.save();
+        car.translate(gameWindow.canvas.width/2, gameWindow.canvas.height/2);
+        car.rotate(radians(orientOffset));
+        car.drawImage(this.carimage, ((this.width/-2)*(scalar)*(camera.czoom/100)), ((this.height/-2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+        car.restore();
+
+        // car = gameWindow.context;
+        // car.fillStyle = "purple";
+        // car.drawImage(this.carimage, (gameWindow.canvas.width/2)-((this.width/2)*(scalar)*(camera.czoom/100)), (gameWindow.canvas.height/2)-((this.height/2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
 
         // Let the renderer know rendering is complete
         upcount++

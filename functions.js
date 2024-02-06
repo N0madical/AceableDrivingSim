@@ -82,10 +82,18 @@ function animate(value, direction, type, limit, step, round=0) {
 // Button Functions
 function setControls(type) {
     mobilecontrols = type
+    if(type == 1) {
+        window.addEventListener("deviceorientation", handleOrientation);
+    }
     pausemenu.controlschosen = true;
     pausemenu.toggle()
 }
 
 function pausemenutoggle() {
     pausemenu.toggle()
+}
+
+function handleOrientation(event) {
+    console.debug("X: " + event.alpha + ", Y: " + event.beta + ", Z: " + event.gamma)
+    orientOffset = event.beta
 }
