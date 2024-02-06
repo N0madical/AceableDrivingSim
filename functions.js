@@ -83,6 +83,12 @@ function animate(value, direction, type, limit, step, round=0) {
 function setControls(type) {
     mobilecontrols = type
     if(type == 1) {
+        if (
+            DeviceMotionEvent &&
+            typeof DeviceMotionEvent.requestPermission === "function"
+          ) {
+            DeviceMotionEvent.requestPermission();
+          }
         window.addEventListener("deviceorientation", handleOrientation);
     }
     pausemenu.controlschosen = true;
