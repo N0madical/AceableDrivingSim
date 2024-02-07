@@ -110,7 +110,7 @@ var pausemenu = {
             document.getElementById("requestMotionAccess").style.top = `${(gameWindow.canvas.height/100) * (57-(35/2))}px`
             document.getElementById("requestMotionAccess").style.width = `${(gameWindow.canvas.width/100) * 25}px`
             document.getElementById("requestMotionAccess").style.height = `${(gameWindow.canvas.height/100) * 35}px`
-            document.getElementById("requestMotionAccess").style.opacity = `0`
+            //document.getElementById("requestMotionAccess").style.opacity = `0`
             updateAll(choosecontrolstext)
         }
     },

@@ -251,7 +251,7 @@ var player = {
         car = gameWindow.context;
         car.save();
         car.translate(gameWindow.canvas.width/2, gameWindow.canvas.height/2);
-        car.rotate(radians(orientOffset));
+        car.rotate(radians(orientOffset*-1));
         car.drawImage(this.carimage, ((this.width/-2)*(scalar)*(camera.czoom/100)), ((this.height/-2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
         car.restore();
 
