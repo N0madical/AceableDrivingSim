@@ -104,6 +104,13 @@ var pausemenu = {
             }
             choosecontrolstext[1].width = animate(choosecontrolstext[1].width, true, true, 25, 10, 5)
             choosecontrolstext[2].width = animate(choosecontrolstext[2].width, true, true, 25, 10, 5)
+            //64, 57, 1, 35
+            document.getElementById("requestMotionAccess").style.display = "initial"
+            document.getElementById("requestMotionAccess").style.left = `${((gameWindow.canvas.width/100) * (64-(25/2)))}px`
+            document.getElementById("requestMotionAccess").style.top = `${(gameWindow.canvas.height/100) * (57-(35/2))}px`
+            document.getElementById("requestMotionAccess").style.width = `${(gameWindow.canvas.width/100) * 25}px`
+            document.getElementById("requestMotionAccess").style.height = `${(gameWindow.canvas.height/100) * 35}px`
+            document.getElementById("requestMotionAccess").style.opacity = `0`
             updateAll(choosecontrolstext)
         }
     },
