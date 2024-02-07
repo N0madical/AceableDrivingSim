@@ -359,7 +359,7 @@ guipages = [
     choosecontrolstext = [
         new hudRect(50, 50, 60, 60, "#1b2932"),
         new hudRect(36, 57, 1, 35, "#49545b", false, "both", 1, "setControls", ("0")),
-        new hudRect(64, 57, 1, 35, "#49545b", false, "both", 1, "setControls", ("1")),
+        new hudRect(64, 57, 1, 35, "#49545b", false, "both", 1),
         new hudText("Select Your Controls", 50, 28, 80, "center"),
         new hudText("Touch", 36, 38, 40, "center"),
         new hudText("Touch & Tilt", 64, 38, 40, "center"),

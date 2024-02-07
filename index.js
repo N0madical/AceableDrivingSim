@@ -137,10 +137,10 @@ var camera = {
     // Objects use the position function to get position relative to player
     position : function(x, y, rot=0) {
         this.distance = (Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2)))*scalar*(camera.czoom/100)
-        this.angle = invtan2((y-this.cy),(x-this.cx))+this.cangle
+        this.angle = invtan2((y-this.cy),(x-this.cx))+(this.cangle+orientOffset)
         this.x2 = (cos(this.angle))*this.distance
         this.y2 = (sin(this.angle))*this.distance
-        this.angle2 = rot - this.cangle
+        this.angle2 = rot - (this.cangle+orientOffset)
         return [this.x2, this.y2, this.angle2, this.angle]
     }
 }
@@ -207,21 +207,24 @@ var player = {
         }
 
         // Update Player Visuals
-        wheelL = gameWindow.context;
-        wheelL.save();
-        wheelL.translate(((gameWindow.canvas.width/2 - ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
-        wheelL.rotate(radians(this.turndeg));
-        wheelL.fillStyle = "black";
-        wheelL.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
-        wheelL.restore();
+        // wheelL = gameWindow.context;
+        // wheelL.save();
+        // wheelL.translate(((gameWindow.canvas.width/2)), ((gameWindow.canvas.height/2)));
+        // wheelL.rotate(orientOffset*-1)
+        // wheelL.translate(((0 - ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((0 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
+        // wheelL.rotate(radians(this.turndeg + (orientOffset*-1)));
+        // wheelL.fillStyle = "black";
+        // wheelL.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
+        // wheelL.restore();
 
-        wheelR = gameWindow.context;
-        wheelR.save();
-        wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
-        wheelR.rotate(radians(this.turndeg));
-        wheelR.fillStyle = "black";
-        wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
-        wheelR.restore();
+        // wheelR = gameWindow.context;
+        // wheelR.save();
+        // wheelR.rotate(orientOffset*-1)
+        // wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
+        // wheelR.rotate(radians(this.turndeg + (orientOffset*-1)));
+        // wheelR.fillStyle = "black";
+        // wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
+        // wheelR.restore();
 
         car = gameWindow.context;
         car.save();

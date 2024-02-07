@@ -144,6 +144,10 @@ var pausemenu = {
     },
 
     update : function() {
+        if(this.menu >= 0) {
+            document.getElementById("requestMotionAccess").style.display = "none"
+        }
+
         if ((this.blur != 0) && (this.paused == false)) {
             this.blur += (0 - this.blur)/(fps/10);
             if(this.blur <= 0.25){this.blur = 0}
