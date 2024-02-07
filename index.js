@@ -118,30 +118,7 @@ var gameWindow = {
         window.addEventListener("touchmove", touchHandler);
         window.addEventListener("touchend", touchEnd);
 
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-            // Handle iOS 13+ devices.
-            DeviceMotionEvent.requestPermission().then((state) => {
-                if (state === 'granted') {
-                    window.addEventListener('devicemotion', handleOrientation);
-                } else {
-                    console.error('Request to access the orientation was rejected');
-                }
-                }).catch(console.error);
-            } else {
-            // Handle regular non iOS 13+ devices.
-            window.addEventListener('devicemotion', handleOrientation);
-        }
-
-        document.addEventListener("touchmove", function(e) { e.preventDefault() });
-
-        alpha = 0;
-        beta = 0;
-        gamma = 0;
-        function handleOrientation(event) {
-            alpha = event.alpha;
-            beta = event.beta;
-            gamma = event.gamma;
-        };
+        // document.addEventListener("touchmove", function(e) { e.preventDefault() });
     },
 
     // Wipe Canvas To Create Refresh Effect

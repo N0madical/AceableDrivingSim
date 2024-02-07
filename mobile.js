@@ -6,7 +6,6 @@ function touchHandler(e) {
             mobileTouch[p][2] = 1;
         }
     }
-    e.preventDefault();
 }
 
 function touchEnd(e) {
@@ -15,5 +14,4 @@ function touchEnd(e) {
             mobileTouch[p][2] = 0;
         }
     }
-    e.preventDefault();
 }
