@@ -98,7 +98,8 @@ function handleOrientation(event) {
     orientOffset = event.beta
 }
 
-function getMotionAccess(e) {
+document.getElementById("requestMotionAccess").onclick = function(e) {
+    e.preventDefault()
     if (
         DeviceMotionEvent &&
         typeof DeviceMotionEvent.requestPermission === "function"
