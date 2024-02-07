@@ -83,13 +83,7 @@ function animate(value, direction, type, limit, step, round=0) {
 function setControls(type) {
     mobilecontrols = type
     if(type == 1) {
-        if (
-            DeviceMotionEvent &&
-            typeof DeviceMotionEvent.requestPermission === "function"
-          ) {
-            DeviceMotionEvent.requestPermission();
-          }
-        window.addEventListener("deviceorientation", handleOrientation);
+        document.getElementById("requestMotionAccess").click()
     }
     pausemenu.controlschosen = true;
     pausemenu.toggle()
@@ -102,4 +96,14 @@ function pausemenutoggle() {
 function handleOrientation(event) {
     console.debug("X: " + event.alpha + ", Y: " + event.beta + ", Z: " + event.gamma)
     orientOffset = event.beta
+}
+
+function getMotionAccess(e) {
+    if (
+        DeviceMotionEvent &&
+        typeof DeviceMotionEvent.requestPermission === "function"
+      ) {
+        DeviceMotionEvent.requestPermission();
+      }
+    window.addEventListener("deviceorientation", handleOrientation);
 }
