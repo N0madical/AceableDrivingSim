@@ -117,8 +117,6 @@ var gameWindow = {
         window.addEventListener("touchstart", touchHandler);
         window.addEventListener("touchmove", touchHandler);
         window.addEventListener("touchend", touchEnd);
-
-        // document.addEventListener("touchmove", function(e) { e.preventDefault() });
     },
 
     // Wipe Canvas To Create Refresh Effect

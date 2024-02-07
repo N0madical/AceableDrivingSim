@@ -82,6 +82,7 @@ function animate(value, direction, type, limit, step, round=0) {
 // Button Functions
 function setControls(type) {
     mobilecontrols = type
+    document.getElementById("requestMotionAccess").style.display = "none"
     pausemenu.controlschosen = true;
     pausemenu.toggle()
 }
@@ -91,7 +92,6 @@ function pausemenutoggle() {
 }
 
 function handleOrientation(event) {
-    console.debug("X: " + event.alpha + ", Y: " + event.beta + ", Z: " + event.gamma)
     orientOffset = event.beta
 }
 
