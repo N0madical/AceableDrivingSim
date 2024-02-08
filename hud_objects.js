@@ -187,6 +187,11 @@ var pausemenu = {
 
         pausemenu.configmenu()
 
+        console.debug(typeof(hud[1].value))
+        if(typeof(hud[1].value) != "undefined") {
+            player.speed = hud[1].value
+        }
+
         if(!pausemenu.paused) {
             for(this.o = 0; this.o < allpos.length; this.o++) {
                 if((allpos[this.o][0] <= this.pbscale) && (allpos[this.o][1] <= this.pbscale)) {

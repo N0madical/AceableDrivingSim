@@ -92,6 +92,7 @@ function pausemenutoggle() {
 
 function handleOrientation(event) {
     orientOffset = event.beta
+    player.turndeg = event.beta
 }
 
 document.getElementById("requestMotionAccess").onclick = function(e) {

@@ -350,6 +350,7 @@ carscripts = [
 guipages = [
     hud = [
         fpscount = new hudText("FPS: Error", 99.5, 1.25, size=15, justify="right"),
+        new hudSlider(80, 50, 20, 2, player.speed, -5, 10, "#49545b", "white", 1),
     ],
     debughud = [
         speedometer = new hudText("Speed: Error", 0.5, 1, size=30),
