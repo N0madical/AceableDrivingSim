@@ -1,3 +1,92 @@
+var clickhandler = {
+    start : function() {
+        this.x = 0
+        this.y = 0
+        this.click = 0
+        this.mouse = [0,0,0]
+        this.touches = []
+        this.isclicked = false
+        this.expectclick = false
+
+        window.addEventListener('mousemove', function(e) {clickhandler.mouse[0] = e.pageX; clickhandler.mouse[1] = e.pageY;})
+        window.addEventListener('mousedown', function(e) {clickhandler.mouse[2] = 1})
+        window.addEventListener('mouseup', function(e) {clickhandler.mouse[2] = 0})
+
+        window.addEventListener("touchstart", clickhandler.touchHandler);
+        window.addEventListener("touchmove", clickhandler.touchHandler);
+        window.addEventListener("touchend", clickhandler.touchHandler);
+    },
+
+    touchHandler : function(e) {
+        clickhandler.touches = Object.values(e.touches)
+        for(let i in clickhandler.touches) {
+            clickhandler.touches[i] = [clickhandler.touches[i].pageX, clickhandler.touches[i].pageY, 1]
+        }
+    },
+
+    clicked : function(x1, x2, y1, y2, type=0) {
+        if(type == 0 || type == 1) {
+            if(this.mouse[0] >= x1*(gameWindow.canvas.width/100) && this.mouse[0] <= x2*(gameWindow.canvas.width/100) && this.mouse[1] >= y1*(gameWindow.canvas.height/100) && this.mouse[1] <= y2*(gameWindow.canvas.height/100)) {
+                if(this.mouse[2] && !this.isclicked) {
+                    this.expectclick = true
+                }
+                if(!this.isclicked && this.expectclick && !this.mouse[2]) {
+                    this.isclicked = true
+                    this.expectclick = false
+                    return true
+                }
+            } else {
+                this.expectclick = false
+            }
+        }
+        this.limit = (type == 0) ? 10:type
+        this.first = (type == 0) ? 0:type-1
+        for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
+            if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
+                if(this.touches[i][2] && !this.isclicked) {
+                    this.expectclick = true
+                }
+
+                if(!this.isclicked && this.expectclick && !this.touches[i][2]) {
+                    this.isclicked = true
+                    this.expectclick = false
+                    return true
+                }
+            } else {
+                this.expectclick = false
+            }
+        }
+    },
+
+    hovered : function(x1, x2, y1, y2) {
+        if(this.mouse[0] >= x1*(gameWindow.canvas.width/100) && this.mouse[0] <= x2*(gameWindow.canvas.width/100) && this.mouse[1] >= y1*(gameWindow.canvas.height/100) && this.mouse[1] <= y2*(gameWindow.canvas.height/100)) {
+            return true
+        }
+        for(let i = 0; i < this.touches.length; i++) {
+            if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
+                return true
+            }
+        }
+    },
+
+    update : function() {
+        if(this.touches.length > 0) {
+            this.x = this.touches[0][0]
+            this.y = this.touches[0][1]
+            this.click = this.touches[0][2]
+        } else {
+            this.x = this.mouse[0]
+            this.y = this.mouse[1]
+            this.click = this.mouse[2]
+        }
+
+        if(this.click == 0) {
+            this.isclicked = false
+            this.expectclick = false
+        }
+    }
+}
+
 // The pause menu (press esc to activate)
 var pausemenu = {
     start : function() {
@@ -73,12 +162,12 @@ var pausemenu = {
                 this.mainmenutext[i].update()
 
                 for(this.j = 0; this.j < allpos.length; this.j++) {
-                    if ((allpos[this.j][0] <= 500) && ((allpos[this.j][1] >= (this.mainmenutext[i].realy-gameWindow.canvas.height/20)) && (allpos[this.j][1] <= (this.mainmenutext[i].realy+gameWindow.canvas.height/20))) && (i != 0)) {
+                    if (clickhandler.hovered(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5)) {
                         if (Math.round(this.selheight) != this.mainmenutext[i].realy){
                             this.selheight += (this.mainmenutext[i].realy - this.selheight)/5
                         }
                         
-                        if(allpos[this.j][2] == 1 && pausemenu.paused == 1) {
+                        if(clickhandler.clicked(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5) && pausemenu.paused == 1) {
                             if(i == 1) {
                                 pausemenu.toggle()
                             } else if (i == 2) {
@@ -187,23 +276,19 @@ var pausemenu = {
 
         pausemenu.configmenu()
 
-        console.debug(typeof(hud[1].value))
         if(typeof(hud[1].value) != "undefined") {
             player.speed = hud[1].value
         }
 
         if(!pausemenu.paused) {
-            for(this.o = 0; this.o < allpos.length; this.o++) {
-                if((allpos[this.o][0] <= this.pbscale) && (allpos[this.o][1] <= this.pbscale)) {
-                    this.pbcolor = "#49545b"
-                    if (allpos[this.o][2] == 1) {
-                        pausemenu.toggle()
-                    }
-                } else {
-                    this.pbcolor = "#1b2932"
+            if(clickhandler.hovered(0,6,0,8)) {
+                this.pbcolor = "#49545b"
+                if (clickhandler.clicked(0,6,0,8)) {
+                    pausemenu.toggle()
                 }
+            } else {
+                this.pbcolor = "#1b2932"
             }
-            
         }
         upcount++;
     },

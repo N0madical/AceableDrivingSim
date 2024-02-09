@@ -110,13 +110,8 @@ var gameWindow = {
         window.addEventListener('keyup', function (e) {
             gameWindow.keys[e.keyCode] = (e.type == "keydown");
         })
-        window.addEventListener('mousemove', function(e) {mousepos = [e.pageX, e.pageY]})
-        window.addEventListener('mousedown', function(e) {mousedown = 1})
-        window.addEventListener('mouseup', function(e) {mousedown = 0})
 
-        window.addEventListener("touchstart", touchHandler);
-        window.addEventListener("touchmove", touchHandler);
-        window.addEventListener("touchend", touchEnd);
+        clickhandler.start()
     },
 
     // Wipe Canvas To Create Refresh Effect
@@ -321,7 +316,6 @@ function updateGameWindow() {
         allpos = mobileTouch
     }
     
-    
     // Refresh Game Window
     gameWindow.clear();
 
@@ -421,6 +415,10 @@ function updateGameWindow() {
     // while(upcount < updatelist.length) {
     //     updatelist[upcount].update();
     // }
+
+    clickhandler.update()
+
+    if(clickhandler.hovered(0, 50, 0, 50)) {console.debug("Hover!")}
 
     updateAll(hud)
 
