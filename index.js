@@ -11,8 +11,6 @@ var fpsrec = 0;
 var scalar = 50;
 let orientOffset = 0;
 
-let mousepos = [0,0]
-let mousedown = 0
 let left = false;
 let right = false;
 let up = false;
@@ -26,8 +24,6 @@ let loadedtextures = {}
 let loadedcartextures = []
 var loadopac = 100;
 var loadcount = 0;
-let mobileTouch = [[-1, -1, 0], [-1, -1, 0], [-1, -1, 0]]
-let allpos = [[-1, -1, 0], [-1, -1, 0], [-1, -1, 0], [-1, -1, 0]];
 
 // Debug Timer
 var upcount = 0;
@@ -277,13 +273,13 @@ function updateGameWindow() {
         //fpscount.text = `Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
         if (debug) {
             speedometer.text = `Speed: ${Round(player.speed,1)}mps : ${Round(player.speed*3.6,1)}kmph : ${Round(player.speed*2.237,1)}mph, Turn Angle: ${Round(player.turndeg,1)}°, Turn Radius: ${Round(player.turnrad,1)}, Res. Angle: ${Round((player.speed/player.turnrad),1)}°`
-            posdebug.text = `Position: ${Round(camera.cx,1)}, ${Round(camera.cy,1)}, ${Round(camera.cangle,1)}°, Mouse Pos: ${mousepos}`
+            posdebug.text = `Position: ${Round(camera.cx,1)}, ${Round(camera.cy,1)}, ${Round(camera.cangle,1)}°, Mouse Pos: ${clickhandler.mouse}`
         }
         fps = fpsrec * 4;
         fpsrec = 0;
     }
     if(debug == false) {
-        if((mousepos[0] >= gameWindow.canvas.width-100) && (mousepos[1] <= 20)) {
+        if(clickhandler.hovered(93.5,100,0,2)) {
             fpscount.alpha = 1
         } else {
             fpscount.alpha = 0
@@ -308,13 +304,6 @@ function updateGameWindow() {
     //             console.debug(`Key ${i} pressed`);
     //     }
     // }
-
-    // Coagulating touch and mouse
-    if(mobileTouch[0][0] == -1) {
-        allpos = [[mousepos[0], mousepos[1], mousedown]]
-    } else {
-        allpos = mobileTouch
-    }
     
     // Refresh Game Window
     gameWindow.clear();
@@ -330,7 +319,7 @@ function updateGameWindow() {
     // Pause Menu (WIP)
     if(esc) {pausemenu.toggle(); console.info("Esc pressed")}
 
-    if(mobileTouch[0][2] == 1 && !pausemenu.controlschosen) {
+    if(clickhandler.mobileUser && !pausemenu.controlschosen) {
         pausemenu.openmenu(-1)
     }
 
@@ -417,8 +406,6 @@ function updateGameWindow() {
     // }
 
     clickhandler.update()
-
-    if(clickhandler.hovered(0, 50, 0, 50)) {console.debug("Hover!")}
 
     updateAll(hud)
 

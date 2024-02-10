@@ -2,11 +2,14 @@ var clickhandler = {
     start : function() {
         this.x = 0
         this.y = 0
+        this.realx = 0
+        this.realy = 0
         this.click = 0
         this.mouse = [0,0,0]
         this.touches = []
         this.isclicked = false
         this.expectclick = false
+        this.mobileUser = false
 
         window.addEventListener('mousemove', function(e) {clickhandler.mouse[0] = e.pageX; clickhandler.mouse[1] = e.pageY;})
         window.addEventListener('mousedown', function(e) {clickhandler.mouse[2] = 1})
@@ -18,6 +21,7 @@ var clickhandler = {
     },
 
     touchHandler : function(e) {
+        clickhandler.mobileUser = true
         clickhandler.touches = Object.values(e.touches)
         for(let i in clickhandler.touches) {
             clickhandler.touches[i] = [clickhandler.touches[i].pageX, clickhandler.touches[i].pageY, 1]
@@ -43,6 +47,7 @@ var clickhandler = {
         this.first = (type == 0) ? 0:type-1
         for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
             if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
+                console.debug(this.touches[i][2])
                 if(this.touches[i][2] && !this.isclicked) {
                     this.expectclick = true
                 }
@@ -58,7 +63,10 @@ var clickhandler = {
         }
     },
 
-    hovered : function(x1, x2, y1, y2) {
+    hovered : function(x1, x2, y1, y2, debug=false) {
+        if(debug){
+            console.debug(x1*(gameWindow.canvas.width/100), this.mouse[0], x2*(gameWindow.canvas.width/100), y1*(gameWindow.canvas.height/100), this.mouse[1], y2*(gameWindow.canvas.height/100))
+        }
         if(this.mouse[0] >= x1*(gameWindow.canvas.width/100) && this.mouse[0] <= x2*(gameWindow.canvas.width/100) && this.mouse[1] >= y1*(gameWindow.canvas.height/100) && this.mouse[1] <= y2*(gameWindow.canvas.height/100)) {
             return true
         }
@@ -71,14 +79,18 @@ var clickhandler = {
 
     update : function() {
         if(this.touches.length > 0) {
-            this.x = this.touches[0][0]
-            this.y = this.touches[0][1]
+            this.realx = this.touches[0][0]
+            this.realy = this.touches[0][1]
             this.click = this.touches[0][2]
         } else {
-            this.x = this.mouse[0]
-            this.y = this.mouse[1]
+            console.debug("applied mouse")
+            this.realx = this.mouse[0]
+            this.realy = this.mouse[1]
             this.click = this.mouse[2]
         }
+
+        this.x = this.realx*(100/gameWindow.canvas.width)
+        this.y = this.realy*(100/gameWindow.canvas.height)
 
         if(this.click == 0) {
             this.isclicked = false
@@ -161,24 +173,22 @@ var pausemenu = {
                 this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;
                 this.mainmenutext[i].update()
 
-                for(this.j = 0; this.j < allpos.length; this.j++) {
-                    if (clickhandler.hovered(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5)) {
-                        if (Math.round(this.selheight) != this.mainmenutext[i].realy){
-                            this.selheight += (this.mainmenutext[i].realy - this.selheight)/5
-                        }
-                        
-                        if(clickhandler.clicked(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5) && pausemenu.paused == 1) {
-                            if(i == 1) {
-                                pausemenu.toggle()
-                            } else if (i == 2) {
-                                player.reset()
-                                finishscreen.finished = false
-                                pausemenu.toggle()
-                            } else if (i == 4) {
-                                pausemenu.menu = 2
-                            } else if (i == 3) {
-                                pausemenu.menu = 3
-                            }
+                if (clickhandler.hovered(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5)) {
+                    if (Math.round(this.selheight) != this.mainmenutext[i].realy){
+                        this.selheight += (this.mainmenutext[i].realy - this.selheight)/5
+                    }
+                    
+                    if(clickhandler.clicked(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5) && pausemenu.paused == 1) {
+                        if(i == 1) {
+                            pausemenu.toggle()
+                        } else if (i == 2) {
+                            player.reset()
+                            finishscreen.finished = false
+                            pausemenu.toggle()
+                        } else if (i == 4) {
+                            pausemenu.menu = 2
+                        } else if (i == 3) {
+                            pausemenu.menu = 3
                         }
                     }
                 }
@@ -342,13 +352,13 @@ var finishscreen = {
             updateAll(popuptext);
         }
 
-        if ((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300)) && (pausemenu.paused == false)) {
-            this.tabimage = this.tabbg2
+        if ((clickhandler.hovered(30, 70, 0, 9)) && (pausemenu.paused == false)) {
+            popuptext[0].setImage("tabbg2.png")
         } else {
-            this.tabimage = this.tabbg
+            popuptext[0].setImage("tabbg.png")
         }
 
-        if ((this.parkedcount > 0) && (space || (((mousepos[1] < 70) && ((mousepos[0] > gameWindow.canvas.width/2-300) && (mousepos[0] < gameWindow.canvas.width/2+300))) && (mousedown == 1))) && (pausemenu.paused == false)) {
+        if ((this.parkedcount > 0) && (clickhandler.clicked(30, 70, 0, 9)) && (pausemenu.paused == false)) {
             this.finished = true
         }
 
@@ -428,6 +438,11 @@ function hudRect(x, y, width, height, fill, image=false, resize="both", alpha=1,
     this.resize = resize;
     this.alpha = alpha;
 
+    this.setImage = function(newimage) {
+        this.fill = new Image();
+        this.fill.src = `textures/${newimage}`
+    }
+
     this.update = function() {
         this.realwidth = (this.resize) ? (this.width*(gameWindow.canvas.width/(100))):(this.width*(1920/(100)))
         this.realheight = (this.resize == "both") ? (this.height*(gameWindow.canvas.height/(100))):(this.resize == "equal") ? (this.height*((gameWindow.canvas.width*(1080/1920))/(100))):(this.height*(1080/(100)))
@@ -444,13 +459,8 @@ function hudRect(x, y, width, height, fill, image=false, resize="both", alpha=1,
         this.canvas.globalAlpha = 1.0;
 
         if(this.clickevent != "") {
-            if((this.realx) <= allpos[0][0] && (this.realx + this.realwidth) >= allpos[0][0] && 
-               (this.realy) <= allpos[0][1] && (this.realy + this.realheight) >= allpos[0][1]) 
-            {
-                if(this.lastclick == 0 && allpos[0][2] == 1) {window[clickevent](...args)} 
-                this.lastclick = allpos[0][2]
-            } else {
-                this.lastclick = 1
+            if(clickhandler.clicked(this.x - this.width/2, this.x + this.width/2, this.y - this.height/2, this.y + this.height/2)) {
+                window[clickevent](...args)
             }
         }
     }
@@ -502,13 +512,8 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
         upcount++
 
         if(this.clickevent != "") {
-            if((this.realx - this.fromleft) <= allpos[0][0] && (this.realx + this.fromright) >= allpos[0][0] && 
-               (this.realy - this.realheight/2) <= allpos[0][1] && (this.realy + this.realheight/2) >= allpos[0][1]) 
-            {   
-                if(this.lastclick == 0 && allpos[0][2] == 1) {window[clickevent](...args)} 
-                this.lastclick = allpos[0][2]
-            } else {
-                this.lastclick = 1
+            if(clickhandler.clicked(this.x - (this.fromleft*(100/gameWindow.canvas.width)), this.x + (this.fromright*(100/gameWindow.canvas.width)), this.y - (this.realheight*(100/gameWindow.canvas.height))/2, this.y + (this.realheight*(100/gameWindow.canvas.height))/2)) {
+                window[clickevent](...args)
             }
         }
     }
@@ -545,16 +550,18 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
         canvas.arc((this.realx - this.realwidth/2) + ((this.realwidth/(this.max - this.min))*(this.value-this.min)), this.realy, this.realheight, 0, 2*Math.PI);
         canvas.fill();
 
-        if((allpos[0][0] > (this.realx - this.realwidth/2)) && (allpos[0][0] < (this.realx + this.realwidth/2)) && (allpos[0][1] < (this.realy + this.realheight*1.5)) && (allpos[0][1] > (this.realy - (this.realheight/2)*1.5)) && (allpos[0][2])) {
+        //console.debug(clickhandler.realx)
+
+        if((clickhandler.realx > (this.realx - this.realwidth/2)) && (clickhandler.realx < (this.realx + this.realwidth/2)) && (clickhandler.realy < (this.realy + this.realheight*1.5)) && (clickhandler.realy > (this.realy - (this.realheight/2)*1.5)) && (clickhandler.click)) {
             this.active = true
         }
         if(this.active) {
             if(this.step < 1) {
-                this.nextvalue = Round((this.min + ((allpos[0][0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),String(this.step).length-2)
+                this.nextvalue = Round((this.min + ((clickhandler.realx - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),String(this.step).length-2)
             } else if (this.step > 1) {
-                this.nextvalue = Round((this.min + ((allpos[0][0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth)))/this.step,0)*this.step
+                this.nextvalue = Round((this.min + ((clickhandler.realx - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth)))/this.step,0)*this.step
             } else {
-                this.nextvalue = Round((this.min + ((allpos[0][0] - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),0)
+                this.nextvalue = Round((this.min + ((clickhandler.realx - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),0)
             }
             
             if((this.nextvalue >= this.min) && (this.nextvalue <= this.max)) {
@@ -565,7 +572,7 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
                 this.value = this.max
             }
 
-            if(mousedown == 0) { 
+            if(clickhandler.click == 0) { 
                 this.active = false
             }
         }
