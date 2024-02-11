@@ -10,6 +10,7 @@ var clickhandler = {
         this.isclicked = false
         this.expectclick = false
         this.mobileUser = false
+        this.touch = false
 
         window.addEventListener('mousemove', function(e) {clickhandler.mouse[0] = e.pageX; clickhandler.mouse[1] = e.pageY;})
         window.addEventListener('mousedown', function(e) {clickhandler.mouse[2] = 1})
@@ -31,34 +32,25 @@ var clickhandler = {
     clicked : function(x1, x2, y1, y2, type=0) {
         if(type == 0 || type == 1) {
             if(this.mouse[0] >= x1*(gameWindow.canvas.width/100) && this.mouse[0] <= x2*(gameWindow.canvas.width/100) && this.mouse[1] >= y1*(gameWindow.canvas.height/100) && this.mouse[1] <= y2*(gameWindow.canvas.height/100)) {
-                if(this.mouse[2] && !this.isclicked) {
-                    this.expectclick = true
-                }
-                if(!this.isclicked && this.expectclick && !this.mouse[2]) {
-                    this.isclicked = true
+                this.touch = true
+                if(this.expectclick && !this.click) {
+                    console.debug("success!")
                     this.expectclick = false
+                    this.isclicked = true
                     return true
                 }
-            } else {
-                this.expectclick = false
             }
         }
         this.limit = (type == 0) ? 10:type
         this.first = (type == 0) ? 0:type-1
         for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
             if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
-                console.debug(this.touches[i][2])
-                if(this.touches[i][2] && !this.isclicked) {
-                    this.expectclick = true
-                }
-
-                if(!this.isclicked && this.expectclick && !this.touches[i][2]) {
-                    this.isclicked = true
+                this.touch = true
+                if(this.expectclick && !this.click) {
                     this.expectclick = false
+                    this.isclicked = true
                     return true
                 }
-            } else {
-                this.expectclick = false
             }
         }
     },
@@ -83,7 +75,6 @@ var clickhandler = {
             this.realy = this.touches[0][1]
             this.click = this.touches[0][2]
         } else {
-            console.debug("applied mouse")
             this.realx = this.mouse[0]
             this.realy = this.mouse[1]
             this.click = this.mouse[2]
@@ -92,10 +83,17 @@ var clickhandler = {
         this.x = this.realx*(100/gameWindow.canvas.width)
         this.y = this.realy*(100/gameWindow.canvas.height)
 
-        if(this.click == 0) {
+        if(this.click && !this.isclicked) {
+            this.expectclick = true
+        }
+        if(!this.click) {
             this.isclicked = false
+        }
+
+        if(!this.touch) {
             this.expectclick = false
         }
+        this.touch = false
     }
 }
 
