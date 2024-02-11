@@ -13,7 +13,7 @@ var clickhandler = {
         this.touch = false
 
         window.addEventListener('mousemove', function(e) {clickhandler.mouse[0] = e.pageX; clickhandler.mouse[1] = e.pageY;})
-        window.addEventListener('mousedown', function(e) {clickhandler.mouse[2] = 1})
+        window.addEventListener('mousedown', function(e) {clickhandler.mouse[2] = 1; clickhandler.mobileUser = false})
         window.addEventListener('mouseup', function(e) {clickhandler.mouse[2] = 0})
 
         window.addEventListener("touchstart", clickhandler.touchHandler);
@@ -30,29 +30,32 @@ var clickhandler = {
     },
 
     clicked : function(x1, x2, y1, y2, type=0) {
-        if(type == 0 || type == 1) {
+        console.debug(this.mobileUser)
+        if((type == 0 || type == 1) && !clickhandler.mobileUser) {
             if(this.mouse[0] >= x1*(gameWindow.canvas.width/100) && this.mouse[0] <= x2*(gameWindow.canvas.width/100) && this.mouse[1] >= y1*(gameWindow.canvas.height/100) && this.mouse[1] <= y2*(gameWindow.canvas.height/100)) {
                 this.touch = true
-                if(this.expectclick && !this.click) {
+                if(this.expectclick && !this.mouse[2]) {
                     console.debug("success!")
                     this.expectclick = false
                     this.isclicked = true
                     return true
                 }
             }
-        }
-        this.limit = (type == 0) ? 10:type
-        this.first = (type == 0) ? 0:type-1
-        for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
-            if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
-                this.touch = true
-                if(this.expectclick && !this.click) {
-                    this.expectclick = false
-                    this.isclicked = true
-                    return true
+        } else {
+            this.limit = (type == 0) ? 10:type
+            this.first = (type == 0) ? 0:type-1
+            for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
+                if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
+                    this.touch = true
+                    if(this.expectclick && !this.touches[i][2]) {
+                        this.expectclick = false
+                        this.isclicked = true
+                        return true
+                    }
                 }
             }
         }
+        
     },
 
     hovered : function(x1, x2, y1, y2, debug=false) {
@@ -70,10 +73,14 @@ var clickhandler = {
     },
 
     update : function() {
-        if(this.touches.length > 0) {
-            this.realx = this.touches[0][0]
-            this.realy = this.touches[0][1]
-            this.click = this.touches[0][2]
+        if(this.mobileUser) {
+            if(this.touches.length > 0) {
+                this.realx = this.touches[0][0]
+                this.realy = this.touches[0][1]
+                this.click = this.touches[0][2]
+            } else {
+                this.click = 0
+            }
         } else {
             this.realx = this.mouse[0]
             this.realy = this.mouse[1]
