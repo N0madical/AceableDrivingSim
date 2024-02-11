@@ -23,9 +23,14 @@ var clickhandler = {
 
     touchHandler : function(e) {
         clickhandler.mobileUser = true
-        clickhandler.touches = Object.values(e.touches)
+        let tempclicks = Object.values(e.touches)
+        for(let i in tempclicks) {
+            clickhandler.touches[i] = [tempclicks[i].pageX, tempclicks[i].pageY, 1]
+        }
         for(let i in clickhandler.touches) {
-            clickhandler.touches[i] = [clickhandler.touches[i].pageX, clickhandler.touches[i].pageY, 1]
+            if(i > tempclicks.length) {
+                clickhandler.touches[i][2] = 0
+            }
         }
     },
 
@@ -46,6 +51,7 @@ var clickhandler = {
             this.first = (type == 0) ? 0:type-1
             for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
                 if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
+                    console.debug("inside")
                     this.touch = true
                     if(this.expectclick && !this.touches[i][2]) {
                         this.expectclick = false
@@ -73,6 +79,7 @@ var clickhandler = {
     },
 
     update : function() {
+        console.debug(this.touches[i])
         if(this.mobileUser) {
             if(this.touches.length > 0) {
                 this.realx = this.touches[0][0]
