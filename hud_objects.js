@@ -28,7 +28,7 @@ var clickhandler = {
             clickhandler.touches[i] = [tempclicks[i].pageX, tempclicks[i].pageY, 1]
         }
         for(let i in clickhandler.touches) {
-            if(i > tempclicks.length) {
+            if(i+1 > tempclicks.length) {
                 clickhandler.touches[i][2] = 0
             }
         }
@@ -108,6 +108,9 @@ var clickhandler = {
             this.expectclick = false
         }
         this.touch = false
+
+        console.debug("Mobile touch:", this.touches[0][0], this.touches[0][1], (this.touches[0][2]))
+        //console.debug(this.touches)
     }
 }
 
