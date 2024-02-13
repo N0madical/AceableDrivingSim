@@ -350,12 +350,14 @@ carscripts = [
 guipages = [
     hud = [
         fpscount = new hudText("FPS: Error", 99.5, 1.25, size=15, justify="right"),
-        new hudSlider(80, 50, 20, 2, player.speed, -5, 10, "#49545b", "white", 1),
     ],
     debughud = [
         speedometer = new hudText("Speed: Error", 0.5, 1, size=30),
         posdebug = new hudText("Position: Error", 0.5, 1.5, size=30),
         border = new carborder(),
+    ],
+    mobileContolHud = [
+        new hudRect(88, 50, 12, 60, "gaspedal.png", true, "equal")
     ],
     choosecontrolstext = [
         new hudRect(50, 50, 60, 60, "#1b2932"),

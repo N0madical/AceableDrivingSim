@@ -55,6 +55,7 @@ window.onload = function() {
     // Initiate pause menu
     pausemenu.start();
     finishscreen.start();
+    mobileHud.start();
 
     // Add IDs and Layers if Undefined
     for(i = 0; i < updatelist.length; i++) {
@@ -185,7 +186,7 @@ var player = {
             if(isNaN(camera.cx) || isNaN(camera.cy)) {camera.cx = this.prevloc[0]; camera.cy = this.prevloc[1];}
 
             // Slow Down Effect
-            if (!up && !down) {
+            if (!up && !down && !mobileHud.active) {
                 if (this.speed > 0) {this.speed -= this.deceleration/fps; if(this.speed <=0){this.speed=0}} 
                 else if (this.speed < 0) {this.speed += this.deceleration/fps; if(this.speed >=0){this.speed=0}}
                 else {this.speed = 0}
@@ -406,6 +407,7 @@ function updateGameWindow() {
     // }
 
     clickhandler.update()
+    mobileHud.update()
 
     updateAll(hud)
 

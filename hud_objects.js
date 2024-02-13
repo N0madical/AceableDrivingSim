@@ -35,12 +35,10 @@ var clickhandler = {
     },
 
     clicked : function(x1, x2, y1, y2, type=0) {
-        console.debug(this.mobileUser)
         if((type == 0 || type == 1) && !clickhandler.mobileUser) {
             if(this.mouse[0] >= x1*(gameWindow.canvas.width/100) && this.mouse[0] <= x2*(gameWindow.canvas.width/100) && this.mouse[1] >= y1*(gameWindow.canvas.height/100) && this.mouse[1] <= y2*(gameWindow.canvas.height/100)) {
                 this.touch = true
                 if(this.expectclick && !this.mouse[2]) {
-                    console.debug("success!")
                     this.expectclick = false
                     this.isclicked = true
                     return true
@@ -51,7 +49,6 @@ var clickhandler = {
             this.first = (type == 0) ? 0:type-1
             for(let i = this.first; i < this.touches.length && i < this.limit; i++) {
                 if(this.touches[i][0] >= x1*(gameWindow.canvas.width/100) && this.touches[i][0] <= x2*(gameWindow.canvas.width/100) && this.touches[i][1] >= y1*(gameWindow.canvas.height/100) && this.touches[i][1] <= y2*(gameWindow.canvas.height/100)) {
-                    console.debug("inside")
                     this.touch = true
                     if(this.expectclick && !this.touches[i][2]) {
                         this.expectclick = false
@@ -79,7 +76,6 @@ var clickhandler = {
     },
 
     update : function() {
-        console.debug(this.touches[i])
         if(this.mobileUser) {
             if(this.touches.length > 0) {
                 this.realx = this.touches[0][0]
@@ -108,9 +104,36 @@ var clickhandler = {
             this.expectclick = false
         }
         this.touch = false
+    }
+}
 
-        console.debug("Mobile touch:", this.touches[0][0], this.touches[0][1], (this.touches[0][2]))
-        //console.debug(this.touches)
+var mobileHud = {
+    start: function() {
+        this.active = false;
+    },
+
+    update : function() {
+        if(mobilecontrols != 0) {
+            if(clickhandler.x > 50 && clickhandler.click) {
+                this.active = true
+                if(clickhandler.y < 80 && player.speed < 10) {
+                    player.speed += ((player.acceleration*((100 - clickhandler.y)/50))/fps)
+                    mobileContolHud[0].height = 40
+                    if(clickhandler.y < 50) {
+                        //mobileContolHud[0].y = clickhandler.y 
+                        mobileContolHud[0].height = 60 - (100-clickhandler.y)/2
+                    }
+                } else if (clickhandler.y > 80 && player.speed > -5) {
+                    player.speed -= ((player.acceleration*((clickhandler.y-60)/50))/fps)
+                }
+            } else {
+                this.active = false
+                mobileContolHud[0].y = 50
+                mobileContolHud[0].height = 60
+            }
+
+            updateAll(mobileContolHud)
+        }
     }
 }
 
@@ -300,10 +323,6 @@ var pausemenu = {
         pausemenu.accmenu()
 
         pausemenu.configmenu()
-
-        if(typeof(hud[1].value) != "undefined") {
-            player.speed = hud[1].value
-        }
 
         if(!pausemenu.paused) {
             if(clickhandler.hovered(0,6,0,8)) {
