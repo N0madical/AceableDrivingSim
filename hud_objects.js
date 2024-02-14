@@ -110,29 +110,42 @@ var clickhandler = {
 var mobileHud = {
     start: function() {
         this.active = false;
+        this.clickstart = {x:0, y:0};
     },
 
     update : function() {
         if(mobilecontrols != 0) {
-            if(clickhandler.x > 50 && clickhandler.click) {
-                this.active = true
-                if(clickhandler.y < 80 && player.speed < 10) {
-                    player.speed += ((player.acceleration*((100 - clickhandler.y)/50))/fps)
-                    mobileContolHud[0].height = 40
-                    if(clickhandler.y < 50) {
-                        //mobileContolHud[0].y = clickhandler.y 
-                        mobileContolHud[0].height = 60 - (100-clickhandler.y)/2
-                    }
-                } else if (clickhandler.y > 80 && player.speed > -5) {
-                    player.speed -= ((player.acceleration*((clickhandler.y-60)/50))/fps)
+            if(!(clickhandler.x < 6 && clickhandler.y < 8) && clickhandler.click) {
+                console.debug(this.active, clickhandler.y)
+                if(!this.active) {
+                    this.clickstart = {x:clickhandler.x, y:clickhandler.y}
                 }
+                this.active = true
+                for(let i = 0; i < 5; i++) {
+                    mobileContolHud[i].x = clickhandler.x
+                    if(mobilecontrols == 1) {
+                        mobileContolHud[i].x = this.clickstart.x - ((this.clickstart.x - clickhandler.x)/4)*i
+                    } else {
+                        mobileContolHud[i].x = clickhandler.x
+                    }
+                    mobileContolHud[i].y = this.clickstart.y - ((this.clickstart.y - clickhandler.y)/4)*i
+                }
+
+                if(player.speed*(player.acceleration*((this.clickstart.y - clickhandler.y)/50)) >= 0) {
+                    player.speed += ((player.acceleration*((this.clickstart.y - clickhandler.y)/50))/fps)
+                } else {
+                    player.speed += ((player.acceleration*((this.clickstart.y - clickhandler.y)/10))/fps)
+                }
+                
+                if(mobilecontrols == 1) {
+                    if(Math.abs(((this.clickstart.x - clickhandler.x)*-1)) < player.maxturndeg) {
+                        player.turndeg = ((this.clickstart.x - clickhandler.x)*-1)
+                    }
+                }
+                updateAll(mobileContolHud)
             } else {
                 this.active = false
-                mobileContolHud[0].y = 50
-                mobileContolHud[0].height = 60
             }
-
-            updateAll(mobileContolHud)
         }
     }
 }

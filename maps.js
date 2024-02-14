@@ -357,7 +357,11 @@ guipages = [
         border = new carborder(),
     ],
     mobileContolHud = [
-        new hudRect(88, 50, 12, 60, "gaspedal.png", true, "equal")
+        new hudRect(88, 50, (1*(1080/1920)), 1, "accball.png", true, "equal", 0.2),
+        new hudRect(88, 50, (3*(1080/1920)), 3, "accball.png", true, "equal", 0.4),
+        new hudRect(88, 50, (6*(1080/1920)), 6, "accball.png", true, "equal", 0.6),
+        new hudRect(88, 50, (9*(1080/1920)), 9, "accball.png", true, "equal", 0.8),
+        new hudRect(88, 50, (12*(1080/1920)), 12, "accball.png", true, "equal")
     ],
     choosecontrolstext = [
         new hudRect(50, 50, 60, 60, "#1b2932"),
