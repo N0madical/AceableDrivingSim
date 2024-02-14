@@ -116,15 +116,15 @@ var mobileHud = {
     update : function() {
         if(mobilecontrols != 0) {
             if(!(clickhandler.x < 6 && clickhandler.y < 8) && clickhandler.click) {
-                console.debug(this.active, clickhandler.y)
                 if(!this.active) {
                     this.clickstart = {x:clickhandler.x, y:clickhandler.y}
                 }
                 this.active = true
                 for(let i = 0; i < 5; i++) {
-                    mobileContolHud[i].x = clickhandler.x
                     if(mobilecontrols == 1) {
-                        mobileContolHud[i].x = this.clickstart.x - ((this.clickstart.x - clickhandler.x)/4)*i
+                        if(Math.abs(((this.clickstart.x - clickhandler.x)*-1.5)) < player.maxturndeg) {
+                            mobileContolHud[i].x = this.clickstart.x - ((this.clickstart.x - clickhandler.x)/4)*i
+                        }
                     } else {
                         mobileContolHud[i].x = clickhandler.x
                     }
@@ -138,8 +138,14 @@ var mobileHud = {
                 }
                 
                 if(mobilecontrols == 1) {
-                    if(Math.abs(((this.clickstart.x - clickhandler.x)*-1)) < player.maxturndeg) {
-                        player.turndeg = ((this.clickstart.x - clickhandler.x)*-1)
+                    if(Math.abs(((this.clickstart.x - clickhandler.x)*-1.5)) < player.maxturndeg) {
+                        player.turndeg = ((this.clickstart.x - clickhandler.x)*-1.5)
+                    } else {
+                        if(((this.clickstart.x - clickhandler.x)*-1.5) > 0) {
+                            player.turndeg = player.maxturndeg
+                        } else {
+                            player.turndeg = player.maxturndeg*-1
+                        }
                     }
                 }
                 updateAll(mobileContolHud)
