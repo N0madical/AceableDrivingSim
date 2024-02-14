@@ -96,7 +96,7 @@ function handleOrientation(event) {
 }
 
 document.getElementById("requestMotionAccess").onclick = function(e) {
-    setControls(1)
+    setControls(2)
     e.preventDefault()
     if (
         DeviceMotionEvent &&

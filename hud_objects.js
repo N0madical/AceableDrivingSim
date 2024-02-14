@@ -114,7 +114,7 @@ var mobileHud = {
     },
 
     update : function() {
-        if(mobilecontrols != 0) {
+        if(mobilecontrols != 0 && !player.paused) {
             if(!(clickhandler.x < 6 && clickhandler.y < 8) && clickhandler.click) {
                 if(!this.active) {
                     this.clickstart = {x:clickhandler.x, y:clickhandler.y}
