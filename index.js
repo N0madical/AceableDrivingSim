@@ -10,6 +10,7 @@ var lasttime = 0;
 var fpsrec = 0;
 var scalar = 50;
 let orientOffset = 0;
+renderlist = {}
 
 let left = false;
 let right = false;
@@ -17,6 +18,8 @@ let up = false;
 let down = false;
 let esc = false;
 let r_key = false;
+let s_key = false;
+let a_key = false;
 let space = false;
 let parked = false
 var fps = maxfps;
@@ -294,17 +297,19 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
     if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
     if (gameWindow.keys && (gameWindow.keys[82])) {r_key = true} else {r_key = false}
+    if (gameWindow.keys && (gameWindow.keys[83])) {s_key = true} else {s_key = false}
+    if (gameWindow.keys && (gameWindow.keys[65])) {a_key = true} else {a_key = false}
     if (gameWindow.keys && (gameWindow.keys[32])) {space = true} else {space = false}
 
     if(player.paused){left=false; right=false; up=false; down=false;}
 
-    //############# Keycode Finder ############
-    // if (gameWindow.keys) {
-    //     for(i = 0; i < gameWindow.keys.length; i++) {
-    //         if (gameWindow.keys[i])
-    //             console.debug(`Key ${i} pressed`);
-    //     }
-    // }
+    // ############# Keycode Finder ############
+    if (gameWindow.keys) {
+        for(i = 0; i < gameWindow.keys.length; i++) {
+            if (gameWindow.keys[i])
+                console.debug(`Key ${i} pressed`);
+        }
+    }
     
     // Refresh Game Window
     gameWindow.clear();
@@ -347,68 +352,16 @@ function updateGameWindow() {
         }
         if(loadopac < 1) {document.getElementById("loadingscreen").remove()}
     }
-    
-
-    // console.debug(updatelist)
-
-    // if(updatelistcache != updatelist) {
-    //     updatelistcache = []
-    //     for (g = 1; g < 6; g++) {
-        
-    //         for (f = 0; f < updatelist.length; f++) {
-    //             if (updatelist[f].layer == g) {
-    //                 updatelistcache = updatelistcache.concat(updatelist[f])
-    //                 layercounts[g]++
-    //             }
-    //         }
-    //     }
-    //     updatelist = updatelistcache
-    // }
-    
-    // upcount = 0
-    // //upcountprev = 0
-    // repeats = 0
-    // sum = 0
-    // for (h = 0; h < layercounts.length; h++) {
-    //     for(e = 0; e < h; e++) {
-    //         sum += layercounts[e]
-    //     }
-    //     console.debug(sum)
-    //     for(t = sum; t < (sum + layercounts[h]); t++) {
-    //         updatelist[t].update()
-    //     }
-    //     // while(upcount < sum) {
-    //     //     repeats++
-    //     //     if (repeats > 1000) {
-    //     //         console.error(`Error! Sprite ID ${updatelist[upcount].id} has timed out or is not returning updated status.`)
-    //     //         break
-    //     //     }
-    //     // }
-    //     //repeats = 0
-    // }
-
-    // while(upcount < layercounts[h]) {
-    //     updatelist[upcount].update();
-    //     if(upcountprev == upcount) {
-    //         repeats++
-    //     } else {
-    //         repeats = 0
-    //     }
-    //     upcountprev = upcount
-    //     if (repeats > 1000) {
-    //         console.error(`Error! Sprite ID ${updatelist[upcount].id} has timed out or is not returning updated status.`)
-    //         break
-    //     }
-    // }
-    
-    
-    // while(upcount < updatelist.length) {
-    //     updatelist[upcount].update();
-    // }
 
     clickhandler.update()
     mobileHud.update()
 
     updateAll(hud)
+
+    for(let i in infomenus) {
+        if(renderlist[i]) {
+            updateAll(infomenus[i])
+        }
+    }
 
 }

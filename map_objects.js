@@ -324,20 +324,16 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
 }
 
 // Parking space object
-function infospot(x, y, angle, width, height, idealangle=0) {
+function infospot(x, y, size, menu) {
     this.start = function() {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.fill = "green";
+        this.menu = menu;
+        this.width = size;
+        this.fill = "blue";
         this.layer = 2;
         this.toggle = 0;
         this.opacity = 50;
-
-        this.AccOfAtt = 0
-        this.prevxy = [0,0]
-        this.acclist = []
     }
 
     this.update = function() {
@@ -351,58 +347,19 @@ function infospot(x, y, angle, width, height, idealangle=0) {
         this.pos = camera.position(this.x,this.y,-this.angle);
         canvas.globalAlpha = (this.opacity/100)
         canvas.fillStyle = this.fill;
-        if (this.circle) {
-            canvas.beginPath();
-            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.width/2)*scalar*(camera.czoom/100),0,2*Math.PI);
-            canvas.fill();
-        } else {
-            canvas.translate(((gameWindow.canvas.width/2 + this.pos[0])), ((gameWindow.canvas.height/2 - this.pos[1])));
-            canvas.rotate(radians(this.pos[2]));
-            canvas.fillRect((this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
-        }
+        canvas.beginPath();
+        canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.width/2)*scalar*(camera.czoom/100),0,2*Math.PI);
+        canvas.fill();
         canvas.globalAlpha = 1
         canvas.restore();
 
         if(!player.paused) {
             this.distance = Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2))
 
-            if(this.distance <= this.sensdistance) {
-                this.cirx = camera.cx + (player.turnrad*cos(camera.cangle))
-                this.ciry = camera.cy - (player.turnrad*sin(camera.cangle))
-                this.calc1 = [this.x - this.cirx, this.y - this.ciry]
-                this.calc2 = [this.cirx + (this.calc1[0]/Math.sqrt((this.calc1[0]**2) + (this.calc1[1]**2))) * Math.abs(player.turnrad), this.ciry + (this.calc1[1]/Math.sqrt((this.calc1[0]**2) + (this.calc1[1]**2))) * Math.abs(player.turnrad)]
-                this.AccOfAtt = 1 - ((Math.sqrt((this.x - this.calc2[0])**2 + (this.y - this.calc2[1])**2))/this.sensdistance)
-                if((Round(camera.cx,2) != this.prevxy[0]) || (Round(camera.cy,2) != this.prevxy[1])) {
-                    this.prevxy = [Round(camera.cx,2), Round(camera.cy,2)]
-                    if(this.AccOfAtt >= 0.6) {this.acclist.push((this.AccOfAtt-0.6)*2.5)
-                    } else {this.acclist.push(0)}
-                }
-            } else if ((Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) >= this.sensdistance + 5) || ([player.cx, player.cy, player.cangle] == player_position)) {
-                this.acclist = []
-            }
-
-            if((this.distance <= 2) && (player.speed <= 0.5))  {
-                parked = true
-                finishscreen.parkedcount = 5
-                finishscreen.score_accuracy = average(this.acclist)
-                this.direction = Math.abs(-(Math.abs((-this.idealangle) - camera.cangle)%180)+90)/90
-
-                if(this.direction >= 0.6) {finishscreen.score_direction = (this.direction-0.6)*2.5} 
-                else {finishscreen.score_direction = 0}
-
-                this.xdistance = 1-(Math.abs(cos(this.idealangle+invtan((camera.cy-this.y)/(camera.cx-this.x)))*this.distance)/2)
-                // if((this.xdistance >= ((this.width/2)-((player.width/2)*0.9))) && (this.xdistance <= (this.width/2))) {finishscreen.score_distance = (1-((this.xdistance-((this.width/2)-((player.width/2)*0.9)))/((player.width/2)*0.9)))*finishscreen.score_direction}
-                // else if (this.xdistance <= ((this.width/2)-((player.width/2)*0.9))) {finishscreen.score_distance = 1*finishscreen.score_direction}
-                // else {finishscreen.score_distance = 0}
-                if(this.xdistance >= 0.6) {finishscreen.score_distance = ((this.xdistance-0.6)*2.5)*this.direction}
-                else {finishscreen.score_distance = 0}
-                
-
-                if(this.reverse == false) {
-                    if(Math.abs(this.idealangle - camera.cangle) > 90) {
-                        finishscreen.score_direction = 0
-                    }
-                }
+            if((this.distance <= 2))  { // && (player.speed <= 0.5)
+                renderlist[this.menu] = true
+            } else {
+                renderlist[this.menu] = false
             }
         }
 

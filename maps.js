@@ -107,6 +107,7 @@ textures = [
 maps = [
     // Parking lot map
     parkinglot = [
+        new infospot(0, 15, 1, 0),
         //new rect(false, 0, 10, 0, 2, 2, "yellow", 4),
 
         new terrain(0, 0, 0, 90, 80, "grass"),
@@ -341,6 +342,13 @@ carscripts = [
         //[0, 3, [270,1], [0,0,0,0, false]],
         [2, 1, 5, [0,0,70,0, 1, false]],
     ],
+]
+
+infomenus = [
+    [
+        new hudRect(50, 20, 20, 10, "blue", false),
+        new hudText("Idk hi I guess", 50, 20, 80, "Center")
+    ]
 ]
 
 //GUI
