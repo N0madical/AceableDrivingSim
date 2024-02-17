@@ -107,7 +107,7 @@ textures = [
 maps = [
     // Parking lot map
     parkinglot = [
-        new infospot(0, 15, 1, 0),
+        new infospot(18, 0, 2, 0),
         //new rect(false, 0, 10, 0, 2, 2, "yellow", 4),
 
         new terrain(0, 0, 0, 90, 80, "grass"),
@@ -346,8 +346,19 @@ carscripts = [
 
 infomenus = [
     [
-        new hudRect(50, 20, 20, 10, "blue", false),
-        new hudText("Idk hi I guess", 50, 20, 80, "Center")
+        [
+            new hudRect(50, 10, 50, 5, "#1b2932", false, "both", 1, "toolTipToggle", [0]),
+            new hudText("Parallel Parking", 26, 10, 40, "left", "white"),
+            new hudRect(73, 10, 1.75, 3.5, "caratUp.png", true, "equal")
+        ],
+        [
+            new hudRect(50, 40, 50, 60, "#1b2932", false, "both"),
+            new hudRect(50, 10, 50, 5, "#1b2932", false, "both", 1, "toolTipToggle", [0]),
+            new hudText("Parallel Parking", 50, 15, 60, "center", "white"),
+            new hudRect(73, 10, 1.75, 3.5, "caratDown.png", true, "equal"),
+            new hudRect(35, 40, 12, 40, "tooltip1.JPG", true, "equal"),
+            new hudText("Start by pulling up next to\nthe car in front of your\nparking space\n\nThen, back in at a tight angle\nand streighten out before\nhitting the curb.", 43, 25, 40, "left", "white"),
+        ],
     ]
 ]
 

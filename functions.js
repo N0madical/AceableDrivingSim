@@ -106,3 +106,11 @@ document.getElementById("requestMotionAccess").onclick = function(e) {
       }
     window.addEventListener("deviceorientation", handleOrientation);
 }
+
+function toolTipToggle(id) {
+    if(renderlist[id] == 1) {
+        renderlist[id] = 2
+    } else {
+        renderlist[id] = 1
+    }
+}

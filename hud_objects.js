@@ -535,34 +535,37 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
     this.realheight = (this.size/3)*2;
 
     this.update = function() {
+        this.multiline = this.text.split("\n")
 
         this.ssize = this.size * (gameWindow.canvas.width/1920)
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.font = (`${this.ssize}px ${this.font}`);
         canvas.fillStyle = this.color;
-        this.realwidth = canvas.measureText(this.text).width
-        this.realheight = (this.ssize/3)*2
-        if (this.justify == "center") {
-            this.jpos = this.realwidth/2;
-            this.fromleft = this.realwidth/2
-            this.fromright = this.realwidth/2
-        } else if (this.justify == "right") {
-            this.jpos = this.realwidth;
-            this.fromleft = this.realwidth
-            this.fromright = 0
-        } else {
-            this.jpos = 0;
-            this.fromleft = 0
-            this.fromright = this.realwidth
-        }
         canvas.globalAlpha = this.alpha;
-        this.realx = this.x*(gameWindow.canvas.width/100)
-        this.realy = this.y*(gameWindow.canvas.height/100)
-
-        canvas.fillText(this.text, this.realx - this.jpos, this.realy + this.realheight/2);
+        this.realheight = (this.ssize/3)*2
+        for(let i in this.multiline) {
+            this.realwidth = canvas.measureText(this.multiline[i]).width
+            if (this.justify == "center") {
+                this.jpos = this.realwidth/2;
+                this.fromleft = this.realwidth/2
+                this.fromright = this.realwidth/2
+            } else if (this.justify == "right") {
+                this.jpos = this.realwidth;
+                this.fromleft = this.realwidth
+                this.fromright = 0
+            } else {
+                this.jpos = 0;
+                this.fromleft = 0
+                this.fromright = this.realwidth
+            }
+            
+            canvas.fillText(this.multiline[i], this.realx - this.jpos, this.realy + this.realheight/2 + (this.realheight*i*2));
+        }
         canvas.globalAlpha = 1;
         upcount++
+        this.realx = this.x*(gameWindow.canvas.width/100)
+        this.realy = this.y*(gameWindow.canvas.height/100)
 
         if(this.clickevent != "") {
             if(clickhandler.clicked(this.x - (this.fromleft*(100/gameWindow.canvas.width)), this.x + (this.fromright*(100/gameWindow.canvas.width)), this.y - (this.realheight*(100/gameWindow.canvas.height))/2, this.y + (this.realheight*(100/gameWindow.canvas.height))/2)) {

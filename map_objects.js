@@ -357,9 +357,11 @@ function infospot(x, y, size, menu) {
             this.distance = Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2))
 
             if((this.distance <= 2))  { // && (player.speed <= 0.5)
-                renderlist[this.menu] = true
+                if(renderlist[this.menu] != 2) {
+                    renderlist[this.menu] = 1
+                }
             } else {
-                renderlist[this.menu] = false
+                renderlist[this.menu] = 0
             }
         }
 

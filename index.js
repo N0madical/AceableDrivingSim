@@ -10,7 +10,7 @@ var lasttime = 0;
 var fpsrec = 0;
 var scalar = 50;
 let orientOffset = 0;
-renderlist = {}
+let renderlist = {}
 
 let left = false;
 let right = false;
@@ -353,15 +353,16 @@ function updateGameWindow() {
         if(loadopac < 1) {document.getElementById("loadingscreen").remove()}
     }
 
-    clickhandler.update()
-    mobileHud.update()
-
-    updateAll(hud)
-
     for(let i in infomenus) {
-        if(renderlist[i]) {
-            updateAll(infomenus[i])
+        if(renderlist[i] == 1) {
+            updateAll(infomenus[i][0])
+        } else if (renderlist[i] == 2) {
+            updateAll(infomenus[i][1])
         }
     }
+
+    clickhandler.update()
+    mobileHud.update()
+    updateAll(hud)
 
 }
