@@ -33,31 +33,29 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
                     this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
                     this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
-                    this.touch = false
-                    if(this.angle > 0 && this.angle < 90) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}} 
-                    else if(this.angle > 90 && this.angle < 180) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}}
-                    else if(this.angle > 180 && this.angle < 270) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
-                    else {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
-                    if (this.touch) {if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}}
+                    if (pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width, this.height, this.angle)) {
+                        if (this.layer == player.layer + 1) {
+                            player.reset()
+                        } else {
+                            this.opacity -= 1.5
+                        }
+                    }
                 }
             }
             if(this.layer == player.layer) {
                 for (this.i = 0; this.i < player.wheelangles.length; this.i++) {
                     this.pointx = camera.cx + (sin(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
                     this.pointy = camera.cy + (cos(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
-                    this.touch = false
-                    if(this.angle > 0 && this.angle < 90) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}} 
-                    else if(this.angle > 90 && this.angle < 180) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}}
-                    else if(this.angle > 180 && this.angle < 270) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
-                    else {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
-                    if (this.touch) {
+                    if (pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width, this.height, this.angle)) {
                         if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
                         if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
                     }
                 }
             }
         }
-        canvas.globalAlpha = (this.opacity/100)
+        if(this.opacity != 100) {
+            canvas.globalAlpha = (this.opacity/100)
+        }
         if(this.isimage) {
             canvas.drawImage(this.fill, (this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
         } else {
@@ -69,10 +67,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
     }
 
     this.testpoint = function(tstx, tsty) {
-        if(this.angle > 0 && this.angle < 90) {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}} 
-        else if(this.angle > 90 && this.angle < 180) {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0)) {return true}}
-        else if(this.angle > 180 && this.angle < 270) {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
-        else {if (((tan(this.angle)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)>=0) && ((tan(this.angle + 90)*(tstx-this.poscorner[0])+this.poscorner[1]-tsty)<=0) && ((tan(this.angle)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)<=0) && ((tan(this.angle+90)*(tstx-this.negcorner[0])+this.negcorner[1]-tsty)>=0)) {return true}}
+        if(pointInRectangle(tstx, tsty, this.x, this.y, this.width, this.height, this.angle)){return true}
         return false
     }
     
@@ -128,7 +123,9 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
                 }
             }
         }
-        canvas.globalAlpha = (this.opacity/100)
+        if(this.opacity != 100) {
+            canvas.globalAlpha = (this.opacity/100)
+        }
         if(this.isimage) {
             canvas.drawImage(this.fill, (this.diameter*(scalar)*(camera.czoom/100)) / -2, (this.diameter*(scalar)*(camera.czoom/100)) / -2, this.diameter*(scalar)*(camera.czoom/100), this.diameter*(scalar)*(camera.czoom/100));
             canvas.restore();
@@ -369,9 +366,9 @@ function infospot(x, y, size, menu) {
     }
 }
 
-function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=2) {
+function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colisionmod=[0,0]) {
     this.start = function() {
-        this.type = 5;
+        this.type = cartype;
         this.fill = loadedcartextures[cartype][0];
         this.width = loadedcartextures[cartype][1];
         this.height = loadedcartextures[cartype][2];
@@ -381,10 +378,11 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
         this.logicid = logicID - 1
         this.x = x 
         this.y = y
-        this.angle = angle + 0.00001
+        this.angle = angle
         this.colmod = colisionmod;
-        this.radius = ((Math.sqrt((this.width+this.colmod)**2 + (this.height+this.colmod)**2))/2)
+        this.radius = ((Math.sqrt((this.width)**2 + (this.height)**2))/2)
         this.exclusiveactive = false
+        this.colmods = [[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2]]
     }
 
     this.update = function() {
@@ -414,14 +412,21 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
 
         if(this.logicid >= 0) {
             this.exclusiveactive = false
-            for(i = 0; i < carscripts[this.logicid].length; i++) {
+            for(let i = 0; i < carscripts[this.logicid].length; i++) {
                 if(this.exclusiveactive == false) {
                     //console.debug(this.angle)
-                    this.scactive = false
+                    this.logicActive = false
 
+                    // // Object, Objects, or Value to activate logic result
                     this.pathintersect = carscripts[this.logicid][i][0]
+
+                    // // Path to check for object along, or type of value to check (x,y,angle,velocity)
                     this.pathtype = carscripts[this.logicid][i][1]
+
+                    // // Distance along path to check for object, or array of [Desired value, Range] when checking value
                     this.pathdist = carscripts[this.logicid][i][2]
+
+                    // // What to do when the logic is triggered
                     this.result = carscripts[this.logicid][i][3]
 
                     if(this.pathtype == 1) {
@@ -442,16 +447,16 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
 
                     if(this.pathintersect == 0 && !this.logicactive) {
                         if(this.pathtype == 1 && this.x >= this.pathdist[0] - this.pathdist[1] && this.x <= this.pathdist[0] + this.pathdist[1]) {
-                            this.scactive = true
+                            this.logicActive = true
                             this.x = this.pathdist[0]
                         } else if (this.pathtype == 2 && this.y >= this.pathdist[0] - this.pathdist[1] && this.y <= this.pathdist[0] + this.pathdist[1]) {
-                            this.scactive = true
+                            this.logicActive = true
                             this.y = this.pathdist[0]
                         } else if (this.pathtype == 3 && (mod360(this.angle)) >= this.pathdist[0] - this.pathdist[1] && (mod360(this.angle)) <= this.pathdist[0] + this.pathdist[1]) {
-                            this.scactive = true
+                            this.logicActive = true
                             this.angle = this.pathdist[0]
                         } else if (this.pathtype == 4 && this.speed >= this.pathdist[0] - this.pathdist[1] && this.speed <= this.pathdist[0] + this.pathdist[1]) {
-                            this.scactive = true
+                            this.logicActive = true
                             this.speed = this.pathdist[0]
                         }
                     }
@@ -461,7 +466,7 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
                             if(maps[map-1][j].type == 1 || maps[map-1][j].type == 2) {
                                 if(maps[map-1][j].layer == this.layersel) {
                                     if(maps[map-1][j].testpoint(this.pathpoint[0], this.pathpoint[1])) {
-                                        this.scactive = true
+                                        this.logicActive = true
                                         this.logicactive = true
                                     }
                                 }
@@ -470,7 +475,7 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
                         }
                     }
 
-                    if(this.scactive == true) {
+                    if(this.logicActive) {
                         this.exclusiveactive = carscripts[this.logicid][i][4]
                         this.x += this.result[0]
                         this.y += this.result[1]
@@ -495,18 +500,11 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
         }
 
         if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
-            this.poscorner = [(this.x + (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y + (sin(this.angle+invtan(this.height/this.width))*this.radius))]
-            this.negcorner = [(this.x - (cos(this.angle+invtan(this.height/this.width))*this.radius)),(this.y - (sin(this.angle+invtan(this.height/this.width))*this.radius))]
-            this.offset = 90
-            for (this.i = 0; this.i < player.distances.length; this.i++) {
-                this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
-                this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
-                this.touch = false
-                if(this.angle >= this.offset && this.angle < this.offset+90) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}} 
-                else if(this.angle >= this.offset+90 && this.angle < this.offset+180) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0)) {this.touch = true}}
-                else if(this.angle >= this.offset+180 && this.angle < this.offset+270) {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
-                else {if (((tan(this.angle)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)>=0) && ((tan(this.angle + 90)*(this.pointx-this.poscorner[0])+this.poscorner[1]-this.pointy)<=0) && ((tan(this.angle)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)<=0) && ((tan(this.angle+90)*(this.pointx-this.negcorner[0])+this.negcorner[1]-this.pointy)>=0)) {this.touch = true}}
-                if (this.touch) {player.reset()}
+            for (let i = 0; i < player.distances.length; i++) {
+                this.pointx = camera.cx + (sin(((i*16) + camera.cangle) % 360) * (player.distances[i]/scalar))
+                this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]/scalar))
+
+                if(pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width + this.colmods[this.type][0], this.height + this.colmods[this.type][1], this.angle)) {player.reset()}
             }
         }
 
@@ -514,4 +512,20 @@ function car(cartype, x, y, angle, speed, turn, colisionmod=0, logicID=0, layer=
         canvas.restore();
         upcount++
     }
+}
+
+function pointInRectangle(x, y, rx, ry, w, h, a) {
+    // Translate point and rectangle to center at the origin
+    x -= rx;
+    y -= ry;
+
+    // Rotate the point around the origin by -a
+    const xRotated = x * cos(-a) - y * sin(-a);
+    const yRotated = x * sin(-a) + y * cos(-a);
+
+    // Check if the rotated point is inside the rotated rectangle
+    return (
+        xRotated >= -w/2 && xRotated <= w/2 &&
+        yRotated >= -h/2 && yRotated <= h/2
+    );
 }

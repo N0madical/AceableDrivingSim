@@ -65,8 +65,12 @@ configs = [
 ]
 
 cartextures = [
-    ["textures/car.png", 2.3, 5],
-    ["textures/carblue.png", 2.3, 5],
+    ["textures/car.png", 2.3, 5], //0
+    ["textures/carblack.png", 2.3, 5], //1
+    ["textures/carblue.png", 2.3, 5], //2
+    ["textures/cardarkblue.png", 2.3, 5], //3
+    ["textures/carlightblue.png", 2.3, 5], //4 
+    ["textures/cargray.png", 2.3, 5], //5
 ]
 
 //Loading Textures
@@ -74,12 +78,6 @@ textures = [
     global = [
         ["asphalt", "textures/crasphalt.jpg"],
         ["grass", "textures/grass.jpg"],
-        ["car", "textures/car.png"],
-        ["carblack", "textures/carblack.png"],
-        ["carblue", "textures/carblue.png"],
-        ["cardarkblue", "textures/cardarkblue.png"],
-        ["carlightblue", "textures/carlightblue.png"],
-        ["cargray", "textures/cargray.png"],
         ["road", "textures/road.png"]
     ],
     
@@ -94,7 +92,6 @@ textures = [
     parkinglot2 = [
         ["lightpole", "textures/lightpole.png"],
         ["tree", "textures/tree.png"],
-
     ],
 
     road = [],
@@ -108,7 +105,8 @@ maps = [
     // Parking lot map
     parkinglot = [
         new infospot(18, 0, 2, 0),
-        //new rect(false, 0, 10, 0, 2, 2, "yellow", 4),
+
+        new car(type=0, x=0, y=10, angle=0, speed=3, turn=0, logicID=1),
 
         new terrain(0, 0, 0, 90, 80, "grass"),
 
@@ -180,44 +178,42 @@ maps = [
         new rect(false, -6, 7.5, 90, 0.15, 5, "yellow"),
         new rect(false, -6, 10, 90, 0.15, 5, "yellow"),
 
-        new car(type=0, x=0, y=10, angle=0, speed=3, turn=0, collisionmod=-1, logicID=1),
-
         new parkingspot(false, -5.75, -8.75, 90, 2, 4),
-        new rect(true, -6, -6.25, 90, 2.3, 5, "carblue", 4, -0.5),
-        new rect(true, -6.1, -3.75, 90, 2.3, 5, "cardarkblue", 4, -0.5),
-        new rect(true, -5.7, -1.25, 90, 2.3, 5, "car", 4, -0.5),
+        new car(0, -6, -6.25, 90),
+        new car(3, -6.1, -3.75, 90),
+        new car(0, -5.7, -1.25, 90),
         new parkingspot(false, -5.75, 1.25, 90, 2, 4),
-        new rect(true, -6.3, 3.75, 90, 2.3, 5, "carlightblue", 4, -0.5),
-        new rect(true, -6.1, 6.25, 90, 2.3, 5, "car", 4, -0.5),
+        new car(4, -6.3, 3.75, 90),
+        new car(0, -6.1, 6.25, 90),
         new parkingspot(false, -5.75, 8.75, 90, 2, 4),
 
-        new rect(true, 6.1, -8.75, 270, 2.3, 5, "carlightblue", 4, -0.5),
-        new rect(true, 6.2, -6.25, 270, 2.3, 5, "cargray", 4, -0.5),
+        new car(4, 6.1, -8.75, 270),
+        new car(5, 6.2, -6.25, 270),
         new parkingspot(false, 5.75, -3.75, 90, 2, 4),
-        new rect(true, 5.6, -1.25, 270, 2.3, 5, "carblack", 4, -0.5),
-        new rect(true, 6, 1.25, 270, 2.3, 5, "cargray", 4, -0.5),
+        new car(1, 5.6, -1.25, 270),
+        new car(5, 6, 1.25, 270),
         new parkingspot(false, 5.75, 3.75, 90, 2, 4),
-        new rect(true, 6.1, 6.25, 270, 2.3, 5, "carlightblue", 4, -0.5),
+        new car(4, 6.1, 6.25, 270),
         new parkingspot(false, 5.75, 8.75, 90, 2, 4),
 
-        new rect(true, 15.25, -6.25, 180, 2.3, 5, "cardarkblue", 4, -0.5),
+        new car(3, 15.25, -6.25, 180),
         new parkingspot(false, 15.1, 0, 0, 2, 5),
-        new rect(true, 15, 6.25, 180, 2.3, 5, "carblue", 4, -0.5),
+        new car(2, 15, 6.25, 180),
 
-        new rect(true, 22.9, -8.5, 180, 2.3, 5, "car", 4, -0.5),
+        new car(0, 22.9, -8.5, 180),
         new parkingspot(false, 22.9, -2.9, 0, 2, 5),
-        new rect(true, 23, 2.75, 180, 2.3, 5, "carblack", 4, -0.5),
-        new rect(true, 22.75, 8.5, 180, 2.3, 5, "carlightblue", 4, -0.5),
+        new car(1, 23, 2.75, 180),
+        new car(4, 22.75, 8.5, 180),
 
-        new rect(true, -15.5, -5.5, 315, 2.3, 5, "cargray", 4, -0.5),
-        new rect(true, -15, -1.25, 315, 2.3, 5, "carblack", 4, -0.5),
-        new rect(true, -15.25, 2, 315, 2.3, 5, "cargray", 4, -0.5),
-        new rect(true, -15.5, 5.5, 315, 2.3, 5, "carlightblue", 4, -0.5),
+        new car(5, -15.5, -5.5, 315),
+        new car(1, -15, -1.25, 315),
+        new car(5, -15.25, 2, 315),
+        new car(4, -15.5, 5.5, 315),
 
-        new rect(true, -23, -5.5, 45, 2.3, 5, "car", 4, -0.5),
-        new rect(true, -22.75, -2, 45, 2.3, 5, "carblack", 4, -0.5),
+        new car(0, -23, -5.5, 45),
+        new car(1, -22.75, -2, 45),
         new parkingspot(false, -22.5, 1.3, 45, 2, 5),
-        new rect(true, -22.5, 5, 45, 2.3, 5, "carblue", 4, -0.5),
+        new car(2, -22.5, 5, 45),
         
         new rect(false, 6, -10, 90, 0.15, 5, "yellow"), 
         new rect(false, 6, -7.5, 90, 0.15, 5, "yellow"),
@@ -261,8 +257,6 @@ maps = [
         new rect(false, 0, -20.75, 0, 38, 0.5, "dimgray", 3),
         new rect(false, 11.2, 20.75, 0, 16, 0.5, "dimgray", 3),
         new rect(false, -11.2, 20.75, 0, 16, 0.5, "dimgray", 3),
-
-        //new rect(false, 0, 8, 0, 5, 0.5, "orange", 4)
     ],
 
     parkinglot2 = [
@@ -317,7 +311,7 @@ maps = [
 
 
 //Object Syntax: [
-//         Interaction Object (Options: 0 = at position, 1 = Wall, 2 = Curb, 3 = Terrain, 4 = Cover, 5 = NPC Car, 6 = Player Car, Array = IDs), 
+//         Interaction Object (Options: 0 = at value, 1 = Wall, 2 = Curb, 3 = Terrain, 4 = Cover, 5 = NPC Car, 6 = Player Car, Array = IDs), 
 //         Path(1 = Streight Path, 2 = Real Path) OR Check(1=x, 2=y, 3=angle, 4=velocity), 
 //         Distance Along Path OR [Check Value,range],
 //         Resulting [X,Y,Angle,Velocity, angletype(false = turn, true = angle), ifDirectional] Change, 
@@ -333,15 +327,15 @@ carscripts = [
         [0, 3, [180,2], [0,0,0,0, 1, false]],
         [0, 3, [270,2], [0,0,0,0, 1, false]],
     ],
-    script2 = [
-        [0, 3, [0,1], [0,0,0,0, 1, false]],
-        [0, 3, [0,1], [0,0,0,0, 3, false]],
-        //[0, 3, [90,1], [0,0,0,0, false]],
-        [0, 3, [180,1], [0,0,0,0, 1, false]],
-        [0, 3, [180,1], [0,0,180,0, 3, false]],
-        //[0, 3, [270,1], [0,0,0,0, false]],
-        [2, 1, 5, [0,0,70,0, 1, false]],
-    ],
+    // script2 = [
+    //     [0, 3, [0,1], [0,0,0,0, 1, false]],
+    //     [0, 3, [0,1], [0,0,0,0, 3, false]],
+    //     //[0, 3, [90,1], [0,0,0,0, false]],
+    //     [0, 3, [180,1], [0,0,0,0, 1, false]],
+    //     [0, 3, [180,1], [0,0,180,0, 3, false]],
+    //     //[0, 3, [270,1], [0,0,0,0, false]],
+    //     [2, 1, 5, [0,0,70,0, 1, false]],
+    // ],
 ]
 
 infomenus = [

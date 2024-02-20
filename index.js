@@ -304,12 +304,12 @@ function updateGameWindow() {
     if(player.paused){left=false; right=false; up=false; down=false;}
 
     // ############# Keycode Finder ############
-    if (gameWindow.keys) {
-        for(i = 0; i < gameWindow.keys.length; i++) {
-            if (gameWindow.keys[i])
-                console.debug(`Key ${i} pressed`);
-        }
-    }
+    // if (gameWindow.keys) {
+    //     for(i = 0; i < gameWindow.keys.length; i++) {
+    //         if (gameWindow.keys[i])
+    //             console.debug(`Key ${i} pressed`);
+    //     }
+    // }
     
     // Refresh Game Window
     gameWindow.clear();

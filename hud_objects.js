@@ -366,6 +366,7 @@ var finishscreen = {
         this.score_direction = 0;
         this.score_distance = 0;
         this.parkedcount = 0
+        this.tabtoggle = false
 
         this.starsize = 10
         this.starcount = 7
@@ -405,10 +406,12 @@ var finishscreen = {
             updateAll(popuptext);
         }
 
-        if ((clickhandler.hovered(30, 70, 0, 9)) && (pausemenu.paused == false)) {
+        if ((clickhandler.hovered(30, 70, 0, 9)) && (pausemenu.paused == false) && !this.tabtoggle) {
             popuptext[0].setImage("tabbg2.png")
-        } else {
+            this.tabtoggle = true
+        } else if (this.tabtoggle) {
             popuptext[0].setImage("tabbg.png")
+            this.tabtoggle = false
         }
 
         if ((this.parkedcount > 0) && (clickhandler.clicked(30, 70, 0, 9)) && (pausemenu.paused == false)) {
@@ -492,8 +495,9 @@ function hudRect(x, y, width, height, fill, image=false, resize="both", alpha=1,
     this.alpha = alpha;
 
     this.setImage = function(newimage) {
-        this.fill = new Image();
-        this.fill.src = `textures/${newimage}`
+        if(this.fill.src != `textures/${newimage}`) {
+            this.fill.src = `textures/${newimage}`
+        }
     }
 
     this.update = function() {
