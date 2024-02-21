@@ -104,9 +104,10 @@ textures = [
 maps = [
     // Parking lot map
     parkinglot = [
-        new infospot(18, 0, 2, 0),
+        //new infospot(18, 0, 2, 0),
+        new infospot(0, 0, 2, 0),
 
-        new car(type=0, x=0, y=10, angle=0, speed=3, turn=0, logicID=1),
+        new car(type=0, x=0, y=-10, angle=180, speed=3, turn=0, logicID=1),
 
         new terrain(0, 0, 0, 90, 80, "grass"),
 
@@ -341,16 +342,15 @@ carscripts = [
 infomenus = [
     [
         [
-            new hudRect(50, 10, 50, 5, "#1b2932", false, "both", 1, "toolTipToggle", [0]),
-            new hudText("Parallel Parking", 26, 10, 40, "left", "white"),
-            new hudRect(73, 10, 1.75, 3.5, "caratUp.png", true, "equal")
+            new hudRect(50, 10, 10, 15, "#1b2932", 50, false, "both", 0, "toolTipToggle", [0]),
+            new hudText("Parallel\nParking", 50, 6, 40, "center", "white", alpha=0),
+            new hudRect(50, 14, 2, 3.5, "info.png", 0, true, "equal", alpha=0)
         ],
         [
-            new hudRect(50, 40, 50, 60, "#1b2932", false, "both"),
-            new hudRect(50, 10, 50, 5, "#1b2932", false, "both", 1, "toolTipToggle", [0]),
+            new hudRect(50, 40, 50, 60, "#1b2932", 50, false, "both"),
+            new hudText("x", 73, 13, 40, "center", "white", 1, "Arial", "toolTipToggle", [0]),
             new hudText("Parallel Parking", 50, 15, 60, "center", "white"),
-            new hudRect(73, 10, 1.75, 3.5, "caratDown.png", true, "equal"),
-            new hudRect(35, 40, 12, 40, "tooltip1.JPG", true, "equal"),
+            new hudRect(35, 40, 12, 40, "tooltip1.JPG", 0, true, "equal"),
             new hudText("Start by pulling up next to\nthe car in front of your\nparking space\n\nThen, back in at a tight angle\nand streighten out before\nhitting the curb.", 43, 25, 40, "left", "white"),
         ],
     ]
@@ -358,7 +358,7 @@ infomenus = [
 
 //GUI
 //hudRect: x, y, width, height, color, image, autoresize, transparency
-//hudText: text, x, y, size, align, color, alpha, font
+//hudText: text, x, y, size, justify="left", color="white", alpha=1, font="Arial", clickevent="", args=[]
 //hudSlider: x, y, width, height, value, min, max, barcolor, handlecolor, step
 guipages = [
     hud = [
@@ -370,16 +370,16 @@ guipages = [
         border = new carborder(),
     ],
     mobileContolHud = [
-        new hudRect(88, 50, (1*(1080/1920)), 1, "accball.png", true, "equal", 0.2),
-        new hudRect(88, 50, (3*(1080/1920)), 3, "accball.png", true, "equal", 0.4),
-        new hudRect(88, 50, (6*(1080/1920)), 6, "accball.png", true, "equal", 0.6),
-        new hudRect(88, 50, (9*(1080/1920)), 9, "accball.png", true, "equal", 0.8),
-        new hudRect(88, 50, (12*(1080/1920)), 12, "accball.png", true, "equal")
+        new hudRect(88, 50, (1*(1080/1920)), 1, "accball.png", 0, true, "equal", 0.2),
+        new hudRect(88, 50, (3*(1080/1920)), 3, "accball.png", 0, true, "equal", 0.4),
+        new hudRect(88, 50, (6*(1080/1920)), 6, "accball.png", 0, true, "equal", 0.6),
+        new hudRect(88, 50, (9*(1080/1920)), 9, "accball.png", 0, true, "equal", 0.8),
+        new hudRect(88, 50, (12*(1080/1920)), 12, "accball.png", 0, true, "equal")
     ],
     choosecontrolstext = [
-        new hudRect(50, 50, 60, 60, "#1b2932"),
-        new hudRect(36, 57, 1, 35, "#49545b", false, "both", 1, "setControls", ("1")),
-        new hudRect(64, 57, 1, 35, "#49545b", false, "both", 1),
+        new hudRect(50, 50, 60, 60, "#1b2932", 50),
+        new hudRect(36, 57, 1, 35, "#49545b", 0, false, "both", 1, "setControls", ("1")),
+        new hudRect(64, 57, 1, 35, "#49545b", 0, false, "both", 1),
         new hudText("Select Your Controls", 50, 28, 80, "center"),
         new hudText("Touch", 36, 38, 40, "center"),
         new hudText("Touch & Tilt", 64, 38, 40, "center"),
@@ -392,7 +392,7 @@ guipages = [
         new hudText("Settings", 20, 90, 50, justify="left"),
     ],
     settingsmenutext = [
-        new hudRect(50, 50, 80, 80, "#1b2932"),
+        new hudRect(50, 50, 80, 80, "#1b2932", 25),
         new hudText("Settings", 50, 20, 100, "center"),
         new hudSlider(30, 40, 10, 2, maxfps, 30, 300, "#49545b", "white", 5),
         new hudSlider(70, 40, 10, 2, 101, 50, 200, "#49545b", "white", 5),
@@ -402,27 +402,27 @@ guipages = [
         new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     acctext = [
-        new hudRect(50, 50, 80, 80, "#1b2932"),
+        new hudRect(50, 50, 80, 80, "#1b2932", 25),
         new hudText("Accessibility", 50, 20, 100, "center"),
         new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     finishscreentext = [
-        new hudRect(50, 50, 100, 100, "#000000", false, "both", 0.8),
+        new hudRect(50, 50, 100, 100, "#000000", 0, false, "both", 0.8),
         new hudText("Congratulations!", 50, 15, 100, "center"),
         new hudText("Level Complete!", 50, 22, 20, "center"),
         new hudText("Score:", 50, 43, 30, "center"),
         new hudText("Pull-In Accuracy:", 50, 75, 30, "center"),
         new hudText("Angle Accuracy:", 50, 80, 30, "center"),
         new hudText("Left/Right Accuracy:", 50, 85, 30, "center"),
-        new hudRect(40, 50, 0, 0, "star.png", true, "equal"),
-        new hudRect(45, 50, 0, 0, "star.png", true, "equal"),
-        new hudRect(50, 50, 0, 0, "star.png", true, "equal"),
-        new hudRect(55, 50, 0, 0, "star.png", true, "equal"),
-        new hudRect(60, 50, 0, 0, "star.png", true, "equal"),
+        new hudRect(40, 50, 0, 0, "star.png", 0, true, "equal"),
+        new hudRect(45, 50, 0, 0, "star.png", 0, true, "equal"),
+        new hudRect(50, 50, 0, 0, "star.png", 0, true, "equal"),
+        new hudRect(55, 50, 0, 0, "star.png", 0, true, "equal"),
+        new hudRect(60, 50, 0, 0, "star.png", 0, true, "equal"),
     ],
     popuptext = [
-        new hudRect(50, 0, 45, 18, "tabbg.png", true, "both"),
-        new hudRect(42.5, 4.5, 11, 8, "spacebar.png", true, "both"),
+        new hudRect(50, 0, 45, 18, "tabbg.png", 0, true, "both"),
+        new hudRect(42.5, 4.5, 11, 8, "spacebar.png", 0, true, "both"),
         new hudText(text="Press   SpaceBar   or Click Here to Finish", x=50, y=4, size=40, justify="center", color="white", font="Arial"),
     ],
 ]

@@ -225,7 +225,7 @@ var pausemenu = {
                 this.paused = false;
             }
 
-            for(i = 0; i < this.mainmenutext.length; i++) {
+            for(let i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
                 this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;
                 this.mainmenutext[i].update()
@@ -383,19 +383,9 @@ var finishscreen = {
     },
 
     update : function() {
-        // if(parked) {
-        //     if (Math.round(this.yoffset) < 0){
-        //         this.yoffset += (0 - this.yoffset)/4
-        //     }     
-        //     parked = false 
-        // } else {
-        //     if (Math.round(this.yoffset) > -100 ){
-        //         this.yoffset += (-100 - this.yoffset)/10
-        //     }
-        // }
         this.parkedcount -= 1
 
-        this.opos = [0, 4.5, 4]
+        this.opos = [0, 4.5, 4] //Original positions of finish screen tab text elements
         if(parked) {
             for(let i = 0; i < popuptext.length; i++) {
                 popuptext[i].y = animate(popuptext[i].y, true, true, this.opos[i], 5, 20)
@@ -409,15 +399,19 @@ var finishscreen = {
             updateAll(popuptext);
         }
 
-        if ((clickhandler.hovered(30, 70, 0, 9)) && (pausemenu.paused == false) && !this.tabtoggle) {
-            popuptext[0].setImage("tabbg2.png")
-            this.tabtoggle = true
-        } else if (this.tabtoggle) {
-            popuptext[0].setImage("tabbg.png")
-            this.tabtoggle = false
+        if ((clickhandler.hovered(30, 70, 0, 9)) && (pausemenu.paused == false)) {
+            if(!this.tabtoggle) {
+                popuptext[0].setImage("tabbg2.png")
+                this.tabtoggle = true
+            }
+        } else {
+            if(this.tabtoggle) {
+                popuptext[0].setImage("tabbg.png")
+                this.tabtoggle = false
+            }
         }
 
-        if ((this.parkedcount > 0) && (clickhandler.clicked(30, 70, 0, 9)) && (pausemenu.paused == false)) {
+        if ((this.parkedcount > 0) && (clickhandler.clicked(30, 70, 0, 9) || space) && (pausemenu.paused == false)) {
             this.finished = true
         }
 
@@ -454,7 +448,7 @@ function carborder() {
     this.update = function() {
         this.x = gameWindow.canvas.width/2
         this.y = gameWindow.canvas.height/2
-        for (i = 0; i < (player.distances.length); i++) {
+        for (let i = 0; i < (player.distances.length); i++) {
             this.newx = this.x + (sin(((i*16)) % 360) * (player.distances[i]))*scalar*(camera.czoom/100)
             this.newy = this.y - (cos(((i*16)) % 360) * (player.distances[i]))*scalar*(camera.czoom/100)
 
@@ -478,11 +472,12 @@ function carborder() {
     }
 }
 
-function hudRect(x, y, width, height, fill, image=false, resize="both", alpha=1, clickevent="", args=[]) {
+function hudRect(x, y, width, height, fill, bezel=0, image=false, resize="both", alpha=1, clickevent="", args=[]) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.bezel = bezel;
     this.image = image;
     this.clickevent = clickevent;
     this.clickdown = false;
@@ -513,7 +508,14 @@ function hudRect(x, y, width, height, fill, image=false, resize="both", alpha=1,
             canvas.drawImage(this.fill, this.realx, this.realy, this.realwidth, this.realheight);
         } else {
             this.canvas.fillStyle = this.fill;
-            this.canvas.fillRect(this.realx,this.realy,this.realwidth,this.realheight);
+            if(this.bezel > 0) {
+                this.canvas.beginPath();
+                //this.canvas.setTransform(cos((this.x - clickhandler.x)/3), sin((this.y + clickhandler.y)/10), 0, 1, 0, 0)
+                this.canvas.roundRect(this.realx,this.realy,this.realwidth,this.realheight, this.bezel);
+                this.canvas.fill();
+            } else {
+                this.canvas.fillRect(this.realx,this.realy,this.realwidth,this.realheight);
+            }
         }
         this.canvas.globalAlpha = 1.0;
 

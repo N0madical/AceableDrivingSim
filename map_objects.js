@@ -30,9 +30,9 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         this.opacity = 100;
         if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
             if(this.layer > player.layer) {
-                for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
-                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
+                for (let i = 0; i < player.distances.length; i++) {
+                    this.pointx = camera.cx + (sin(((i*16) + camera.cangle) % 360) * (player.distances[i]))
+                    this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]))
                     if (pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width, this.height, this.angle)) {
                         if (this.layer == player.layer + 1) {
                             player.reset()
@@ -43,12 +43,12 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
                 }
             }
             if(this.layer == player.layer) {
-                for (this.i = 0; this.i < player.wheelangles.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
-                    this.pointy = camera.cy + (cos(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
+                for (let i = 0; i < player.wheelangles.length; i++) {
+                    this.pointx = camera.cx + (sin(((player.wheelangles[i]) + camera.cangle) % 360) * (player.wheeldistance))
+                    this.pointy = camera.cy + (cos(((player.wheelangles[i]) + camera.cangle) % 360) * (player.wheeldistance))
                     if (pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width, this.height, this.angle)) {
-                        if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
-                        if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
+                        if((i == 0 || i == 3) && (player.speed > 0)) {player.speed = 0}
+                        if((i == 1 || i == 2) && (player.speed < 0)) {player.speed = 0}
                     }
                 }
             }
@@ -103,21 +103,21 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         this.opacity = 100;
         if(!player.paused) {
             if(this.layer >= player.layer) {
-                for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
-                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
+                for (let i = 0; i < player.distances.length; i++) {
+                    this.pointx = camera.cx + (sin(((i*16) + camera.cangle) % 360) * (player.distances[i]))
+                    this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]))
                     if (Math.sqrt(((this.pointx - this.x)**2) + ((this.pointy - this.y)**2)) <= (this.diameter/2)) {
                         if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
                     }
                 }
-                for (this.i = 0; this.i < player.wheelangles.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
-                    this.pointy = camera.cy + (cos(((player.wheelangles[this.i]) + camera.cangle) % 360) * (player.wheeldistance))
+                for (let i = 0; i < player.wheelangles.length; i++) {
+                    this.pointx = camera.cx + (sin(((player.wheelangles[i]) + camera.cangle) % 360) * (player.wheeldistance))
+                    this.pointy = camera.cy + (cos(((player.wheelangles[i]) + camera.cangle) % 360) * (player.wheeldistance))
                     if (Math.sqrt(((this.x - this.pointx)**2) + ((this.y - this.pointy)**2)) <= (this.diameter/2))
                     {   
                         if (this.layer == player.layer) {
-                            if((this.i == 0 || this.i == 3) && (player.speed > 0)) {player.speed = 0}
-                            if((this.i == 1 || this.i == 2) && (player.speed < 0)) {player.speed = 0}
+                            if((i == 0 || i == 3) && (player.speed > 0)) {player.speed = 0}
+                            if((i == 1 || i == 2) && (player.speed < 0)) {player.speed = 0}
                         }
                     }
                 }
@@ -195,10 +195,10 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
         //         }
         //     }
         } else {
-            for(this.i = 0; this.i < this.tiley; this.i++) {
-                for(this.f = 0; this.f < this.tilex; this.f++) {
-                    this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*this.f)) * 0.998
-                    this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*this.i)) * 0.998
+            for(let i = 0; i < this.tiley; i++) {
+                for(let f = 0; f < this.tilex; f++) {
+                    this.x2 = (this.x - (this.width/2 - this.iwidth/2) + (this.iwidth*f)) * 0.998
+                    this.y2 = (this.y - (this.height/2 - this.iheight/2) + (this.iheight*i)) * 0.998
                     if((this.x2 - this.radlength < camera.cx + (gameWindow.canvas.width/(scalar*(camera.czoom/100)))) && (this.x2 + this.radlength > camera.cx - (gameWindow.canvas.width/(scalar*(camera.czoom/100))))) {
                         if((this.y2 - this.radlength < camera.cy + (gameWindow.canvas.height/(scalar*(camera.czoom/100)))) && (this.y2 + this.radlength > camera.cy - (gameWindow.canvas.height/(scalar*(camera.czoom/100))))) {
                             this.pos = camera.position(this.x2,this.y2,this.angle);
@@ -356,9 +356,26 @@ function infospot(x, y, size, menu) {
             if((this.distance <= 2))  { // && (player.speed <= 0.5)
                 if(renderlist[this.menu] != 2) {
                     renderlist[this.menu] = 1
+                    for(let i in infomenus[this.menu][0]) {
+                        infomenus[this.menu][0][i].alpha = animate(infomenus[this.menu][0][i].alpha*100, true, true, 100, 5)/100
+                    }
+                    let hoverbox = infomenus[this.menu][0][0]
+                    if(clickhandler.hovered(hoverbox.x-hoverbox.width/2, hoverbox.x+hoverbox.width/2, hoverbox.y-hoverbox.height/2, hoverbox.y+hoverbox.height/2)) {
+                        hoverbox.width = animate(hoverbox.width, false, true, 9, 60, 4)
+                        hoverbox.height = animate(hoverbox.height, false, true, 14, 60, 4)
+                    } else {
+                        hoverbox.width = animate(hoverbox.width, true, true, 10, 10, 2)
+                        hoverbox.height = animate(hoverbox.height, true, true, 15, 10, 2)
+                    }
                 }
             } else {
-                renderlist[this.menu] = 0
+                if(infomenus[this.menu][0][0].alpha != 0) {
+                    for(let i in infomenus[this.menu][0]) {
+                        infomenus[this.menu][0][i].alpha = animate(infomenus[this.menu][0][i].alpha*100, false, true, 0, 5)/100
+                    }
+                } else {
+                    renderlist[this.menu] = 0
+                }
             }
         }
 
@@ -462,7 +479,7 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
                     }
 
                     if (this.pathintersect == 1 || this.pathintersect == 2 || this.pathintersect == 3 || this.pathintersect == 4) {
-                        for (j = 0; j < maps[map-1].length; j++) {
+                        for (let j = 0; j < maps[map-1].length; j++) {
                             if(maps[map-1][j].type == 1 || maps[map-1][j].type == 2) {
                                 if(maps[map-1][j].layer == this.layersel) {
                                     if(maps[map-1][j].testpoint(this.pathpoint[0], this.pathpoint[1])) {
