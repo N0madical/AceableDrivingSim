@@ -104,8 +104,8 @@ textures = [
 maps = [
     // Parking lot map
     parkinglot = [
-        //new infospot(18, 0, 2, 0),
-        new infospot(0, 0, 2, 0),
+        new infospot(18, 0, 2, 0),
+        //new infospot(0, 0, 2, 0),
 
         new car(type=0, x=0, y=-10, angle=180, speed=3, turn=0, logicID=1),
 
@@ -343,11 +343,11 @@ infomenus = [
     [
         [
             new hudRect(50, 10, 10, 15, "#1b2932", 50, false, "both", 0, "toolTipToggle", [0]),
-            new hudText("Parallel\nParking", 50, 6, 40, "center", "white", alpha=0),
+            new hudText("Parallel\nParking", 50, 6, 35, "center", "white", alpha=0),
             new hudRect(50, 14, 2, 3.5, "info.png", 0, true, "equal", alpha=0)
         ],
         [
-            new hudRect(50, 40, 50, 60, "#1b2932", 50, false, "both"),
+            new hudRect(50, 40, 50, 60, "#1b2932",  25, false, "both"),
             new hudText("x", 73, 13, 40, "center", "white", 1, "Arial", "toolTipToggle", [0]),
             new hudText("Parallel Parking", 50, 15, 60, "center", "white"),
             new hudRect(35, 40, 12, 40, "tooltip1.JPG", 0, true, "equal"),

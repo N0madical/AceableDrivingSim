@@ -361,11 +361,11 @@ function infospot(x, y, size, menu) {
                     }
                     let hoverbox = infomenus[this.menu][0][0]
                     if(clickhandler.hovered(hoverbox.x-hoverbox.width/2, hoverbox.x+hoverbox.width/2, hoverbox.y-hoverbox.height/2, hoverbox.y+hoverbox.height/2)) {
-                        hoverbox.width = animate(hoverbox.width, false, true, 9, 60, 4)
-                        hoverbox.height = animate(hoverbox.height, false, true, 14, 60, 4)
+                        hoverbox.width = animate(hoverbox.width, false, true, 9, 10, 4)
+                        hoverbox.height = animate(hoverbox.height, false, true, 14, 10, 4)
                     } else {
-                        hoverbox.width = animate(hoverbox.width, true, true, 10, 10, 2)
-                        hoverbox.height = animate(hoverbox.height, true, true, 15, 10, 2)
+                        hoverbox.width = animate(hoverbox.width, true, true, 10, 5, 2)
+                        hoverbox.height = animate(hoverbox.height, true, true, 15, 5, 2)
                     }
                 }
             } else {

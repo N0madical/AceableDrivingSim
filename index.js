@@ -202,24 +202,21 @@ var player = {
         }
 
         // Update Player Visuals
-        // wheelL = gameWindow.context;
-        // wheelL.save();
-        // wheelL.translate(((gameWindow.canvas.width/2)), ((gameWindow.canvas.height/2)));
-        // wheelL.rotate(orientOffset*-1)
-        // wheelL.translate(((0 - ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((0 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
-        // wheelL.rotate(radians(this.turndeg + (orientOffset*-1)));
-        // wheelL.fillStyle = "black";
-        // wheelL.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
-        // wheelL.restore();
+        wheelL = gameWindow.context;
+        wheelL.save();
+        wheelL.translate(((gameWindow.canvas.width/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*sin(orientOffset+30)))), ((gameWindow.canvas.height/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*cos(orientOffset+30)))));
+        wheelL.rotate(radians(this.turndeg - orientOffset));
+        wheelL.fillStyle = "black";
+        wheelL.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
+        wheelL.restore();
 
-        // wheelR = gameWindow.context;
-        // wheelR.save();
-        // wheelR.rotate(orientOffset*-1)
-        // wheelR.translate(((gameWindow.canvas.width/2 + ((this.width/3.0)*(scalar)*(camera.czoom/100)))), ((gameWindow.canvas.height/2 - ((this.height/3.8)*(scalar)*(camera.czoom/100)))));
-        // wheelR.rotate(radians(this.turndeg + (orientOffset*-1)));
-        // wheelR.fillStyle = "black";
-        // wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
-        // wheelR.restore();
+        wheelR = gameWindow.context;
+        wheelR.save();
+        wheelR.translate(((gameWindow.canvas.width/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*sin(orientOffset-30)))), ((gameWindow.canvas.height/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*cos(orientOffset-30)))));
+        wheelR.rotate(radians(this.turndeg - orientOffset));
+        wheelR.fillStyle = "black";
+        wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
+        wheelR.restore();
 
         car = gameWindow.context;
         car.save();

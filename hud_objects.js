@@ -568,7 +568,7 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
                 this.fromright = this.realwidth
             }
             
-            canvas.fillText(this.multiline[i], this.realx - this.jpos, this.realy + this.realheight/2 + (this.realheight*i*2));
+            canvas.fillText(this.multiline[i], this.realx - this.jpos, this.realy + this.realheight/2 + (this.realheight*i*1.7));
         }
         canvas.globalAlpha = 1;
         upcount++
