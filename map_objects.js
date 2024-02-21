@@ -57,10 +57,10 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
             canvas.globalAlpha = (this.opacity/100)
         }
         if(this.isimage) {
-            canvas.drawImage(this.fill, (this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+            canvas.drawImage(this.fill, Round((this.width*(scalar)*(camera.czoom/100)) / -2), Round((this.height*(scalar)*(camera.czoom/100)) / -2), Round(this.width*(scalar)*(camera.czoom/100)), Round(this.height*(scalar)*(camera.czoom/100)));
         } else {
             canvas.fillStyle = this.fill; 
-            canvas.fillRect((this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+            canvas.fillRect(Round((this.width*(scalar)*(camera.czoom/100)) / -2), Round((this.height*(scalar)*(camera.czoom/100)) / -2), Round(this.width*(scalar)*(camera.czoom/100)), Round(this.height*(scalar)*(camera.czoom/100)));
         }
         canvas.restore();
         upcount++
@@ -127,12 +127,12 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
             canvas.globalAlpha = (this.opacity/100)
         }
         if(this.isimage) {
-            canvas.drawImage(this.fill, (this.diameter*(scalar)*(camera.czoom/100)) / -2, (this.diameter*(scalar)*(camera.czoom/100)) / -2, this.diameter*(scalar)*(camera.czoom/100), this.diameter*(scalar)*(camera.czoom/100));
+            canvas.drawImage(this.fill, Round((this.diameter*(scalar)*(camera.czoom/100)) / -2), Round((this.diameter*(scalar)*(camera.czoom/100)) / -2), Round(this.diameter*(scalar)*(camera.czoom/100)), Round(this.diameter*(scalar)*(camera.czoom/100)));
             canvas.restore();
         } else {
             canvas.fillStyle = this.fill; 
             canvas.beginPath();
-            canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.diameter/2)*scalar*(camera.czoom/100),radians(this.pos[2]),radians(this.arc+this.pos[2]));
+            canvas.arc(Round(gameWindow.canvas.width/2+this.pos[0]), Round(gameWindow.canvas.height/2-this.pos[1]), Round((this.diameter/2)*scalar*(camera.czoom/100)), radians(this.pos[2]), radians(this.arc+this.pos[2]));
             canvas.closePath();
             canvas.fill();
         }
@@ -213,8 +213,8 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
                             if((this.y2 + this.iheight/2) > (this.y + (this.height/2))){this.trimy = ((this.y + (this.height/2)) - (this.y2 + this.iheight/2))} else {this.trimy = 0}
                             canvas.drawImage(
                                 this.image, 
-                                0, (0 - this.trimy)*scalar, (this.iwidth + this.trimx) * scalar, (this.iheight + this.trimy) * scalar, 
-                                ((this.iwidth) / -2)* scalar * (camera.czoom/100), ((this.iheight) / -2 - this.trimy) * scalar *(camera.czoom/100), (this.iwidth+this.trimx)*scalar*(camera.czoom/100), (this.iheight+this.trimy)*scalar*(camera.czoom/100)
+                                0, Round((0 - this.trimy)*scalar), Round((this.iwidth + this.trimx) * scalar), Round((this.iheight + this.trimy) * scalar), Round(
+                                ((this.iwidth) / -2)* scalar * (camera.czoom/100)), Round(((this.iheight) / -2 - this.trimy) * scalar *(camera.czoom/100)), Round((this.iwidth+this.trimx)*scalar*(camera.czoom/100)), Round((this.iheight+this.trimy)*scalar*(camera.czoom/100))
                             );
                             canvas.restore();
                         }

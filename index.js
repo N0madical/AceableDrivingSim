@@ -130,12 +130,16 @@ var camera = {
 
     // Objects use the position function to get position relative to player
     position : function(x, y, rot=0) {
-        this.distance = (Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2)))*scalar*(camera.czoom/100)
-        this.angle = invtan2((y-this.cy),(x-this.cx))+(this.cangle+orientOffset)
-        this.x2 = (cos(this.angle))*this.distance
-        this.y2 = (sin(this.angle))*this.distance
-        this.angle2 = rot - (this.cangle+orientOffset)
-        return [this.x2, this.y2, this.angle2, this.angle]
+        let distance = (Math.sqrt(Math.pow(x-this.cx,2)+Math.pow(y-this.cy,2)))*scalar*(camera.czoom/100)
+        let angle = invtan2((y-this.cy),(x-this.cx))+(this.cangle+orientOffset)
+        return [
+            (cos(angle))*distance, //x return
+            (sin(angle))*distance, //y return
+            rot - (this.cangle+orientOffset), //angle return
+            angle //offset angle return
+        ]
+        
+        //return [this.x2, this.y2, this.angle2, this.angle]
     }
 }
 
@@ -204,7 +208,7 @@ var player = {
         // Update Player Visuals
         wheelL = gameWindow.context;
         wheelL.save();
-        wheelL.translate(((gameWindow.canvas.width/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*sin(orientOffset+30)))), ((gameWindow.canvas.height/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*cos(orientOffset+30)))));
+        wheelL.translate(((gameWindow.canvas.width/2 - ((this.wheeldistance*0.8)*(scalar)*(camera.czoom/100)*sin(orientOffset+35)))), ((gameWindow.canvas.height/2 - ((this.wheeldistance*0.8)*(scalar)*(camera.czoom/100)*cos(orientOffset+35)))));
         wheelL.rotate(radians(this.turndeg - orientOffset));
         wheelL.fillStyle = "black";
         wheelL.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
@@ -212,7 +216,7 @@ var player = {
 
         wheelR = gameWindow.context;
         wheelR.save();
-        wheelR.translate(((gameWindow.canvas.width/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*sin(orientOffset-30)))), ((gameWindow.canvas.height/2 - ((this.wheeldistance*0.9)*(scalar)*(camera.czoom/100)*cos(orientOffset-30)))));
+        wheelR.translate(((gameWindow.canvas.width/2 - ((this.wheeldistance*0.8)*(scalar)*(camera.czoom/100)*sin(orientOffset-35)))), ((gameWindow.canvas.height/2 - ((this.wheeldistance*0.8)*(scalar)*(camera.czoom/100)*cos(orientOffset-35)))));
         wheelR.rotate(radians(this.turndeg - orientOffset));
         wheelR.fillStyle = "black";
         wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
@@ -342,6 +346,8 @@ function updateGameWindow() {
         }
     }
 
+    mobileHud.update()
+
     //console.debug(loaded)
     if((fps > 8) && (loadopac >= 1) && (loadcount == global.length)) {
         if (Math.round(loadopac) != 0){
@@ -360,7 +366,6 @@ function updateGameWindow() {
     }
 
     clickhandler.update()
-    mobileHud.update()
     updateAll(hud)
     if(debug) {
         updateAll(debughud)
