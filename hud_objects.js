@@ -280,8 +280,11 @@ var pausemenu = {
             maxfps = settingsmenutext[2].value
             settingsmenutext[4].text = `Max Fps: ${maxfps}`
 
-            camera.czoom = settingsmenutext[3].value
-            settingsmenutext[5].text = `Zoom: ${camera.czoom}%`
+            if(settingsmenutext[3].value != 101) {
+                camera.czoom = settingsmenutext[3].value
+                settingsmenutext[5].text = `Zoom: ${camera.czoom}%`
+            }
+            
 
             settingsmenutext[6].text = `Debug: ${debug}`
 
@@ -448,17 +451,16 @@ var finishscreen = {
 }
 
 function carborder() {
-    this.distances = player.distances
     this.update = function() {
         this.x = gameWindow.canvas.width/2
         this.y = gameWindow.canvas.height/2
-        for (i = 0; i < (this.distances.length-1); i++) {
-            this.newx = this.x + (sin(((-i*(16))+180)%360) * this.distances[i])
-            this.newy = this.y + (cos(((-i*(16))+180)%360) * this.distances[i])
+        for (i = 0; i < (player.distances.length); i++) {
+            this.newx = this.x + (sin(((i*16)) % 360) * (player.distances[i]))*scalar*(camera.czoom/100)
+            this.newy = this.y - (cos(((i*16)) % 360) * (player.distances[i]))*scalar*(camera.czoom/100)
 
             bg = gameWindow.context;
             bg.fillStyle = "red";
-            bg.fillRect(this.newx,this.newy,5,5);
+            bg.fillRect(this.newx-2.5,this.newy-2.5,5,5);
         }
         // for (this.f = 0; this.f < 1; this.f++) {
         //     this.newx = this.x + (player.wheeldistance * sin(player.wheelangles[this.f]+90))*scalar

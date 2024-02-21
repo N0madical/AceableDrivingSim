@@ -43,13 +43,13 @@ window.onload = function() {
 
     // Load Debug HUD (If applicable)
     if (debug) {
-        fpscount.x = 0.5; fpscount.y = 0.5; fpscount.size = 30
-        console.debug("hi")
+        fpscount.x = 99; fpscount.y = 2; fpscount.size = 25;
+        console.info("Debug Mode Enabled")
     }
 
     // Sprides to be loaded on all maps
     spritelist = [player, finishscreen, pausemenu]
-    
+
     // Import selected map
     updatelist = maps[map-1].concat(spritelist);
 
@@ -80,7 +80,6 @@ var gameWindow = {
         this.canvas.height = window.innerHeight;
         this.canvas.id = "gamescreen"
         this.context = this.canvas.getContext("2d"); // This is what allows all objects to interface with canvas
-        //this.context.filter = "blur(10px)"; // Experimenting with blur effect (Lags Computer)
         //document.body.insertBefore(this.canvas, document.body.childNodes[0]); // Inserts canvas into HTML
         camera.start(x,y,angle,zoom);
 
@@ -162,7 +161,8 @@ var player = {
         this.carimage.src = "textures/car.png";
         this.expimage = new Image();
         this.expimage.src = "textures/explosion.png"
-        this.distances = [127, 120, 88, 70, 51, 48, 47, 49, 59, 82, 118, 123, 123, 102, 72, 58, 52, 50, 52, 72, 78, 114, 128]
+        this.distances = [125, 120, 91, 65, 53, 49, 48, 52, 62, 85, 125, 125, 125, 98, 68, 54, 49, 48, 50, 57, 74, 109, 125]
+        for(let i in this.distances){this.distances[i] = this.distances[i]/50} //Converting distances from pixels @1920*1080 to meters
         this.wheeldistance = Math.sqrt(Math.pow(this.height/3,2) + Math.pow(this.width/3,2))
         this.wheelangles = [30,150,210,330]
 
@@ -263,6 +263,7 @@ function updateGameWindow() {
     updatelistcache = [];
     gameWindow.canvas.width = window.innerWidth;
     gameWindow.canvas.height = window.innerHeight;
+    camera.cangle = camera.cangle%360
     layercounts = [0,0,0,0,0]
     
     // Debug ticker gives steady timer to load fps
@@ -277,7 +278,7 @@ function updateGameWindow() {
         //fpscount.text = `Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`
         if (debug) {
             speedometer.text = `Speed: ${Round(player.speed,1)}mps : ${Round(player.speed*3.6,1)}kmph : ${Round(player.speed*2.237,1)}mph, Turn Angle: ${Round(player.turndeg,1)}°, Turn Radius: ${Round(player.turnrad,1)}, Res. Angle: ${Round((player.speed/player.turnrad),1)}°`
-            posdebug.text = `Position: ${Round(camera.cx,1)}, ${Round(camera.cy,1)}, ${Round(camera.cangle,1)}°, Mouse Pos: ${clickhandler.mouse}`
+            posdebug.text = `Position: ${Round(camera.cx,1)}, ${Round(camera.cy,1)}, ${Round(camera.cangle,1)}°, Mouse Pos: ${Round(clickhandler.x)}, ${Round(clickhandler.y)}, ${clickhandler.click}`
         }
         fps = fpsrec * 4;
         fpsrec = 0;
@@ -364,5 +365,8 @@ function updateGameWindow() {
     clickhandler.update()
     mobileHud.update()
     updateAll(hud)
+    if(debug) {
+        updateAll(debughud)
+    }
 
 }

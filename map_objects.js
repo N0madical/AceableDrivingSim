@@ -31,8 +31,8 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
             if(this.layer > player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
-                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
+                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
                     if (pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width, this.height, this.angle)) {
                         if (this.layer == player.layer + 1) {
                             player.reset()
@@ -104,8 +104,8 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         if(!player.paused) {
             if(this.layer >= player.layer) {
                 for (this.i = 0; this.i < player.distances.length; this.i++) {
-                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
-                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]/scalar))
+                    this.pointx = camera.cx + (sin(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
+                    this.pointy = camera.cy + (cos(((this.i*16) + camera.cangle) % 360) * (player.distances[this.i]))
                     if (Math.sqrt(((this.pointx - this.x)**2) + ((this.pointy - this.y)**2)) <= (this.diameter/2)) {
                         if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
                     }
@@ -501,8 +501,8 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
 
         if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.radius + (player.height/2))) {
             for (let i = 0; i < player.distances.length; i++) {
-                this.pointx = camera.cx + (sin(((i*16) + camera.cangle) % 360) * (player.distances[i]/scalar))
-                this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]/scalar))
+                this.pointx = camera.cx + (sin(((i*16) + camera.cangle) % 360) * (player.distances[i]))
+                this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]))
 
                 if(pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width + this.colmods[this.type][0], this.height + this.colmods[this.type][1], this.angle)) {player.reset()}
             }

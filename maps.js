@@ -365,8 +365,8 @@ guipages = [
         fpscount = new hudText("FPS: Error", 99.5, 1.25, size=15, justify="right"),
     ],
     debughud = [
-        speedometer = new hudText("Speed: Error", 0.5, 1, size=30),
-        posdebug = new hudText("Position: Error", 0.5, 1.5, size=30),
+        speedometer = new hudText("Speed: Error", 99, 5, 25, "right"),
+        posdebug = new hudText("Position: Error", 99, 8, 25, "right"),
         border = new carborder(),
     ],
     mobileContolHud = [
@@ -395,9 +395,9 @@ guipages = [
         new hudRect(50, 50, 80, 80, "#1b2932"),
         new hudText("Settings", 50, 20, 100, "center"),
         new hudSlider(30, 40, 10, 2, maxfps, 30, 300, "#49545b", "white", 5),
-        new hudSlider(70, 40, 10, 2, zoom, 50, 200, "#49545b", "white", 5),
+        new hudSlider(70, 40, 10, 2, 101, 50, 200, "#49545b", "white", 5),
         new hudText("Max Fps: -", 30, 35, 30, "center"),
-        new hudText("Zoom: -", 70, 35, 30, "center"),
+        new hudText("Zoom: Auto", 70, 35, 30, "center"),
         new hudText("Debug: -", 89, 88, 10, "right"),
         new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
