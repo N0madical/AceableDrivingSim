@@ -94,7 +94,7 @@ function pausemenutoggle() {
 
 function handleOrientation(event) {
     if(mobilecontrols == 2) {
-        if(event.gamma > 0) {
+        if(event.gamma < 0) {
             orientOffset = event.beta%180
             player.turndeg = event.beta%180
         } else {
