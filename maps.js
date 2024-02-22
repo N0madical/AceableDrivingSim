@@ -344,13 +344,13 @@ infomenus = [
         [
             new hudRect(50, 10, 10, 15, "#1b2932", 50, false, "both", 0, "toolTipToggle", [0]),
             new hudText("Parallel\nParking", 50, 6, 35, "center", "white", alpha=0),
-            new hudRect(50, 14, 2, 3.5, "info.png", 0, true, "equal", alpha=0)
+            new hudRect(50, 14, 2, 3.5, "info.png", 0, true, "width", alpha=0)
         ],
         [
             new hudRect(50, 40, 50, 60, "#1b2932",  25, false, "both"),
             new hudText("x", 73, 13, 40, "center", "white", 1, "Arial", "toolTipToggle", [0]),
             new hudText("Parallel Parking", 50, 15, 60, "center", "white"),
-            new hudRect(35, 40, 12, 40, "tooltip1.JPG", 0, true, "equal"),
+            new hudRect(35, 40, 12, 40, "tooltip1.JPG", 0, true, "height"),
             new hudText("Start by pulling up next to\nthe car in front of your\nparking space\n\nThen, back in at a tight angle\nand streighten out before\nhitting the curb.", 43, 25, 40, "left", "white"),
         ],
     ]
@@ -370,11 +370,11 @@ guipages = [
         border = new carborder(),
     ],
     mobileContolHud = [
-        new hudRect(88, 50, (1*(1080/1920)), 1, "accball.png", 0, true, "equal", 0.2),
-        new hudRect(88, 50, (3*(1080/1920)), 3, "accball.png", 0, true, "equal", 0.4),
-        new hudRect(88, 50, (6*(1080/1920)), 6, "accball.png", 0, true, "equal", 0.6),
-        new hudRect(88, 50, (9*(1080/1920)), 9, "accball.png", 0, true, "equal", 0.8),
-        new hudRect(88, 50, (12*(1080/1920)), 12, "accball.png", 0, true, "equal")
+        new hudRect(88, 50, (1*(1080/1920)), 1, "white", 90, false, "width", 0.2),
+        new hudRect(88, 50, (3*(1080/1920)), 3, "white", 90, false, "width", 0.4),
+        new hudRect(88, 50, (6*(1080/1920)), 6, "white", 90, false, "width", 0.6),
+        new hudRect(88, 50, (9*(1080/1920)), 9, "white", 90, false, "width", 0.8),
+        new hudRect(88, 50, (12*(1080/1920)), 12, "white", 20, false, "width")
     ],
     choosecontrolstext = [
         new hudRect(50, 50, 60, 60, "#1b2932", 50),
@@ -388,8 +388,11 @@ guipages = [
         new hudText("Paused", 20, 10, 100, justify="left"),
         new hudText("Resume Game", 20, 30, 50, justify="left"),
         new hudText("Restart Game", 20, 50, 50, justify="left"),
-        new hudText("Accessability", 20, 70, 50, justify="left"),
+        new hudText("Controls", 20, 70, 50, justify="left"),
         new hudText("Settings", 20, 90, 50, justify="left"),
+        new hudText("_", 20, 50, 50, justify="left"),
+        new hudText("_", 20, 70, 50, justify="left"),
+        new hudText("_", 20, 90, 50, justify="left"),
     ],
     settingsmenutext = [
         new hudRect(50, 50, 80, 80, "#1b2932", 25),
@@ -399,11 +402,30 @@ guipages = [
         new hudText("Max Fps: -", 30, 35, 30, "center"),
         new hudText("Zoom: Auto", 70, 35, 30, "center"),
         new hudText("Debug: -", 89, 88, 10, "right"),
+        new hudText("Press 'a' or 'd' to change", 70, 45, 15, "center", "gray"),
+        new hudRect(37, 86, 8, 1, "#FFFFFF", 5, false, "both", 1),
+        new hudRect(37, 75, 10, 20, "#49545b", 0, false, "both", 1, "setControls", ("0")),
+        new hudRect(50, 75, 10, 20, "#49545b", 0, false, "both", 1, "setControls", ("1")),
+        new hudRect(63, 75, 10, 20, "#49545b", 0, false, "both", 1), //#10
+        new hudText("Touch Controls:", 50, 55, 40, "center"),
+        new hudText("Off", 37, 62, 30, "center"),
+        new hudText("Touch", 50, 62, 30, "center"),
+        new hudText("Touch & Tilt", 63, 62, 30, "center"),
+        new hudText("FPS: -", 11, 88, 10, "left"),
         new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
-    acctext = [
+    controlstext = [
         new hudRect(50, 50, 80, 80, "#1b2932", 25),
-        new hudText("Accessibility", 50, 20, 100, "center"),
+        new hudText("Controls", 50, 20, 100, "center"),
+        new hudRect(30, 40, 30, 17, "keys.png", 0, true, "width"),
+        new hudText("Move The Car: \nWASD or Arrow Keys", 30, 50, 20, "center"),
+        new hudRect(30, 70, 20, 8, "spacebar.png", 0, true, "width"),
+        new hudText("Finish The Game (When In Parking Spot): \nSpacebar", 30, 77, 20, "center"),
+        new hudRect(70, 35, 10, 9, "key-a-d.png", 0, true, "width"),
+        new hudText("Change Onscreen Important Slider:\n'a' key: decrease\n'd' key: increase", 70, 41, 20, "center"),
+        new hudRect(70, 58, 5, 9, "key-esc.png", 0, true, "width"),
+        new hudText("Close Current Menu / Open Pause Menu:\nEscape key", 70, 64, 20, "center"),
+        new hudText("Underlined Letter:\nHighlighting Pressable Key", 70, 77, 20, "center"),
         new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     finishscreentext = [
@@ -414,11 +436,11 @@ guipages = [
         new hudText("Pull-In Accuracy:", 50, 75, 30, "center"),
         new hudText("Angle Accuracy:", 50, 80, 30, "center"),
         new hudText("Left/Right Accuracy:", 50, 85, 30, "center"),
-        new hudRect(40, 50, 0, 0, "star.png", 0, true, "equal"),
-        new hudRect(45, 50, 0, 0, "star.png", 0, true, "equal"),
-        new hudRect(50, 50, 0, 0, "star.png", 0, true, "equal"),
-        new hudRect(55, 50, 0, 0, "star.png", 0, true, "equal"),
-        new hudRect(60, 50, 0, 0, "star.png", 0, true, "equal"),
+        new hudRect(40, 50, 0, 0, "star.png", 0, true, "width"),
+        new hudRect(45, 50, 0, 0, "star.png", 0, true, "width"),
+        new hudRect(50, 50, 0, 0, "star.png", 0, true, "width"),
+        new hudRect(55, 50, 0, 0, "star.png", 0, true, "width"),
+        new hudRect(60, 50, 0, 0, "star.png", 0, true, "width"),
     ],
     popuptext = [
         new hudRect(50, 0, 45, 18, "tabbg.png", 0, true, "both"),

@@ -293,14 +293,14 @@ function updateGameWindow() {
     }
 
     // Defining and Detecting Keypresses
-    if (gameWindow.keys && (gameWindow.keys[37] || gameWindow.keys[65])) {left = true} else {left = false}
-    if (gameWindow.keys && (gameWindow.keys[39] || gameWindow.keys[68])) {right = true} else {right = false}
+    if (gameWindow.keys && (gameWindow.keys[37] || gameWindow.keys[65])) {left = true; a_key = true} else {left = false; a_key = false}
+    if (gameWindow.keys && (gameWindow.keys[39] || gameWindow.keys[68])) {right = true; d_key = true} else {right = false; d_key = false}
     if (gameWindow.keys && (gameWindow.keys[38] || gameWindow.keys[87])) {up = true} else {up = false}
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
     if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
     if (gameWindow.keys && (gameWindow.keys[82])) {r_key = true} else {r_key = false}
     if (gameWindow.keys && (gameWindow.keys[83])) {s_key = true} else {s_key = false}
-    if (gameWindow.keys && (gameWindow.keys[65])) {a_key = true} else {a_key = false}
+    if (gameWindow.keys && (gameWindow.keys[67])) {c_key = true} else {c_key = false}
     if (gameWindow.keys && (gameWindow.keys[32])) {space = true} else {space = false}
 
     if(player.paused){left=false; right=false; up=false; down=false;}

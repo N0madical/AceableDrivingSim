@@ -170,6 +170,7 @@ var pausemenu = {
         this.active = 0
         this.blurstep = 2;
         this.controlschosen = false;
+        this.keydown = false;
 
         this.pauseimage = new Image();
         this.pauseimage.src = "textures/pause.png";
@@ -225,6 +226,14 @@ var pausemenu = {
                 this.paused = false;
             }
 
+            if (s_key == true) {
+                pausemenu.menu = 2
+            }
+
+            if (c_key == true) {
+                pausemenu.menu = 3
+            }
+
             for(let i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
                 this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;
@@ -260,13 +269,15 @@ var pausemenu = {
             }
             choosecontrolstext[1].width = animate(choosecontrolstext[1].width, true, true, 25, 10, 5)
             choosecontrolstext[2].width = animate(choosecontrolstext[2].width, true, true, 25, 10, 5)
-            //64, 57, 1, 35
-            document.getElementById("requestMotionAccess").style.display = "initial"
-            document.getElementById("requestMotionAccess").style.left = `${((gameWindow.canvas.width/100) * (64-(25/2)))}px`
-            document.getElementById("requestMotionAccess").style.top = `${(gameWindow.canvas.height/100) * (57-(35/2))}px`
-            document.getElementById("requestMotionAccess").style.width = `${(gameWindow.canvas.width/100) * 25}px`
-            document.getElementById("requestMotionAccess").style.height = `${(gameWindow.canvas.height/100) * 35}px`
-            document.getElementById("requestMotionAccess").style.opacity = `0`
+
+            const realButton = document.getElementById("requestMotionAccess").style
+            const vButton = choosecontrolstext[2]
+            realButton.display = "initial"
+            realButton.left = `${vButton.realx}px`
+            realButton.top = `${vButton.realy}px`
+            realButton.width = `${vButton.realwidth}px`
+            realButton.height = `${vButton.realheight}px`
+            realButton.opacity = `0`
             updateAll(choosecontrolstext)
         }
     },
@@ -280,25 +291,58 @@ var pausemenu = {
             maxfps = settingsmenutext[2].value
             settingsmenutext[4].text = `Max Fps: ${maxfps}`
 
+            if((a_key || d_key) && settingsmenutext[3].value == 101) {
+                settingsmenutext[3].value = 100
+            }
+
+            if (a_key) {
+                if(!this.keydown && settingsmenutext[3].value > 50) {
+                    settingsmenutext[3].value -= 10
+                    this.keydown = true
+                }
+            } else if (d_key) {
+                if(!this.keydown && settingsmenutext[3].value < 200) {
+                    settingsmenutext[3].value += 10
+                    this.keydown = true
+                }
+            } else {
+                this.keydown = false
+            }
+
             if(settingsmenutext[3].value != 101) {
                 camera.czoom = settingsmenutext[3].value
                 settingsmenutext[5].text = `Zoom: ${camera.czoom}%`
             }
-            
+
+            const realButton = document.getElementById("requestMotionAccess").style
+            const vButton = settingsmenutext[11]
+            realButton.display = "initial"
+            realButton.left = `${vButton.realx}px`
+            realButton.top = `${vButton.realy}px`
+            realButton.width = `${vButton.realwidth}px`
+            realButton.height = `${vButton.realheight}px`
+            realButton.opacity = `0`
+
+            if(settingsmenutext[8].x < settingsmenutext[9 + Number(mobilecontrols)].x) {
+                settingsmenutext[8].x = animate(settingsmenutext[8].x, true, true, settingsmenutext[9 + Number(mobilecontrols)].x, 10, 2)
+            } else {
+                settingsmenutext[8].x = animate(settingsmenutext[8].x, false, true, settingsmenutext[9 + Number(mobilecontrols)].x, 10, 2)
+            }
 
             settingsmenutext[6].text = `Debug: ${debug}`
+            settingsmenutext[16].text = `FPS: ${fps}`
 
             updateAll(settingsmenutext)
         }
     },
 
-    accmenu : function() {
+    controlsmenu : function() {
         if(this.menu == 3) {
-            for(let i in acctext) {
-                acctext[i].alpha = (this.blur/100)*1.25
+            for(let i in controlstext) {
+                controlstext[i].alpha = (this.blur/100)*1.25
             }
 
-            updateAll(acctext)
+            updateAll(controlstext)
         }
     },
 
@@ -342,7 +386,7 @@ var pausemenu = {
         pausemenu.mainmenu()
 
         pausemenu.settingsmenu()
-        pausemenu.accmenu()
+        pausemenu.controlsmenu()
 
         pausemenu.configmenu()
 
@@ -498,8 +542,8 @@ function hudRect(x, y, width, height, fill, bezel=0, image=false, resize="both",
     }
 
     this.update = function() {
-        this.realwidth = (this.resize) ? (this.width*(gameWindow.canvas.width/(100))):(this.width*(1920/(100)))
-        this.realheight = (this.resize == "both") ? (this.height*(gameWindow.canvas.height/(100))):(this.resize == "equal") ? (this.height*((gameWindow.canvas.width*(1080/1920))/(100))):(this.height*(1080/(100)))
+        this.realwidth = (this.resize == "both" || this.resize == "width") ? (this.width*(gameWindow.canvas.width/(100))):(this.resize == "height") ? (this.width*((gameWindow.canvas.height*(1920/1080))/(100))):(this.width*(1920/(100)))
+        this.realheight = (this.resize == "both" || this.resize == "height") ? (this.height*(gameWindow.canvas.height/(100))):(this.resize == "width") ? (this.height*((gameWindow.canvas.width*(1080/1920))/(100))):(this.height*(1080/(100)))
         this.realx = (this.x*(gameWindow.canvas.width/100))-(this.realwidth/2)
         this.realy = (this.y*(gameWindow.canvas.height/100))-(this.realheight/2)
         this.canvas = gameWindow.context
@@ -545,7 +589,7 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
     this.update = function() {
         this.multiline = this.text.split("\n")
 
-        this.ssize = this.size * (gameWindow.canvas.width/1920)
+        this.ssize = this.size * (gameWindow.canvas.width/1920) * ((gameWindow.canvas.height/1080)**0.2)
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
         canvas.font = (`${this.ssize}px ${this.font}`);
@@ -568,7 +612,7 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
                 this.fromright = this.realwidth
             }
             
-            canvas.fillText(this.multiline[i], this.realx - this.jpos, this.realy + this.realheight/2 + (this.realheight*i*1.7));
+            canvas.fillText(this.multiline[i], this.realx - this.jpos, this.realy + this.realheight/2 + (this.realheight*i*1.8));
         }
         canvas.globalAlpha = 1;
         upcount++

@@ -83,7 +83,9 @@ function animate(value, direction, type, limit, step, round=0) {
 function setControls(type) {
     mobilecontrols = type
     pausemenu.controlschosen = true;
-    pausemenu.toggle()
+    if(pausemenu.menu != 2) {
+        pausemenu.toggle()
+    }
 }
 
 function pausemenutoggle() {
