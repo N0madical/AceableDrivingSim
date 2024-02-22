@@ -27,6 +27,7 @@ let loadedtextures = {}
 let loadedcartextures = []
 var loadopac = 100;
 var loadcount = 0;
+let rightUpDialog = false;
 
 // Debug Timer
 var upcount = 0;
@@ -301,6 +302,7 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[82])) {r_key = true} else {r_key = false}
     if (gameWindow.keys && (gameWindow.keys[83])) {s_key = true} else {s_key = false}
     if (gameWindow.keys && (gameWindow.keys[67])) {c_key = true} else {c_key = false}
+    if (gameWindow.keys && (gameWindow.keys[73])) {i_key = true} else {i_key = false}
     if (gameWindow.keys && (gameWindow.keys[32])) {space = true} else {space = false}
 
     if(player.paused){left=false; right=false; up=false; down=false;}
@@ -347,6 +349,10 @@ function updateGameWindow() {
     }
 
     mobileHud.update()
+
+    if(rightUpDialog) {
+        updateAll(rightUp)
+    }
 
     //console.debug(loaded)
     if((fps > 8) && (loadopac >= 1) && (loadcount == global.length)) {

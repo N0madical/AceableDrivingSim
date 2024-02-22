@@ -93,8 +93,17 @@ function pausemenutoggle() {
 }
 
 function handleOrientation(event) {
-    orientOffset = event.beta
-    player.turndeg = event.beta
+    if(mobilecontrols == 2) {
+        orientOffset = event.beta%180
+        player.turndeg = event.beta%180
+    } else {
+        orientOffset = 0
+    }
+    if(Math.abs(event.gamma) < 30) {
+        rightUpDialog = true
+    } else {
+        rightUpDialog = false
+    }
 }
 
 document.getElementById("requestMotionAccess").onclick = function(e) {

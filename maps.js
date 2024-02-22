@@ -348,7 +348,7 @@ infomenus = [
         ],
         [
             new hudRect(50, 40, 50, 60, "#1b2932",  25, false, "both"),
-            new hudText("x", 73, 13, 40, "center", "white", 1, "Arial", "toolTipToggle", [0]),
+            new hudText("x", 73, 13, 60, "center", "white", 1, "Arial", "toolTipToggle", [0]),
             new hudText("Parallel Parking", 50, 15, 60, "center", "white"),
             new hudRect(35, 40, 12, 40, "tooltip1.JPG", 0, true, "height"),
             new hudText("Start by pulling up next to\nthe car in front of your\nparking space\n\nThen, back in at a tight angle\nand streighten out before\nhitting the curb.", 43, 25, 40, "left", "white"),
@@ -412,7 +412,7 @@ guipages = [
         new hudText("Touch", 50, 62, 30, "center"),
         new hudText("Touch & Tilt", 63, 62, 30, "center"),
         new hudText("FPS: -", 11, 88, 10, "left"),
-        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
+        new hudText("x", 89, 12, 60, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     controlstext = [
         new hudRect(50, 50, 80, 80, "#1b2932", 25),
@@ -426,7 +426,7 @@ guipages = [
         new hudRect(70, 58, 5, 9, "key-esc.png", 0, true, "width"),
         new hudText("Close Current Menu / Open Pause Menu:\nEscape key", 70, 64, 20, "center"),
         new hudText("Underlined Letter:\nHighlighting Pressable Key", 70, 77, 20, "center"),
-        new hudText("x", 89, 12, 40, "right", "white", 1, "Arial", "pausemenutoggle"),
+        new hudText("x", 89, 12, 60, "right", "white", 1, "Arial", "pausemenutoggle"),
     ],
     finishscreentext = [
         new hudRect(50, 50, 100, 100, "#000000", 0, false, "both", 0.8),
@@ -447,4 +447,8 @@ guipages = [
         new hudRect(42.5, 4.5, 11, 8, "spacebar.png", 0, true, "both"),
         new hudText(text="Press   SpaceBar   or Click Here to Finish", x=50, y=4, size=40, justify="center", color="white", font="Arial"),
     ],
+    rightUp = [
+        new hudRect(50, 50, 100, 100, "#000000", 0, false, "both", 0.8),
+        new hudText("Please Hold Your Device Up For Tilt Controls", 50, 50, 100, "center"),
+    ]
 ]

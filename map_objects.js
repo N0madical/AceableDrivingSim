@@ -367,6 +367,9 @@ function infospot(x, y, size, menu) {
                         hoverbox.width = animate(hoverbox.width, true, true, 10, 5, 2)
                         hoverbox.height = animate(hoverbox.height, true, true, 15, 5, 2)
                     }
+                    if(i_key) {
+                        toolTipToggle(0)
+                    }
                 }
             } else {
                 if(infomenus[this.menu][0][0].alpha != 0) {
