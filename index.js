@@ -348,11 +348,11 @@ function updateGameWindow() {
         }
     }
 
-    mobileHud.update()
-
     if(rightUpDialog) {
         updateAll(rightUp)
     }
+
+    mobileHud.update()
 
     //console.debug(loaded)
     if((fps > 8) && (loadopac >= 1) && (loadcount == global.length)) {

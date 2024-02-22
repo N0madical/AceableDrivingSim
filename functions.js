@@ -104,7 +104,7 @@ function handleOrientation(event) {
     } else {
         orientOffset = 0
     }
-    if(Math.abs(event.gamma) < 30) {
+    if(Math.abs(event.gamma) < 15) {
         rightUpDialog = true
     } else {
         rightUpDialog = false
