@@ -395,11 +395,16 @@ guipages = [
         new hudText("_", 20, 75, 50, justify="left"),
         new hudText("_", 20, 90, 50, justify="left"),
     ],
+    editorTitle = [new hudText("Edit Mode", 50, 5, 50, "center")],
     editorHud = [
         new hudRect(95, 10, 8, 15, "RotatePlus.png", 0, true, "height", 1, "editorInterface", ["0"]),
         new hudRect(95, 25, 8, 15, "RotateMinus.png", 0, true, "height", 1, "editorInterface", ["1"]),
         new hudRect(95, 40, 8, 15, "#555555", 90, false, "height", 1, "editorInterface", ["2"]),
-        new hudText("Change\nLayer", 95, 40, 30, "center")
+        new hudText("Change\nLayer", 95, 40, 30, "center"),
+        new hudRect(85, 55, 8, 15, "PlusH.png", 0, true, "height", 1, "editorInterface", ["6"]),
+        new hudRect(95, 55, 8, 15, "MinusH.png", 0, true, "height", 1, "editorInterface", ["5"]),
+        new hudRect(85, 70, 8, 15, "PlusW.png", 0, true, "height", 1, "editorInterface", ["4"]),
+        new hudRect(95, 70, 8, 15, "MinusW.png", 0, true, "height", 1, "editorInterface", ["3"]),
     ],
     settingsmenutext = [
         new hudRect(50, 50, 80, 80, "#1b2932", 25),

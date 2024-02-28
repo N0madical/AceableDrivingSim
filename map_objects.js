@@ -58,7 +58,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         }
 
         if(gameEditor.active) {
-            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle)) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
                     gameEditor.sel = this.id
@@ -88,6 +88,23 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
                 if(gameEditor.changeHeight == 1) {
                     this.layer = (this.layer < 5) ? this.layer+1:1
                     gameEditor.changeHeight = 0
+                }
+
+                console.debug(gameEditor.width)
+                if(gameEditor.width == -1) {
+                    this.width -= 0.5
+                    gameEditor.width = 0
+                } else if (gameEditor.width == 1) {
+                    this.width += 0.5
+                    gameEditor.width = 0
+                }
+
+                if(gameEditor.height == -1) {
+                    this.height -= 0.5
+                    gameEditor.height = 0
+                } else if (gameEditor.height == 1) {
+                    this.height += 0.5
+                    gameEditor.height = 0
                 }
             }
         }
@@ -561,6 +578,41 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
                 this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]))
 
                 if(pointInRectangle(this.pointx, this.pointy, this.x, this.y, this.width + this.colmods[this.type][0], this.height + this.colmods[this.type][1], this.angle)) {player.reset()}
+            }
+        }
+
+        if(gameEditor.active) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+                canvas.filter = "brightness(50%)"
+                if(clickhandler.click && gameEditor.asel == -1) {
+                    gameEditor.sel = this.id
+                    gameEditor.asel = this.id
+                }
+            }
+
+            if(gameEditor.asel == this.id) {
+                this.x = Round(gameEditor.mousePos[0],0.5)
+                this.y = Round(gameEditor.mousePos[1],0.5)
+                console.debug(clickhandler.click)
+                if(!clickhandler.click) {
+                    gameEditor.asel = -1
+                }
+            }
+
+            if(gameEditor.sel == this.id) {
+                if(gameEditor.rotate == -1) {
+                    this.angle -= 10
+                    gameEditor.rotate = 0
+                } else if (gameEditor.rotate == 1) {
+                    this.angle += 10
+                    gameEditor.rotate = 0
+                }
+                
+                editorHud[3].text = ("Layer: " + this.layer)
+                if(gameEditor.changeHeight == 1) {
+                    this.layer = (this.layer < 5) ? this.layer+1:1
+                    gameEditor.changeHeight = 0
+                }
             }
         }
 

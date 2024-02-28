@@ -263,6 +263,7 @@ var pausemenu = {
                             } else if (i == 3) {
                                 pausemenu.menu = 3
                             } else if (i == 5) {
+                                pausemenu.menu = 0
                                 gameEditor.active = true
                                 pausemenu.toggle()
                             }
@@ -508,6 +509,8 @@ var gameEditor = {
         this.asel = -1
         this.rotate = 0
         this.changeHeight = 0
+        this.height = 0
+        this.width = 0
     },
 
     update : function() {
@@ -518,7 +521,9 @@ var gameEditor = {
                 updateAll(editorHud)
             }
 
-            if(esc_key) {
+            updateAll(editorTitle)
+
+            if(pausemenu.menu != 0) {
                 this.active = false
             }
         }

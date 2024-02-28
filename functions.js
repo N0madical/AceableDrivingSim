@@ -93,12 +93,28 @@ function pausemenutoggle() {
 }
 
 function editorInterface(action) {
-    if(action == 0) {
-        gameEditor.rotate = -1
-    } else if (action == 1) {
-        gameEditor.rotate = 1
-    } else if (action == 2) {
-        gameEditor.changeHeight = 1
+    console.debug("test", action)
+    switch (parseInt(action)) {
+        case 0:
+            gameEditor.rotate = -1;
+            break;
+        case 1:
+            gameEditor.rotate = 1;
+            break;
+        case 2:
+            gameEditor.changeHeight = 1;
+            break;
+        case 3:
+            gameEditor.width = -1;
+            break;
+        case 4:
+            gameEditor.width = 1;
+            break;
+        case 5:
+            gameEditor.height = -1;
+            break;
+        case 6:
+            gameEditor.height = 1;
     }
     
 }
