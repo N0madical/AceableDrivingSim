@@ -75,6 +75,13 @@ var clickhandler = {
         }
     },
 
+    getRelPos : function() {
+        let mousepos = [clickhandler.realx-gameWindow.canvas.width/2, (clickhandler.realy-gameWindow.canvas.height/2)*-1]
+        let distance = Math.sqrt(mousepos[0]**2 + mousepos[1]**2)/(scalar*camera.czoom/100)
+        let mouseangle = invtan2(mousepos[0], mousepos[1])
+        return [(sin(camera.cangle + mouseangle) * distance) + camera.cx, (cos(camera.cangle + mouseangle) * distance) + camera.cy]
+    },
+
     update : function() {
         if(this.mobileUser) {
             if(this.touches.length > 0) {
@@ -114,7 +121,7 @@ var mobileHud = {
     },
 
     update : function() {
-        if(mobilecontrols != 0 && !player.paused) {
+        if(mobilecontrols != 0 && !player.paused && gameEditor.asel == -1) {
             if(!(clickhandler.x < 6 && clickhandler.y < 8) && clickhandler.click) {
                 if(!this.active) {
                     this.clickstart = {x:clickhandler.x, y:clickhandler.y}
@@ -237,28 +244,34 @@ var pausemenu = {
             for(let i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
                 this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;
-                this.mainmenutext[i].update()
 
-                if (clickhandler.hovered(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5)) {
-                    if (Math.round(this.selheight) != this.mainmenutext[i].realy){
-                        this.selheight += (this.mainmenutext[i].realy - this.selheight)/5
-                    }
-                    
-                    if(clickhandler.clicked(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5) && pausemenu.paused == 1) {
-                        if(i == 1) {
-                            pausemenu.toggle()
-                        } else if (i == 2) {
-                            player.reset()
-                            finishscreen.finished = false
-                            pausemenu.toggle()
-                        } else if (i == 4) {
-                            pausemenu.menu = 2
-                        } else if (i == 3) {
-                            pausemenu.menu = 3
+                if(i < 6) {
+                    if (clickhandler.hovered(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5)) {
+                        if (Math.round(this.selheight) != this.mainmenutext[i].realy){
+                            this.selheight += (this.mainmenutext[i].realy - this.selheight)/5
+                        }
+                        
+                        if(clickhandler.clicked(0,25,this.mainmenutext[i].y-5,this.mainmenutext[i].y+5) && pausemenu.paused == 1) {
+                            if(i == 1) {
+                                pausemenu.toggle()
+                            } else if (i == 2) {
+                                player.reset()
+                                finishscreen.finished = false
+                                pausemenu.toggle()
+                            } else if (i == 4) {
+                                pausemenu.menu = 2
+                            } else if (i == 3) {
+                                pausemenu.menu = 3
+                            } else if (i == 5) {
+                                gameEditor.active = true
+                                pausemenu.toggle()
+                            }
                         }
                     }
                 }
             }
+
+            updateAll(this.mainmenutext)
         }
     },
 
@@ -485,6 +498,30 @@ var finishscreen = {
         }
         this.starcount = 7
         this.starsize = 0
+    }
+}
+
+var gameEditor = {
+    start : function() {
+        this.active = false
+        this.sel = -1
+        this.asel = -1
+        this.rotate = 0
+        this.changeHeight = 0
+    },
+
+    update : function() {
+        if(this.active) {
+            this.mousePos = clickhandler.getRelPos()
+
+            if(this.sel != -1) {
+                updateAll(editorHud)
+            }
+
+            if(esc_key) {
+                this.active = false
+            }
+        }
     }
 }
 

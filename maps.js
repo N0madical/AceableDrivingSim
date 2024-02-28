@@ -59,8 +59,8 @@ configs = [
     ],
 
     test = [
-        startpos = [5,0,0],
-        startzoom = 50,
+        startpos = [0,0,0],
+        startzoom = 100,
     ],
 ]
 
@@ -305,8 +305,7 @@ maps = [
     road = [],
 
     test = [
-        new car(type=0, x=0, y=0, angle=-90, speed=-2, turn=0, logicID=2),
-        new rect(false, -10, 3, 45, 10, 0.5, "dimgray", 3),
+        new rect(false, 10, 0, 0, 0.5, 0.5, "dimgray", 3),
     ]
 ]
 
@@ -387,12 +386,20 @@ guipages = [
     mainmenutext = [
         new hudText("Paused", 20, 10, 100, justify="left"),
         new hudText("Resume Game", 20, 30, 50, justify="left"),
-        new hudText("Restart Game", 20, 50, 50, justify="left"),
-        new hudText("Controls", 20, 70, 50, justify="left"),
-        new hudText("Settings", 20, 90, 50, justify="left"),
-        new hudText("_", 20, 50, 50, justify="left"),
-        new hudText("_", 20, 70, 50, justify="left"),
+        new hudText("Restart Game", 20, 45, 50, justify="left"),
+        new hudText("Controls", 20, 60, 50, justify="left"),
+        new hudText("Settings", 20, 75, 50, justify="left"),
+        new hudText("Editor Mode", 20, 90, 50, justify="left"),
+        new hudText("_", 20, 45, 50, justify="left"),
+        new hudText("_", 20, 60, 50, justify="left"),
+        new hudText("_", 20, 75, 50, justify="left"),
         new hudText("_", 20, 90, 50, justify="left"),
+    ],
+    editorHud = [
+        new hudRect(95, 10, 8, 15, "RotatePlus.png", 0, true, "height", 1, "editorInterface", ["0"]),
+        new hudRect(95, 25, 8, 15, "RotateMinus.png", 0, true, "height", 1, "editorInterface", ["1"]),
+        new hudRect(95, 40, 8, 15, "#555555", 90, false, "height", 1, "editorInterface", ["2"]),
+        new hudText("Change\nLayer", 95, 40, 30, "center")
     ],
     settingsmenutext = [
         new hudRect(50, 50, 80, 80, "#1b2932", 25),

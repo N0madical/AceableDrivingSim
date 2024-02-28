@@ -56,6 +56,42 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         if(this.opacity != 100) {
             canvas.globalAlpha = (this.opacity/100)
         }
+
+        if(gameEditor.active) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle)) {
+                canvas.filter = "brightness(50%)"
+                if(clickhandler.click && gameEditor.asel == -1) {
+                    gameEditor.sel = this.id
+                    gameEditor.asel = this.id
+                }
+            }
+
+            if(gameEditor.asel == this.id) {
+                this.x = Round(gameEditor.mousePos[0],0.5)
+                this.y = Round(gameEditor.mousePos[1],0.5)
+                console.debug(clickhandler.click)
+                if(!clickhandler.click) {
+                    gameEditor.asel = -1
+                }
+            }
+
+            if(gameEditor.sel == this.id) {
+                if(gameEditor.rotate == -1) {
+                    this.angle -= 10
+                    gameEditor.rotate = 0
+                } else if (gameEditor.rotate == 1) {
+                    this.angle += 10
+                    gameEditor.rotate = 0
+                }
+                
+                editorHud[3].text = ("Layer: " + this.layer)
+                if(gameEditor.changeHeight == 1) {
+                    this.layer = (this.layer < 5) ? this.layer+1:1
+                    gameEditor.changeHeight = 0
+                }
+            }
+        }
+
         if(this.isimage) {
             canvas.drawImage(this.fill, Round((this.width*(scalar)*(camera.czoom/100)) / -2), Round((this.height*(scalar)*(camera.czoom/100)) / -2), Round(this.width*(scalar)*(camera.czoom/100)), Round(this.height*(scalar)*(camera.czoom/100)));
         } else {

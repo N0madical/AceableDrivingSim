@@ -16,7 +16,7 @@ let left = false;
 let right = false;
 let up = false;
 let down = false;
-let esc = false;
+let esc_key = false;
 let r_key = false;
 let s_key = false;
 let a_key = false;
@@ -60,6 +60,7 @@ window.onload = function() {
     pausemenu.start();
     finishscreen.start();
     mobileHud.start();
+    gameEditor.start();
 
     // Add IDs and Layers if Undefined
     for(i = 0; i < updatelist.length; i++) {
@@ -298,7 +299,7 @@ function updateGameWindow() {
     if (gameWindow.keys && (gameWindow.keys[39] || gameWindow.keys[68])) {right = true; d_key = true} else {right = false; d_key = false}
     if (gameWindow.keys && (gameWindow.keys[38] || gameWindow.keys[87])) {up = true} else {up = false}
     if (gameWindow.keys && (gameWindow.keys[40] || gameWindow.keys[83])) {down = true} else {down = false}
-    if (gameWindow.keys && (gameWindow.keys[27])) {esc = true} else {esc = false}
+    if (gameWindow.keys && (gameWindow.keys[27])) {esc_key = true} else {esc_key = false}
     if (gameWindow.keys && (gameWindow.keys[82])) {r_key = true} else {r_key = false}
     if (gameWindow.keys && (gameWindow.keys[83])) {s_key = true} else {s_key = false}
     if (gameWindow.keys && (gameWindow.keys[67])) {c_key = true} else {c_key = false}
@@ -327,7 +328,7 @@ function updateGameWindow() {
     }
     
     // Pause Menu (WIP)
-    if(esc) {pausemenu.toggle(); console.info("Esc pressed")}
+    if(esc_key) {pausemenu.toggle(); console.info("Esc pressed")}
 
     if(clickhandler.mobileUser && !pausemenu.controlschosen) {
         pausemenu.openmenu(-1)
@@ -353,6 +354,8 @@ function updateGameWindow() {
     }
 
     mobileHud.update()
+
+    gameEditor.update()
 
     //console.debug(loaded)
     if((fps > 8) && (loadopac >= 1) && (loadcount == global.length)) {

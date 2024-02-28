@@ -92,6 +92,17 @@ function pausemenutoggle() {
     pausemenu.toggle()
 }
 
+function editorInterface(action) {
+    if(action == 0) {
+        gameEditor.rotate = -1
+    } else if (action == 1) {
+        gameEditor.rotate = 1
+    } else if (action == 2) {
+        gameEditor.changeHeight = 1
+    }
+    
+}
+
 function handleOrientation(event) {
     if(mobilecontrols == 2) {
         if(event.gamma < 0) {
