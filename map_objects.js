@@ -154,8 +154,8 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
             canvas.rotate(radians(this.pos[2]));
         }
         this.opacity = 100;
-        if(!player.paused) {
-            if(this.layer >= player.layer) {
+        if(!player.paused && (Math.sqrt((this.x-camera.cx)**2 + (this.y-camera.cy)**2) <= this.diameter/2 + (player.height/2))) {
+            if(this.layer > player.layer) {
                 for (let i = 0; i < player.distances.length; i++) {
                     this.pointx = camera.cx + (sin(((i*16) + camera.cangle) % 360) * (player.distances[i]))
                     this.pointy = camera.cy + (cos(((i*16) + camera.cangle) % 360) * (player.distances[i]))
@@ -163,15 +163,14 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
                         if (this.layer == player.layer + 1) {player.reset()} else {this.opacity -= 1.5}
                     }
                 }
+            } else if (this.layer == player.layer) {
                 for (let i = 0; i < player.wheelangles.length; i++) {
                     this.pointx = camera.cx + (sin(((player.wheelangles[i]) + camera.cangle) % 360) * (player.wheeldistance))
                     this.pointy = camera.cy + (cos(((player.wheelangles[i]) + camera.cangle) % 360) * (player.wheeldistance))
                     if (Math.sqrt(((this.x - this.pointx)**2) + ((this.y - this.pointy)**2)) <= (this.diameter/2))
                     {   
-                        if (this.layer == player.layer) {
-                            if((i == 0 || i == 3) && (player.speed > 0)) {player.speed = 0}
-                            if((i == 1 || i == 2) && (player.speed < 0)) {player.speed = 0}
-                        }
+                        if((i == 0 || i == 3) && (player.speed > 0)) {player.speed = 0}
+                        if((i == 1 || i == 2) && (player.speed < 0)) {player.speed = 0}
                     }
                 }
             }
