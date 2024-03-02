@@ -119,6 +119,34 @@ function editorInterface(action) {
     
 }
 
+function exportMap() {
+    if(gameEditor.window == 0) {
+        let list = ``
+        for(let i in maps[map-1]) {
+            list += `new ${maps[map-1][i].printSelf()},\n`
+        }
+        list = list.trim()
+        document.getElementById("textbox").value = list;
+        document.getElementById("textbox").readOnly = true;
+        document.getElementById("textbox").style.display = "inherit";
+        gameEditor.window = 1;
+    }
+    
+}
+
+function importMap() {
+    if(gameEditor.window == 0) {
+        document.getElementById("textbox").value = "";
+        document.getElementById("textbox").readOnly = false;
+        document.getElementById("textbox").style.display = "inherit";
+        gameEditor.window = 2;
+    }
+}
+
+function closePort() {
+    gameEditor.close()
+}
+
 function handleOrientation(event) {
     if(mobilecontrols == 2) {
         if(event.gamma < 0) {

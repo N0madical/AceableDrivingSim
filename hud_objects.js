@@ -505,12 +505,41 @@ var finishscreen = {
 var gameEditor = {
     start : function() {
         this.active = false
+        this.window = 0
         this.sel = -1
         this.asel = -1
         this.rotate = 0
         this.changeHeight = 0
         this.height = 0
         this.width = 0
+    },
+
+    close : function() {
+        if(this.window == 2) {
+            let newMap = document.getElementById("textbox").value.split("\n")
+            let objlist = []
+            for(let i in newMap) {
+                let type = newMap[i].substring(newMap[i].indexOf("new ")+4, newMap[i].indexOf("("))
+                let values = newMap[i].substring(newMap[i].indexOf("("), newMap[i].indexOf(")")+1)
+                console.debug(type,values)
+                let arr = values.replaceAll(/[()"'` ]/g, "").split(",")
+                for(let i in arr) {
+                    arr[i] = arr[i].substring(arr[i].indexOf("=")+1)
+                    if(!isNaN(parseFloat(arr[i]))) {
+                        arr[i] = parseFloat(arr[i])
+                    }
+                }
+                console.debug(...arr)
+                let obj = new window[type](...arr)
+                console.debug(obj)
+                console.debug(obj.printSelf())
+            }
+            for(let j in objlist) {
+                console.debug(objlist[j].printSelf())
+            }
+        }
+        this.window = 0
+        document.getElementById("textbox").style.display = "none";
     },
 
     update : function() {
@@ -526,6 +555,12 @@ var gameEditor = {
             if(pausemenu.menu != 0) {
                 this.active = false
             }
+        }
+
+        if(this.window == 1) {
+            updateAll(exportHud)
+        } else if (this.window == 2) {
+            updateAll(importHud)
         }
     }
 }

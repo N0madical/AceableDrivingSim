@@ -21,6 +21,11 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         }
     }
 
+    this.printSelf = function() {
+        console.debug(this.x)
+        return `rect(isimage=${isimage}, x=${this.x}, y=${this.y}, angle=${this.angle}, width=${this.width}, height=${this.height}, fill='${fill}', layer=${this.layer})`
+    }
+
     this.update = function() {
         canvas = gameWindow.context;
         canvas.save();
@@ -69,7 +74,6 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
             if(gameEditor.asel == this.id) {
                 this.x = Round(gameEditor.mousePos[0],0.5)
                 this.y = Round(gameEditor.mousePos[1],0.5)
-                console.debug(clickhandler.click)
                 if(!clickhandler.click) {
                     gameEditor.asel = -1
                 }
@@ -90,7 +94,6 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
                     gameEditor.changeHeight = 0
                 }
 
-                console.debug(gameEditor.width)
                 if(gameEditor.width == -1) {
                     this.width -= 0.5
                     gameEditor.width = 0
@@ -145,6 +148,10 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         }
     }
 
+    this.printSelf = function() {
+        return `circle(isimage=${this.isimage}, x=${this.x}, y=${this.y}, angle=${this.angle}, diameter=${this.diameter}, fill='${fill}', arc=${this.arc}, layer=${this.layer})`
+    }
+
     this.update = function() {
         canvas = gameWindow.context;
         canvas.save();
@@ -178,9 +185,59 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         if(this.opacity != 100) {
             canvas.globalAlpha = (this.opacity/100)
         }
+
+        if(gameEditor.active) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.diameter, this.diameter, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+                canvas.filter = "brightness(50%)"
+                if(clickhandler.click && gameEditor.asel == -1) {
+                    gameEditor.sel = this.id
+                    gameEditor.asel = this.id
+                }
+            }
+
+            if(gameEditor.asel == this.id) {
+                this.x = Round(gameEditor.mousePos[0],0.5)
+                this.y = Round(gameEditor.mousePos[1],0.5)
+                if(!clickhandler.click) {
+                    gameEditor.asel = -1
+                }
+            }
+
+            if(gameEditor.sel == this.id) {
+                if(gameEditor.rotate == -1) {
+                    this.angle -= 10
+                    gameEditor.rotate = 0
+                } else if (gameEditor.rotate == 1) {
+                    this.angle += 10
+                    gameEditor.rotate = 0
+                }
+                
+                editorHud[3].text = ("Layer: " + this.layer)
+                if(gameEditor.changeHeight == 1) {
+                    this.layer = (this.layer < 5) ? this.layer+1:1
+                    gameEditor.changeHeight = 0
+                }
+
+                if(gameEditor.width == -1) {
+                    this.diameter -= 0.5
+                    gameEditor.width = 0
+                } else if (gameEditor.width == 1) {
+                    this.diameter += 0.5
+                    gameEditor.width = 0
+                }
+
+                if(gameEditor.height == -1) {
+                    this.diameter -= 0.5
+                    gameEditor.height = 0
+                } else if (gameEditor.height == 1) {
+                    this.diameter += 0.5
+                    gameEditor.height = 0
+                }
+            }
+        }
+
         if(this.isimage) {
             canvas.drawImage(this.fill, Round((this.diameter*(scalar)*(camera.czoom/100)) / -2), Round((this.diameter*(scalar)*(camera.czoom/100)) / -2), Round(this.diameter*(scalar)*(camera.czoom/100)), Round(this.diameter*(scalar)*(camera.czoom/100)));
-            canvas.restore();
         } else {
             canvas.fillStyle = this.fill; 
             canvas.beginPath();
@@ -188,6 +245,7 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
             canvas.closePath();
             canvas.fill();
         }
+        canvas.restore();
         upcount++
     }
 
@@ -213,6 +271,10 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
         this.tilex = Math.ceil(this.width/this.iwidth)
         this.tiley = Math.ceil(this.height/this.iheight)
         canvas = gameWindow.context;
+    }
+
+    this.printSelf = function() {
+        return `terrain(x=${this.x}, y=${this.y}, angle=${this.angle}, width=${this.width}, height=${this.height}, image='${image}', layer=${this.layer}, scalex=${scalex}, scaley=${scaley})`
     }
 
     this.update = function() {
@@ -302,6 +364,10 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         this.acclist = []
     }
 
+    this.printSelf = function() {
+        return `parkingspot(iscircle=${this.circle}, x=${this.x}, y=${this.y}, angle=${this.angle}, width=${this.width}, height=${this.height}, idealangle=${this.idealangle})`
+    }
+
     this.update = function() {
         if (this.toggle == 0) { this.opacity -= (30/fps);
             if(this.opacity <= 20) { this.toggle = 1}
@@ -313,6 +379,59 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         this.pos = camera.position(this.x,this.y,-this.angle);
         canvas.globalAlpha = (this.opacity/100)
         canvas.fillStyle = this.fill;
+
+        if(gameEditor.active) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+                canvas.filter = "brightness(50%)"
+                if(clickhandler.click && gameEditor.asel == -1) {
+                    gameEditor.sel = this.id
+                    gameEditor.asel = this.id
+                }
+            }
+
+            if(gameEditor.asel == this.id) {
+                this.x = Round(gameEditor.mousePos[0],0.5)
+                this.y = Round(gameEditor.mousePos[1],0.5)
+                if(!clickhandler.click) {
+                    gameEditor.asel = -1
+                }
+            }
+
+            if(gameEditor.sel == this.id) {
+                if(gameEditor.rotate == -1) {
+                    this.angle -= 10
+                    this.idealangle -= 10
+                    gameEditor.rotate = 0
+                } else if (gameEditor.rotate == 1) {
+                    this.angle += 10
+                    this.idealangle += 10
+                    gameEditor.rotate = 0
+                }
+                
+                editorHud[3].text = ("Layer: " + this.layer)
+                if(gameEditor.changeHeight == 1) {
+                    this.layer = (this.layer < 5) ? this.layer+1:1
+                    gameEditor.changeHeight = 0
+                }
+
+                if(gameEditor.width == -1) {
+                    this.width -= 0.5
+                    gameEditor.width = 0
+                } else if (gameEditor.width == 1) {
+                    this.width += 0.5
+                    gameEditor.width = 0
+                }
+
+                if(gameEditor.height == -1) {
+                    this.height -= 0.5
+                    gameEditor.height = 0
+                } else if (gameEditor.height == 1) {
+                    this.height += 0.5
+                    gameEditor.height = 0
+                }
+            }
+        }
+
         if (this.circle) {
             canvas.beginPath();
             canvas.arc(gameWindow.canvas.width/2+this.pos[0],gameWindow.canvas.height/2-this.pos[1],(this.width/2)*scalar*(camera.czoom/100),0,2*Math.PI);
@@ -366,6 +485,8 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
                     }
                 }
             }
+
+            
         }
 
         upcount++
@@ -383,6 +504,10 @@ function infospot(x, y, size, menu) {
         this.layer = 2;
         this.toggle = 0;
         this.opacity = 50;
+    }
+
+    this.printSelf = function() {
+        return `infospot(x=${this.x}, y=${this.y}, size=${this.width}, menu=${this.menu})`
     }
 
     this.update = function() {
@@ -455,6 +580,22 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
         this.radius = ((Math.sqrt((this.width)**2 + (this.height)**2))/2)
         this.exclusiveactive = false
         this.colmods = [[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2]]
+    }
+
+    this.printSelf = function() {
+        let x2
+        let y2
+        let a2
+        if(this.logicid == -1) {
+            x2 = this.x
+            y2 = this.y
+            a2 = this.angle
+        } else {
+            x2 = x
+            y2 = y
+            a2 = angle
+        }
+        return `car(cartype=${this.type}, x=${x2}, y=${y2}, angle=${a2}, speed=${this.speed}, turn=${turn}, logicID=${logicID}, layer=${this.layer}, colisionmod=[${this.colmod}])`
     }
 
     this.update = function() {
@@ -592,7 +733,6 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
             if(gameEditor.asel == this.id) {
                 this.x = Round(gameEditor.mousePos[0],0.5)
                 this.y = Round(gameEditor.mousePos[1],0.5)
-                console.debug(clickhandler.click)
                 if(!clickhandler.click) {
                     gameEditor.asel = -1
                 }
