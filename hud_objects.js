@@ -263,7 +263,7 @@ var pausemenu = {
                             } else if (i == 3) {
                                 pausemenu.menu = 3
                             } else if (i == 5) {
-                                pausemenu.menu = 0
+                                pausemenu.paused = false
                                 gameEditor.active = true
                                 pausemenu.toggle()
                             }
@@ -365,17 +365,29 @@ var pausemenu = {
             document.getElementById("requestMotionAccess").style.display = "none"
         }
 
-        if ((this.blur != 0) && (this.paused == false)) {
-            this.blur += (0 - this.blur)/(fps/10);
-            if(this.blur <= 0.25){this.blur = 0}
-            this.selheight = -100;
-        } else if ((this.blur <= 0) && (this.paused == false)) {
-            pausemenu.menu = 0;
+        if(this.paused) {
+            if(this.menu == 0) {this.paused = false}
+            this.blur = animate(this.blur, true, true, 80, 5, 1.5)
+        } else {
+            if(this.blur == 0) {
+                pausemenu.menu = 0;
+                this.selheight = -100;
+            } else {
+                this.blur = animate(this.blur, false, true, 0, 5, 1.5)
+            }
         }
-        if ((this.blur != this.maxblur) && (this.paused == true)){
-            this.blur += (this.maxblur - this.blur)/(fps/10)
-            if(this.blur >= this.maxblur-0.25){this.blur = this.maxblur}
-        }
+
+        // if ((this.blur != 0) && (this.paused == false)) {
+        //     this.blur += (0 - this.blur)/(fps/10);
+        //     if(this.blur <= 0.25){this.blur = 0}
+        //     this.selheight = -100;
+        // } else if ((this.blur <= 0) && (this.paused == false)) {
+        //     pausemenu.menu = 0;
+        // }
+        // if ((this.blur != this.maxblur) && (this.paused == true)){
+        //     this.blur += (this.maxblur - this.blur)/(fps/10)
+        //     if(this.blur >= this.maxblur-0.25){this.blur = this.maxblur}
+        // }
         // if ((this.blur < this.maxblur) && (this.paused == true)) {
         //     this.blur += this.blurstep;
         // }
@@ -508,59 +520,132 @@ var gameEditor = {
         this.window = 0
         this.sel = -1
         this.asel = -1
-        this.rotate = 0
+        this.setup = -1
+        this.borderX = 22
+        this.borderY = 0
         this.changeHeight = 0
-        this.height = 0
-        this.width = 0
     },
 
-    close : function() {
-        if(this.window == 2) {
+    close : function(type) {
+        if(type == "1") {
             let newMap = document.getElementById("textbox").value.split("\n")
             let objlist = []
+            let failure = false
             for(let i in newMap) {
-                let type = newMap[i].substring(newMap[i].indexOf("new ")+4, newMap[i].indexOf("("))
-                let values = newMap[i].substring(newMap[i].indexOf("("), newMap[i].indexOf(")")+1)
-                console.debug(type,values)
-                let arr = values.replaceAll(/[()"'` ]/g, "").split(",")
-                for(let i in arr) {
-                    arr[i] = arr[i].substring(arr[i].indexOf("=")+1)
-                    if(!isNaN(parseFloat(arr[i]))) {
-                        arr[i] = parseFloat(arr[i])
+                if(newMap[i].includes("new ")) {
+                    try {
+                        let type = newMap[i].substring(newMap[i].indexOf("new ")+4, newMap[i].indexOf("("))
+                        let values = newMap[i].substring(newMap[i].indexOf("("), newMap[i].indexOf(")")+1)
+                        let arr = values.replaceAll(/[()"'` ]/g, "").split(",")
+                        for(let i in arr) {
+                            arr[i] = arr[i].substring(arr[i].indexOf("=")+1)
+                            if(arr[i] == "true") {arr[i] = true} else
+                            if(arr[i] == "false") {arr[i] = false} else
+                            if(!isNaN(parseFloat(arr[i]))) {
+                                arr[i] = parseFloat(arr[i])
+                            }
+                        }
+                        let obj = new window[type](...arr)
+                        obj.start()
+                        objlist.push(obj)
+                    } catch(error) {
+                        importHud[6].text = `Object not found or bad format: '${newMap[i].trim()}'`
                     }
+                    
                 }
-                console.debug(...arr)
-                let obj = new window[type](...arr)
-                console.debug(obj)
-                console.debug(obj.printSelf())
             }
             for(let j in objlist) {
-                console.debug(objlist[j].printSelf())
+                try {
+                    console.debug(objlist[j].update())
+                } catch (error) {
+                    importHud[6].text = `Bad arguments for object: '${objlist[j].printSelf()}': ${error}`
+                    failure = true
+                }
+                
             }
+            if(!failure) {
+                maps[map-1] = objlist
+                updatelist = maps[map-1].concat(spritelist)
+
+                for(i = 0; i < updatelist.length; i++) {
+                    if (typeof updatelist[i].layer == 'undefined') {
+                        updatelist[i].layer = 5
+                    }
+            
+                    updatelist[i].id = i
+                };
+            }
+        } else {
+           this.window = 0
+            document.getElementById("textbox").style.display = "none"; 
         }
-        this.window = 0
-        document.getElementById("textbox").style.display = "none";
+        
     },
 
     update : function() {
         if(this.active) {
             this.mousePos = clickhandler.getRelPos()
 
+            if(this.window == 1) {
+                updateAll(exportHud)
+            } else if (this.window == 2) {
+                updateAll(importHud)
+            } else {
+                updateAll(editorTitle)
+                if(this.sel != -1) {
+                    updateAll(editorHud)
+                }
+            }
+
+            if(this.asel != -1) {
+                maps[map-1][this.asel].x = Round(this.mousePos[0],0.5)
+                maps[map-1][this.asel].y = Round(this.mousePos[1],0.5)
+                if(!clickhandler.click) {
+                    this.asel = -1
+                }
+            }
+
             if(this.sel != -1) {
-                updateAll(editorHud)
+                let currentobj = maps[map-1][this.sel]
+
+                console.debug(currentobj.interface().name3)
+
+                if(!currentobj.interface().name1) {editorHud[2].alpha = 0; editorHud[3].alpha = 0;
+                } else {editorHud[2].alpha = 1; editorHud[3].alpha = 1;}
+
+                if(!currentobj.interface().name2) {editorHud[4].alpha = 0; editorHud[5].alpha = 0;
+                } else {editorHud[4].alpha = 1; editorHud[5].alpha = 1;}
+
+                if(!currentobj.interface().name3) {editorHud[6].alpha = 0; editorHud[7].alpha = 0;
+                } else {editorHud[6].alpha = 1; editorHud[7].alpha = 1;}
+
+                if(this.setup != this.sel) {
+                    editorHud[3].value = currentobj.interface().get1; editorHud[3].max = currentobj.interface().max1; editorHud[3].min = currentobj.interface().min1; editorHud[3].step = currentobj.interface().step1;
+                    editorHud[5].value = currentobj.interface().get2; editorHud[5].max = currentobj.interface().max2; editorHud[5].min = currentobj.interface().min2; editorHud[5].step = currentobj.interface().step2;
+                    editorHud[7].value = currentobj.interface().get3; editorHud[7].max = currentobj.interface().max3; editorHud[7].min = currentobj.interface().min3; editorHud[7].step = currentobj.interface().step3;
+                    this.setup = this.sel
+                }
+                editorHud[1].text = (`Layer: ${currentobj.layer}`)
+                editorHud[2].text = `${currentobj.interface().name1}: ${currentobj.interface().get1}`
+                editorHud[4].text = `${currentobj.interface().name2}: ${currentobj.interface().get2}`
+                editorHud[6].text = `${currentobj.interface().name3}: ${currentobj.interface().get3}`
+
+                if(this.changeHeight == 1) {
+                    if(currentobj.layer < 5) {
+                        currentobj.layer += 1
+                    } else {
+                        currentobj.layer = 1
+                    }
+                    this.changeHeight = 0
+                }
+                
+                currentobj.interface(editorHud[3].value, editorHud[5].value, editorHud[7].value)
             }
 
-            updateAll(editorTitle)
-
-            if(pausemenu.menu != 0) {
+            if(pausemenu.paused) {
                 this.active = false
+                this.close(0)
             }
-        }
-
-        if(this.window == 1) {
-            updateAll(exportHud)
-        } else if (this.window == 2) {
-            updateAll(importHud)
         }
     }
 }
@@ -704,7 +789,7 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
     }
 }
 
-function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1) {
+function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1, alpha=1) {
     this.x = x
     this.y = y
     this.width = width
@@ -717,6 +802,7 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
     this.active = false
     this.step = step
     this.resize = true
+    this.alpha = 1
 
     this.update = function() {
         this.realx = this.x*(gameWindow.canvas.width/100)
@@ -726,6 +812,7 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
 
         canvas = gameWindow.context;
         canvas.setTransform(1, 0, 0, 1, 0, 0);
+        canvas.globalAlpha = this.alpha;
 
         canvas.fillStyle = this.color1
         canvas.fillRect(this.realx - this.realwidth/2, this.realy - this.realheight/(4*2), this.realwidth, this.realheight/4);
@@ -734,6 +821,7 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
         canvas.beginPath();
         canvas.arc((this.realx - this.realwidth/2) + ((this.realwidth/(this.max - this.min))*(this.value-this.min)), this.realy, this.realheight, 0, 2*Math.PI);
         canvas.fill();
+        canvas.globalAlpha = 1;
 
         //console.debug(clickhandler.realx)
 

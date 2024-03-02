@@ -224,14 +224,14 @@ var player = {
         wheelR.fillRect(((this.width/10) / -2)*scalar*(camera.czoom/100), ((this.height/6) / -2)*scalar*(camera.czoom/100), (this.width/10)*(scalar)*(camera.czoom/100), (this.height/6)*(scalar)*(camera.czoom/100));
         wheelR.restore();
 
-        car = gameWindow.context;
-        car.save();
-        car.translate(gameWindow.canvas.width/2, gameWindow.canvas.height/2);
-        car.rotate(radians(orientOffset*-1));
-        car.drawImage(this.carimage, ((this.width/-2)*(scalar)*(camera.czoom/100)), ((this.height/-2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
-        car.restore();
+        mainCar = gameWindow.context;
+        mainCar.save();
+        mainCar.translate(gameWindow.canvas.width/2, gameWindow.canvas.height/2);
+        mainCar.rotate(radians(orientOffset*-1));
+        mainCar.drawImage(this.carimage, ((this.width/-2)*(scalar)*(camera.czoom/100)), ((this.height/-2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
+        mainCar.restore();
 
-        // car = gameWindow.context;
+        // mainCar = gameWindow.context;
         // car.fillStyle = "purple";
         // car.drawImage(this.carimage, (gameWindow.canvas.width/2)-((this.width/2)*(scalar)*(camera.czoom/100)), (gameWindow.canvas.height/2)-((this.height/2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
 

@@ -18,6 +18,10 @@ function average(list) {
 }
 
 //Game
+function testFunction(...arguments) {
+    console.debug(arguments)
+}
+
 function updateAll(...list) {
     for(let j in list) {
         for(let i in list[j]) {
@@ -136,15 +140,14 @@ function exportMap() {
 
 function importMap() {
     if(gameEditor.window == 0) {
-        document.getElementById("textbox").value = "";
         document.getElementById("textbox").readOnly = false;
         document.getElementById("textbox").style.display = "inherit";
         gameEditor.window = 2;
     }
 }
 
-function closePort() {
-    gameEditor.close()
+function closePort(type) {
+    gameEditor.close(type)
 }
 
 function handleOrientation(event) {

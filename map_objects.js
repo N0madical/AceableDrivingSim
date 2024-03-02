@@ -21,6 +21,19 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         }
     }
 
+    this.interface = function(opt1,opt2,opt3) {
+        if(opt1) {
+            this.angle = opt1
+            this.width = opt2
+            this.height = opt3
+        }
+        return {
+            get1: this.angle, min1: 0, max1: 360, step1: 15, name1: "Angle",
+            get2: this.width, min2: 0.1, max2: 50, step2: 0.5, name2: "Width",
+            get3: this.height, min3: 0.1, max3: 50, step3: 0.5, name3: "Height",
+        }
+    }
+
     this.printSelf = function() {
         console.debug(this.x)
         return `rect(isimage=${isimage}, x=${this.x}, y=${this.y}, angle=${this.angle}, width=${this.width}, height=${this.height}, fill='${fill}', layer=${this.layer})`
@@ -63,51 +76,11 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
         }
 
         if(gameEditor.active) {
-            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
                     gameEditor.sel = this.id
                     gameEditor.asel = this.id
-                }
-            }
-
-            if(gameEditor.asel == this.id) {
-                this.x = Round(gameEditor.mousePos[0],0.5)
-                this.y = Round(gameEditor.mousePos[1],0.5)
-                if(!clickhandler.click) {
-                    gameEditor.asel = -1
-                }
-            }
-
-            if(gameEditor.sel == this.id) {
-                if(gameEditor.rotate == -1) {
-                    this.angle -= 10
-                    gameEditor.rotate = 0
-                } else if (gameEditor.rotate == 1) {
-                    this.angle += 10
-                    gameEditor.rotate = 0
-                }
-                
-                editorHud[3].text = ("Layer: " + this.layer)
-                if(gameEditor.changeHeight == 1) {
-                    this.layer = (this.layer < 5) ? this.layer+1:1
-                    gameEditor.changeHeight = 0
-                }
-
-                if(gameEditor.width == -1) {
-                    this.width -= 0.5
-                    gameEditor.width = 0
-                } else if (gameEditor.width == 1) {
-                    this.width += 0.5
-                    gameEditor.width = 0
-                }
-
-                if(gameEditor.height == -1) {
-                    this.height -= 0.5
-                    gameEditor.height = 0
-                } else if (gameEditor.height == 1) {
-                    this.height += 0.5
-                    gameEditor.height = 0
                 }
             }
         }
@@ -152,6 +125,19 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         return `circle(isimage=${this.isimage}, x=${this.x}, y=${this.y}, angle=${this.angle}, diameter=${this.diameter}, fill='${fill}', arc=${this.arc}, layer=${this.layer})`
     }
 
+    this.interface = function(opt1,opt2,opt3) {
+        if(opt1) {
+            this.angle = opt1
+            this.diameter = opt2
+            this.arc = opt3
+        }
+        return {
+            get1: this.angle, min1: 0, max1: 360, step1: 15, name1: "Angle",
+            get2: this.diameter, min2: 0.1, max2: 50, step2: 0.5, name2: "Diameter",
+            get3: this.arc, min3: 15, max3: 360, step3: 15, name3: "Arc",
+        }
+    }
+
     this.update = function() {
         canvas = gameWindow.context;
         canvas.save();
@@ -187,51 +173,11 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
         }
 
         if(gameEditor.active) {
-            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.diameter, this.diameter, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.diameter, this.diameter, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
                     gameEditor.sel = this.id
                     gameEditor.asel = this.id
-                }
-            }
-
-            if(gameEditor.asel == this.id) {
-                this.x = Round(gameEditor.mousePos[0],0.5)
-                this.y = Round(gameEditor.mousePos[1],0.5)
-                if(!clickhandler.click) {
-                    gameEditor.asel = -1
-                }
-            }
-
-            if(gameEditor.sel == this.id) {
-                if(gameEditor.rotate == -1) {
-                    this.angle -= 10
-                    gameEditor.rotate = 0
-                } else if (gameEditor.rotate == 1) {
-                    this.angle += 10
-                    gameEditor.rotate = 0
-                }
-                
-                editorHud[3].text = ("Layer: " + this.layer)
-                if(gameEditor.changeHeight == 1) {
-                    this.layer = (this.layer < 5) ? this.layer+1:1
-                    gameEditor.changeHeight = 0
-                }
-
-                if(gameEditor.width == -1) {
-                    this.diameter -= 0.5
-                    gameEditor.width = 0
-                } else if (gameEditor.width == 1) {
-                    this.diameter += 0.5
-                    gameEditor.width = 0
-                }
-
-                if(gameEditor.height == -1) {
-                    this.diameter -= 0.5
-                    gameEditor.height = 0
-                } else if (gameEditor.height == 1) {
-                    this.diameter += 0.5
-                    gameEditor.height = 0
                 }
             }
         }
@@ -368,6 +314,19 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         return `parkingspot(iscircle=${this.circle}, x=${this.x}, y=${this.y}, angle=${this.angle}, width=${this.width}, height=${this.height}, idealangle=${this.idealangle})`
     }
 
+    this.interface = function(opt1,opt2,opt3) {
+        if(opt1) {
+            this.angle = opt1
+            this.width = opt2
+            this.height = opt3
+        }
+        return {
+            get1: this.angle, min1: 0, max1: 360, step1: 15, name1: "Angle",
+            get2: this.width, min2: 0.1, max2: 50, step2: 0.5, name2: "Width",
+            get3: this.height, min3: 0.1, max3: 50, step3: 0.5, name3: "Height",
+        }
+    }
+
     this.update = function() {
         if (this.toggle == 0) { this.opacity -= (30/fps);
             if(this.opacity <= 20) { this.toggle = 1}
@@ -381,53 +340,11 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         canvas.fillStyle = this.fill;
 
         if(gameEditor.active) {
-            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
                     gameEditor.sel = this.id
                     gameEditor.asel = this.id
-                }
-            }
-
-            if(gameEditor.asel == this.id) {
-                this.x = Round(gameEditor.mousePos[0],0.5)
-                this.y = Round(gameEditor.mousePos[1],0.5)
-                if(!clickhandler.click) {
-                    gameEditor.asel = -1
-                }
-            }
-
-            if(gameEditor.sel == this.id) {
-                if(gameEditor.rotate == -1) {
-                    this.angle -= 10
-                    this.idealangle -= 10
-                    gameEditor.rotate = 0
-                } else if (gameEditor.rotate == 1) {
-                    this.angle += 10
-                    this.idealangle += 10
-                    gameEditor.rotate = 0
-                }
-                
-                editorHud[3].text = ("Layer: " + this.layer)
-                if(gameEditor.changeHeight == 1) {
-                    this.layer = (this.layer < 5) ? this.layer+1:1
-                    gameEditor.changeHeight = 0
-                }
-
-                if(gameEditor.width == -1) {
-                    this.width -= 0.5
-                    gameEditor.width = 0
-                } else if (gameEditor.width == 1) {
-                    this.width += 0.5
-                    gameEditor.width = 0
-                }
-
-                if(gameEditor.height == -1) {
-                    this.height -= 0.5
-                    gameEditor.height = 0
-                } else if (gameEditor.height == 1) {
-                    this.height += 0.5
-                    gameEditor.height = 0
                 }
             }
         }
@@ -496,6 +413,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
 // Parking space object
 function infospot(x, y, size, menu) {
     this.start = function() {
+        this.type = 5;
         this.x = x;
         this.y = y;
         this.menu = menu;
@@ -510,6 +428,17 @@ function infospot(x, y, size, menu) {
         return `infospot(x=${this.x}, y=${this.y}, size=${this.width}, menu=${this.menu})`
     }
 
+    this.interface = function(opt1,opt2,opt3) {
+        if(opt1) {
+            this.width = opt1
+        }
+        return {
+            get1: this.width, min1: 0.1, max1: 50, step1: 0.5, name1: "Diameter",
+            get2: 0, min2: 0.1, max2: 50, step2: 0.5, name2: undefined,
+            get3: 0, min3: 0.1, max3: 50, step3: 0.5, name3: undefined,
+        }
+    }
+
     this.update = function() {
         if (this.toggle == 0) { this.opacity -= (30/fps);
             if(this.opacity <= 20) { this.toggle = 1}
@@ -519,6 +448,17 @@ function infospot(x, y, size, menu) {
         canvas = gameWindow.context;
         canvas.save();
         this.pos = camera.position(this.x,this.y,-this.angle);
+
+        if(gameEditor.active) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.width, 0) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
+                canvas.filter = "brightness(50%)"
+                if(clickhandler.click && gameEditor.asel == -1) {
+                    gameEditor.sel = this.id
+                    gameEditor.asel = this.id
+                }
+            }
+        }
+
         canvas.globalAlpha = (this.opacity/100)
         canvas.fillStyle = this.fill;
         canvas.beginPath();
@@ -528,9 +468,9 @@ function infospot(x, y, size, menu) {
         canvas.restore();
 
         if(!player.paused) {
-            this.distance = Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2))
+            let distance = Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2))
 
-            if((this.distance <= 2))  { // && (player.speed <= 0.5)
+            if((distance <= this.width/2))  { // && (player.speed <= 0.5)
                 if(renderlist[this.menu] != 2) {
                     renderlist[this.menu] = 1
                     for(let i in infomenus[this.menu][0]) {
@@ -565,6 +505,7 @@ function infospot(x, y, size, menu) {
 
 function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colisionmod=[0,0]) {
     this.start = function() {
+        this.type = 6;
         this.type = cartype;
         this.fill = loadedcartextures[cartype][0];
         this.width = loadedcartextures[cartype][1];
@@ -596,6 +537,18 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
             a2 = angle
         }
         return `car(cartype=${this.type}, x=${x2}, y=${y2}, angle=${a2}, speed=${this.speed}, turn=${turn}, logicID=${logicID}, layer=${this.layer}, colisionmod=[${this.colmod}])`
+    }
+
+    this.interface = function(opt1,opt2,opt3) {
+        if(opt1) {
+            this.angle = opt1
+            this.type = opt2
+        }
+        return {
+            get1: this.angle, min1: 0, max1: 360, step1: 15, name1: "Angle",
+            get2: this.type, min2: 0, max2: cartextures.length, step2: 1, name2: "Model",
+            get3: 0, min3: 0.1, max3: 50, step3: 0.5, name3: undefined,
+        }
     }
 
     this.update = function() {
@@ -722,35 +675,11 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
         }
 
         if(gameEditor.active) {
-            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 30 && Math.abs(clickhandler.y - 50) < 30) {
+            if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
                     gameEditor.sel = this.id
                     gameEditor.asel = this.id
-                }
-            }
-
-            if(gameEditor.asel == this.id) {
-                this.x = Round(gameEditor.mousePos[0],0.5)
-                this.y = Round(gameEditor.mousePos[1],0.5)
-                if(!clickhandler.click) {
-                    gameEditor.asel = -1
-                }
-            }
-
-            if(gameEditor.sel == this.id) {
-                if(gameEditor.rotate == -1) {
-                    this.angle -= 10
-                    gameEditor.rotate = 0
-                } else if (gameEditor.rotate == 1) {
-                    this.angle += 10
-                    gameEditor.rotate = 0
-                }
-                
-                editorHud[3].text = ("Layer: " + this.layer)
-                if(gameEditor.changeHeight == 1) {
-                    this.layer = (this.layer < 5) ? this.layer+1:1
-                    gameEditor.changeHeight = 0
                 }
             }
         }
