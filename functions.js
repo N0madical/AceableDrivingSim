@@ -100,25 +100,13 @@ function editorInterface(action) {
     console.debug("test", action)
     switch (parseInt(action)) {
         case 0:
-            gameEditor.rotate = -1;
-            break;
-        case 1:
-            gameEditor.rotate = 1;
-            break;
-        case 2:
             gameEditor.changeHeight = 1;
             break;
-        case 3:
-            gameEditor.width = -1;
+        case 1:
+            gameEditor.copy()
             break;
-        case 4:
-            gameEditor.width = 1;
-            break;
-        case 5:
-            gameEditor.height = -1;
-            break;
-        case 6:
-            gameEditor.height = 1;
+        case 2:
+            gameEditor.delete()
     }
     
 }

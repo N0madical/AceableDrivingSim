@@ -530,11 +530,11 @@ guipages = [
     ],
     editorTitle = [
         new hudText("Edit Mode", 50, 5, 50, "center"),
-        new hudRect(5, 90, 8, 15, "import.png", 0, true, "height", 1, "importMap"),
-        new hudRect(5, 75, 8, 15, "export.png", 0, true, "height", 1, "exportMap"),
+        new hudRect(10, 90, 8, 15, "import.png", 0, true, "height", 1, "importMap"),
+        new hudRect(10, 75, 8, 15, "export.png", 0, true, "height", 1, "exportMap"),
     ],
     editorHud = [
-        new hudRect(90, 10, 8, 15, "#555555", 90, false, "height", 1, "editorInterface", ["2"]),
+        new hudRect(90, 10, 8, 15, "#555555", 180, false, "height", 1, "editorInterface", ["0"]),
         new hudText("Change\nLayer", 90, 10, 30, "center"),
         new hudText("Rotation: -", 90, 25, 30, "center"),
         new hudSlider(90, 30, 15, 3, 1, 0, 360, "#49545b", "white", 15),
@@ -542,6 +542,8 @@ guipages = [
         new hudSlider(90, 45, 15, 3, 1, 0.1, 50, "#49545b", "white", 0.1),
         new hudText("Height: -", 90, 55, 30, "center"),
         new hudSlider(90, 60, 15, 3, 1, 0.1, 50, "#49545b", "white", 0.1),
+        new hudRect(90, 75, 8, 15, "copyobj.png", 90, true, "height", 1, "editorInterface", ["1"]),
+        new hudRect(90, 90, 8, 15, "delete.png", 90, true, "height", 1, "editorInterface", ["2"]),
     ],
     exportHud = [
         new hudRect(50, 50, 100, 100, "black", 0, false, "both", 0.6),

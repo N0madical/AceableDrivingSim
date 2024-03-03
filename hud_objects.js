@@ -521,6 +521,9 @@ var gameEditor = {
         this.sel = -1
         this.asel = -1
         this.setup = -1
+        this.asetup = -1
+        this.xoffset = 0
+        this.yoffset = 0
         this.borderX = 22
         this.borderY = 0
         this.changeHeight = 0
@@ -534,24 +537,10 @@ var gameEditor = {
             for(let i in newMap) {
                 if(newMap[i].includes("new ")) {
                     try {
-                        let type = newMap[i].substring(newMap[i].indexOf("new ")+4, newMap[i].indexOf("("))
-                        let values = newMap[i].substring(newMap[i].indexOf("("), newMap[i].indexOf(")")+1)
-                        let arr = values.replaceAll(/[()"'` ]/g, "").split(",")
-                        for(let i in arr) {
-                            arr[i] = arr[i].substring(arr[i].indexOf("=")+1)
-                            if(arr[i] == "true") {arr[i] = true} else
-                            if(arr[i] == "false") {arr[i] = false} else
-                            if(!isNaN(parseFloat(arr[i]))) {
-                                arr[i] = parseFloat(arr[i])
-                            }
-                        }
-                        let obj = new window[type](...arr)
-                        obj.start()
-                        objlist.push(obj)
+                        objlist.push(this.objfromstr(newMap[i]))
                     } catch(error) {
                         importHud[6].text = `Object not found or bad format: '${newMap[i].trim()}'`
                     }
-                    
                 }
             }
             for(let j in objlist) {
@@ -571,7 +560,6 @@ var gameEditor = {
                     if (typeof updatelist[i].layer == 'undefined') {
                         updatelist[i].layer = 5
                     }
-            
                     updatelist[i].id = i
                 };
             }
@@ -580,6 +568,54 @@ var gameEditor = {
             document.getElementById("textbox").style.display = "none"; 
         }
         
+    },
+
+    copy : function() {
+        if(this.sel != -1) {
+            let obj = this.objfromstr("new " + maps[map-1][this.sel].printSelf())
+            console.debug(obj.id)
+            obj.id = maps[map-1].length
+            console.debug(obj.id)
+            obj.x += 1
+            obj.y += 1
+            maps[map-1].push(obj)
+            updatelist.push(obj)
+            this.sel = obj.id
+        }
+    },
+
+    delete : function() {
+        if(this.sel != -1) {
+            maps[map-1].splice(this.sel,1)
+            updatelist = maps[map-1].concat(spritelist)
+
+            for(i = 0; i < updatelist.length; i++) {
+                if (typeof updatelist[i].layer == 'undefined') {
+                    updatelist[i].layer = 5
+                }
+                updatelist[i].id = i
+            };
+
+            this.sel = -1
+            this.asel = -1
+        }
+    },
+
+    objfromstr : function(str) {
+        let type = str.substring(str.indexOf("new ")+4, str.indexOf("("))
+        let values = str.substring(str.indexOf("("), str.indexOf(")")+1)
+        let arr = values.replaceAll(/[()"'` ]/g, "").split(",")
+        for(let j in arr) {
+            arr[j] = arr[j].substring(arr[j].indexOf("=")+1)
+            if(arr[j] == "true") {arr[j] = true} else
+            if(arr[j] == "false") {arr[j] = false} else
+            if(!isNaN(parseFloat(arr[j]))) {
+                arr[j] = parseFloat(arr[j])
+            }
+        }
+        let obj = new window[type](...arr)
+        obj.start()
+        return obj
     },
 
     update : function() {
@@ -598,17 +634,21 @@ var gameEditor = {
             }
 
             if(this.asel != -1) {
-                maps[map-1][this.asel].x = Round(this.mousePos[0],0.5)
-                maps[map-1][this.asel].y = Round(this.mousePos[1],0.5)
+                if(this.asetup != this.asel) {
+                    this.xoffset = this.mousePos[0] - maps[map-1][this.asel].x
+                    this.yoffset = this.mousePos[1] - maps[map-1][this.asel].y
+                }
+                console.debug(this.xoffset)
+                maps[map-1][this.asel].x = Round(this.mousePos[0]-this.xoffset,0.5)
+                maps[map-1][this.asel].y = Round(this.mousePos[1]-this.yoffset,0.5)
                 if(!clickhandler.click) {
                     this.asel = -1
                 }
+                this.asetup = this.asel
             }
 
             if(this.sel != -1) {
                 let currentobj = maps[map-1][this.sel]
-
-                console.debug(currentobj.interface().name3)
 
                 if(!currentobj.interface().name1) {editorHud[2].alpha = 0; editorHud[3].alpha = 0;
                 } else {editorHud[2].alpha = 1; editorHud[3].alpha = 1;}
