@@ -545,7 +545,7 @@ var gameEditor = {
             }
             for(let j in objlist) {
                 try {
-                    console.debug(objlist[j].update())
+                    objlist[j].update()
                 } catch (error) {
                     importHud[6].text = `Bad arguments for object: '${objlist[j].printSelf()}': ${error}`
                     failure = true
@@ -573,9 +573,7 @@ var gameEditor = {
     copy : function() {
         if(this.sel != -1) {
             let obj = this.objfromstr("new " + maps[map-1][this.sel].printSelf())
-            console.debug(obj.id)
             obj.id = maps[map-1].length
-            console.debug(obj.id)
             obj.x += 1
             obj.y += 1
             maps[map-1].push(obj)
@@ -638,7 +636,6 @@ var gameEditor = {
                     this.xoffset = this.mousePos[0] - maps[map-1][this.asel].x
                     this.yoffset = this.mousePos[1] - maps[map-1][this.asel].y
                 }
-                console.debug(this.xoffset)
                 maps[map-1][this.asel].x = Round(this.mousePos[0]-this.xoffset,0.5)
                 maps[map-1][this.asel].y = Round(this.mousePos[1]-this.yoffset,0.5)
                 if(!clickhandler.click) {

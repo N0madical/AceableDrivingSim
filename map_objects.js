@@ -35,7 +35,6 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
     }
 
     this.printSelf = function() {
-        console.debug(this.x)
         return `rect(isimage=${isimage}, x=${this.x}, y=${this.y}, angle=${this.angle}, width=${this.width}, height=${this.height}, fill='${fill}', layer=${this.layer})`
     }
 
