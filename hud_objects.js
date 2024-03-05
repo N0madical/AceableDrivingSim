@@ -264,7 +264,7 @@ var pausemenu = {
                                 pausemenu.menu = 3
                             } else if (i == 5) {
                                 pausemenu.paused = false
-                                gameEditor.active = true
+                                gameEditor.window = 1
                                 pausemenu.toggle()
                             }
                         }
@@ -516,7 +516,6 @@ var finishscreen = {
 
 var gameEditor = {
     start : function() {
-        this.active = false
         this.window = 0
         this.sel = -1
         this.asel = -1
@@ -553,6 +552,8 @@ var gameEditor = {
                 
             }
             if(!failure) {
+                this.asel = -1
+                this.sel = -1
                 maps[map-1] = objlist
                 updatelist = maps[map-1].concat(spritelist)
 
@@ -564,7 +565,7 @@ var gameEditor = {
                 };
             }
         } else {
-           this.window = 0
+           this.window = 1
             document.getElementById("textbox").style.display = "none"; 
         }
         
@@ -617,12 +618,18 @@ var gameEditor = {
     },
 
     update : function() {
-        if(this.active) {
+        if(this.asel == -1 && clickhandler.click) {
+            this.asel = -2
+        } else if(this.asel == -2 && !clickhandler.click) {
+            this.asel = -1
+        }
+
+        if(this.window) {
             this.mousePos = clickhandler.getRelPos()
 
-            if(this.window == 1) {
+            if(this.window == 2) {
                 updateAll(exportHud)
-            } else if (this.window == 2) {
+            } else if (this.window == 3) {
                 updateAll(importHud)
             } else {
                 updateAll(editorTitle)
@@ -631,7 +638,7 @@ var gameEditor = {
                 }
             }
 
-            if(this.asel != -1) {
+            if(this.asel != -1 && this.asel != -2) {
                 if(this.asetup != this.asel) {
                     this.xoffset = this.mousePos[0] - maps[map-1][this.asel].x
                     this.yoffset = this.mousePos[1] - maps[map-1][this.asel].y
@@ -680,7 +687,7 @@ var gameEditor = {
             }
 
             if(pausemenu.paused) {
-                this.active = false
+                this.window = 0
                 this.close(0)
             }
         }
@@ -826,7 +833,7 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
     }
 }
 
-function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1, alpha=1) {
+function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, step=1, alpha=1, debug=false) {
     this.x = x
     this.y = y
     this.width = width
@@ -839,7 +846,9 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
     this.active = false
     this.step = step
     this.resize = true
-    this.alpha = 1
+    this.alpha = alpha
+    this.hovered = false
+    this.debug = debug
 
     this.update = function() {
         this.realx = this.x*(gameWindow.canvas.width/100)
@@ -860,11 +869,19 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
         canvas.fill();
         canvas.globalAlpha = 1;
 
-        //console.debug(clickhandler.realx)
-
-        if((clickhandler.realx > (this.realx - this.realwidth/2)) && (clickhandler.realx < (this.realx + this.realwidth/2)) && (clickhandler.realy < (this.realy + this.realheight*1.5)) && (clickhandler.realy > (this.realy - (this.realheight/2)*1.5)) && (clickhandler.click)) {
-            this.active = true
+        if((clickhandler.realx > (this.realx - this.realwidth/2)) && (clickhandler.realx < (this.realx + this.realwidth/2)) && (clickhandler.realy < (this.realy + this.realheight*1.5)) && (clickhandler.realy > (this.realy - (this.realheight/2)*1.5))) {
+            if(clickhandler.click && this.hovered) {
+                this.active = true
+            }
+            if(!clickhandler.click && !this.active) {this.hovered = true}
+        } else {
+            this.hovered = false
         }
+
+        if(this.debug) {
+            console.debug(clickhandler.click, this.hovered, this.active)
+        }
+
         if(this.active) {
             if(this.step < 1) {
                 this.nextvalue = Round((this.min + ((clickhandler.realx - (this.realx - this.realwidth/2))*((this.max - this.min)/this.realwidth))),String(this.step).length-2)

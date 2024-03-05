@@ -74,7 +74,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
             canvas.globalAlpha = (this.opacity/100)
         }
 
-        if(gameEditor.active) {
+        if(gameEditor.window == 1) {
             if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
@@ -171,7 +171,7 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
             canvas.globalAlpha = (this.opacity/100)
         }
 
-        if(gameEditor.active) {
+        if(gameEditor.window == 1) {
             if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.diameter, this.diameter, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
@@ -338,7 +338,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
         canvas.globalAlpha = (this.opacity/100)
         canvas.fillStyle = this.fill;
 
-        if(gameEditor.active) {
+        if(gameEditor.window == 1) {
             if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
@@ -448,7 +448,7 @@ function infospot(x, y, size, menu) {
         canvas.save();
         this.pos = camera.position(this.x,this.y,-this.angle);
 
-        if(gameEditor.active) {
+        if(gameEditor.window == 1) {
             if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.width, 0) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {
@@ -673,7 +673,7 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
             }
         }
 
-        if(gameEditor.active) {
+        if(gameEditor.window == 1) {
             if(pointInRectangle(gameEditor.mousePos[0], gameEditor.mousePos[1], this.x, this.y, this.width, this.height, this.angle) && Math.abs(clickhandler.x - 50) < 50 - gameEditor.borderX && Math.abs(clickhandler.y - 50) < 50 - gameEditor.borderY) {
                 canvas.filter = "brightness(50%)"
                 if(clickhandler.click && gameEditor.asel == -1) {

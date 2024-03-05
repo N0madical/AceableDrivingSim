@@ -541,7 +541,7 @@ guipages = [
         new hudText("Width: -", 90, 40, 30, "center"),
         new hudSlider(90, 45, 15, 3, 1, 0.1, 50, "#49545b", "white", 0.1),
         new hudText("Height: -", 90, 55, 30, "center"),
-        new hudSlider(90, 60, 15, 3, 1, 0.1, 50, "#49545b", "white", 0.1),
+        new hudSlider(90, 60, 15, 3, 1, 0.1, 50, "#49545b", "white", 0.1, 1, true),
         new hudRect(90, 75, 8, 15, "copyobj.png", 90, true, "height", 1, "editorInterface", ["1"]),
         new hudRect(90, 90, 8, 15, "delete.png", 90, true, "height", 1, "editorInterface", ["2"]),
     ],

@@ -112,7 +112,7 @@ function editorInterface(action) {
 }
 
 function exportMap() {
-    if(gameEditor.window == 0) {
+    if(gameEditor.window == 1) {
         let list = ``
         for(let i in maps[map-1]) {
             list += `new ${maps[map-1][i].printSelf()},\n`
@@ -121,16 +121,16 @@ function exportMap() {
         document.getElementById("textbox").value = list;
         document.getElementById("textbox").readOnly = true;
         document.getElementById("textbox").style.display = "inherit";
-        gameEditor.window = 1;
+        gameEditor.window = 2;
     }
     
 }
 
 function importMap() {
-    if(gameEditor.window == 0) {
+    if(gameEditor.window == 1) {
         document.getElementById("textbox").readOnly = false;
         document.getElementById("textbox").style.display = "inherit";
-        gameEditor.window = 2;
+        gameEditor.window = 3;
     }
 }
 
