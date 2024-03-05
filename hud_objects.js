@@ -565,7 +565,7 @@ var gameEditor = {
                 };
             }
         } else {
-           this.window = 1
+           this.window = 0
             document.getElementById("textbox").style.display = "none"; 
         }
         
@@ -618,14 +618,14 @@ var gameEditor = {
     },
 
     update : function() {
-        if(this.asel == -1 && clickhandler.click) {
-            this.asel = -2
-        } else if(this.asel == -2 && !clickhandler.click) {
-            this.asel = -1
-        }
-
         if(this.window) {
             this.mousePos = clickhandler.getRelPos()
+
+            if(this.asel == -1 && clickhandler.click) {
+                this.asel = -2
+            } else if(this.asel == -2 && !clickhandler.click) {
+                this.asel = -1
+            }
 
             if(this.window == 2) {
                 updateAll(exportHud)
@@ -687,7 +687,6 @@ var gameEditor = {
             }
 
             if(pausemenu.paused) {
-                this.window = 0
                 this.close(0)
             }
         }
