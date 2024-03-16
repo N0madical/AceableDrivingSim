@@ -426,7 +426,7 @@ var pausemenu = {
                 this.pbcolor = "#1b2932"
             }
         }
-        upcount++;
+
     },
 }
 
@@ -501,7 +501,7 @@ var finishscreen = {
                 this.starcount++
             }
         }
-        upcount++;
+
     },
 
     reset : function() {
@@ -717,7 +717,7 @@ function carborder() {
         // bg = gameWindow.context;
         // bg.fillStyle = "red";
         // bg.fillRect(((maps[0][19].pointrec[0]*scalar)+gameWindow.canvas.width/2)-camera.cx*scalar,((maps[0][19].pointrec[1]*scalar)+gameWindow.canvas.height/2)-camera.cy*scalar,50,50);
-        upcount++
+
     }
 }
 
@@ -820,7 +820,7 @@ function hudText(text, x, y, size, justify="left", color="white", alpha=1, font=
             canvas.fillText(this.multiline[i], this.realx - this.jpos, this.realy + this.realheight/2 + (this.realheight*i*1.8));
         }
         canvas.globalAlpha = 1;
-        upcount++
+
         this.realx = this.x*(gameWindow.canvas.width/100)
         this.realy = this.y*(gameWindow.canvas.height/100)
 
@@ -902,6 +902,6 @@ function hudSlider(x, y, width, height, value, min, max, barcolor, handlecolor, 
                 this.active = false
             }
         }
-        upcount++
+
     }
 } 
