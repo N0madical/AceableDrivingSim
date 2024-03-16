@@ -29,9 +29,6 @@ var loadopac = 100;
 var loadcount = 0;
 let rightUpDialog = false;
 
-// Debug Timer
-var upcount = 0;
-
 // Launch The Game On Window Load
 window.onload = function() {
     // Import Settings
@@ -177,7 +174,7 @@ var player = {
 
     // Move The Sprite When Update Is Called
     update : function() {
-        // Update Camera Position (WIP)
+        // Update Camera Position
         if(!this.paused) {
             this.turnrad = this.wheelbase/tan(this.turndeg)
             this.arcdeg = degrees(this.speed/this.turnrad)
@@ -230,13 +227,6 @@ var player = {
         mainCar.rotate(radians(orientOffset*-1));
         mainCar.drawImage(this.carimage, ((this.width/-2)*(scalar)*(camera.czoom/100)), ((this.height/-2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
         mainCar.restore();
-
-        // mainCar = gameWindow.context;
-        // car.fillStyle = "purple";
-        // car.drawImage(this.carimage, (gameWindow.canvas.width/2)-((this.width/2)*(scalar)*(camera.czoom/100)), (gameWindow.canvas.height/2)-((this.height/2)*(scalar)*(camera.czoom/100)), this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
-
-        // Let the renderer know rendering is complete
-        upcount++
     },
 
     explosion : function() {
@@ -261,7 +251,7 @@ var player = {
     }
 }
 
-// Refresh The Canvas (50x per second)
+// Refresh The Canvas (At rate of FPS)
 function updateGameWindow() {
     updatelistcache = [];
     gameWindow.canvas.width = window.innerWidth;
@@ -270,7 +260,6 @@ function updateGameWindow() {
     layercounts = [0,0,0,0,0]
     
     // Debug ticker gives steady timer to load fps
-    upcount = 0
     const d = new Date();
     fpsrec += 1
     if (lasttime + 250 <= d.getTime()) {
@@ -327,7 +316,7 @@ function updateGameWindow() {
         if (down && (player.speed > -10)) {if(player.speed <= 0) {player.speed -= (player.acceleration/fps)} else {player.speed -= 10/fps}}
     }
     
-    // Pause Menu (WIP)
+    // Pause Menu
     if(esc_key) {pausemenu.toggle(); console.info("Esc pressed")}
 
     if(clickhandler.mobileUser && !pausemenu.controlschosen) {
@@ -339,7 +328,7 @@ function updateGameWindow() {
     //     pausemenu.controlsdialog()
     // }
     
-    // Load all objects, upcount allows objects to notify loader when they complete loading to avoid async overlap
+    // Load all objects, object layer property defines how objects are drawn over eachother
 
     for (g = 1; g < 6; g++) {
         for (f = 0; f < updatelist.length; f++) {

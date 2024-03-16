@@ -91,7 +91,7 @@ function rect(isimage, x, y, angle, width, height, fill, layer=2) {
             canvas.fillRect(Round((this.width*(scalar)*(camera.czoom/100)) / -2), Round((this.height*(scalar)*(camera.czoom/100)) / -2), Round(this.width*(scalar)*(camera.czoom/100)), Round(this.height*(scalar)*(camera.czoom/100)));
         }
         canvas.restore();
-        upcount++
+
     }
 
     this.testpoint = function(tstx, tsty) {
@@ -191,7 +191,7 @@ function circle(isimage, x, y, angle, diameter, fill, arc=360, layer=2) {
             canvas.fill();
         }
         canvas.restore();
-        upcount++
+
     }
 
     this.testpoint = function(tstx, tsty) {
@@ -281,7 +281,7 @@ function terrain(x, y, angle, width, height, image, layer=1, scalex=100, scaley=
                 }
             }
         }
-        upcount++
+
     }
 }
 
@@ -405,7 +405,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
             
         }
 
-        upcount++
+
     }
 }
 
@@ -498,7 +498,7 @@ function infospot(x, y, size, menu) {
             }
         }
 
-        upcount++
+
     }
 }
 
@@ -626,7 +626,7 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
                         }
                     }
 
-                    if (this.pathintersect == 1 || this.pathintersect == 2 || this.pathintersect == 3 || this.pathintersect == 4) {
+                    if (this.pathintersect >= 1 && this.pathintersect <= 5) {
                         for (let j = 0; j < maps[map-1].length; j++) {
                             if(maps[map-1][j].type == 1 || maps[map-1][j].type == 2) {
                                 if(maps[map-1][j].layer == this.layersel) {
@@ -640,19 +640,26 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
                         }
                     }
 
+                    if (this.pathintersect == 6) {
+                        if(pointInRectangle(this.pathpoint[0], this.pathpoint[1], camera.cx, camera.cy, player.width, player.height, camera.cangle)) {
+                            this.logicActive = true
+                            this.logicactive = true
+                        }
+                    }
+
                     if(this.logicActive) {
                         this.exclusiveactive = carscripts[this.logicid][i][4]
                         this.x += this.result[0]
                         this.y += this.result[1]
-                        if (this.result[4] == 1) {
+                        if (this.result[4] == true) {
                             this.turndeg = this.result[2]
                             //console.debug(this.turndeg, this.angle, this.angle%360)
-                        } else if (this.result[4] == 2) {
+                        } else if (this.result[4] == false) {
                             this.angle += this.result[2]
                         } else {
                             this.angle = this.result[2]
                         }
-                        if((this.result[5] == true && this.recspeed >= 0) || (this.result[5] == false)) {
+                        if((this.result[5] == true && this.speed >= 0) || (this.result[5] == false)) {
                             this.speed += this.result[3]
                         } else {
                             this.speed -= this.result[3]
@@ -685,8 +692,13 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
 
         canvas.drawImage(this.fill, (this.width*(scalar)*(camera.czoom/100)) / -2, (this.height*(scalar)*(camera.czoom/100)) / -2, this.width*(scalar)*(camera.czoom/100), this.height*(scalar)*(camera.czoom/100));
         canvas.restore();
-        upcount++
+
     }
+}
+
+this.testpoint = function(tstx, tsty) {
+    if(pointInRectangle(tstx, tsty, this.x, this.y, this.width, this.height, this.angle)){return true}
+    return false
 }
 
 function pointInRectangle(x, y, rx, ry, w, h, a) {

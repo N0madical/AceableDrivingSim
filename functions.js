@@ -55,6 +55,7 @@ function loadsprites(map, maps) {
         maps[map-1][i].start()
     }
 }
+
 function clickbox(x, y, width, height) {
     this.x = x
     this.y = y
