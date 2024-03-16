@@ -18,7 +18,12 @@
         map = 1
         debug = false
         playerPosition = [0,10,0]
-        document.getElementById("myFrame").src = `${window.location.substring(0,window.location.indexOf("iframe")-6)}?map=${map}&debug=${debug}`
+        if(window.location.host != "") {
+            document.getElementById("myFrame").src = `${window.location.protocol}//${window.location.host}?map=${map}&debug=${debug}`
+        } else {
+            document.getElementById("myFrame").src = `./index.html?map=${map}&debug=${debug}`
+        }
+        
         // document.getElementById("myFrame").src = `./index.html?map=${map}&debug=${debug}&playerPosition=${playerPosition}` // For Adjusting Starting Position from Default
     </script>
 </body>
