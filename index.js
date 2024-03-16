@@ -31,6 +31,18 @@ let rightUpDialog = false;
 
 // Launch The Game On Window Load
 window.onload = function() {
+
+    //Find Passed-In Config]
+    let params = {}
+    let url = window.location.search.substring(1); //get rid of "?" in querystring
+    let qArray = url.split('&'); //get key-value pairs
+    for(let j=0; j < qArray.length; j++) {
+        let val = qArray[j].split("=")[1]
+        console.debug(val, isNaN(val))
+        params[qArray[j].split("=")[0]] = (isNaN(val)) ? val:parseFloat(val)
+    }
+    console.debug(window.location, params)
+
     // Import Settings
     player_position = configs[map-1][0];
     zoom = configs[map-1][1]
