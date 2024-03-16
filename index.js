@@ -2,7 +2,6 @@
 // Code Starts Here
 
 // Defining Variables
-player_position = [0,0,0]
 zoom = 100;
 
 // Initiating Variables
@@ -41,17 +40,25 @@ window.onload = function() {
     let qArray = url.split('&'); //get key-value pairs
     for(let j=0; j < qArray.length; j++) {
         let val = qArray[j].split("=")[1]
-        console.debug(val, isNaN(val))
-        params[qArray[j].split("=")[0]] = (isNaN(val)) ? val:parseFloat(val)
+        if(val == "true" || val == "false") {
+            params[qArray[j].split("=")[0]] = (val == "true") ? true:false
+        } else {
+            params[qArray[j].split("=")[0]] = (isNaN(val)) ? val:parseFloat(val)
+        }
     }
-    console.debug(window.location, params)
+    
+    map = (params["map"] != undefined) ? params["map"]:map
+    debug = (params["debug"] != undefined) ? params["debug"]:debug
 
     // Import Settings
-    player_position = configs[map-1][0];
+    console.debug(map)
+    playerPosition = configs[map-1][0];
     zoom = configs[map-1][1]
+
+    playerPosition = (params["playerPosition"] != undefined) ? JSON.parse("[" + params["playerPosition"] + "]"):playerPosition
     
     // Start The Game
-    gameWindow.start(player_position[0], player_position[1], player_position[2], zoom);
+    gameWindow.start(playerPosition[0], playerPosition[1], playerPosition[2], zoom);
     player.start();
 
     // Load Debug HUD (If applicable)
@@ -263,9 +270,9 @@ var player = {
 
     //Reset the game & Player
     reset : function() {
-        camera.cx = player_position[0];
-        camera.cy = player_position[1];
-        camera.cangle = player_position[2];
+        camera.cx = playerPosition[0];
+        camera.cy = playerPosition[1];
+        camera.cangle = playerPosition[2];
         this.speed = 0;
         this.turndeg = 0;
         finishscreen.reset()

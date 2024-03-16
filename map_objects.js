@@ -374,7 +374,7 @@ function parkingspot(iscircle, x, y, angle, width, height, idealangle=0) {
                     if(this.AccOfAtt >= 0.6) {this.acclist.push((this.AccOfAtt-0.6)*2.5)
                     } else {this.acclist.push(0)}
                 }
-            } else if ((Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) >= this.sensdistance + 5) || ([player.cx, player.cy, player.cangle] == player_position)) {
+            } else if ((Math.sqrt(((camera.cx - this.x)**2) + ((camera.cy - this.y)**2)) >= this.sensdistance + 5) || ([player.cx, player.cy, player.cangle] == playerPosition)) {
                 this.acclist = []
             }
 

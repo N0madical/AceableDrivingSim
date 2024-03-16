@@ -13,5 +13,12 @@
 </style>
 <body>
     <h1>Aceable Driving Sim iFrame:</h1>
-    <iframe src="file://./index.html?hello=yes"></iframe> 
+    <iframe id="myFrame"></iframe> 
+    <script>
+        map = 1
+        debug = false
+        playerPosition = [0,10,0]
+        document.getElementById("myFrame").src = `file://./index.html?map=${map}&debug=${debug}`
+        // document.getElementById("myFrame").src = `./index.html?map=${map}&debug=${debug}&playerPosition=${playerPosition}` // For Adjusting Starting Position from Default
+    </script>
 </body>
