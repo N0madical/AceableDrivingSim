@@ -241,6 +241,12 @@ var pausemenu = {
                 pausemenu.menu = 3
             }
 
+            if (e_key == true) {
+                pausemenu.paused = false
+                gameEditor.window = 1
+                pausemenu.toggle()
+            }
+
             for(let i = 0; i < this.mainmenutext.length; i++) {
                 this.mainmenutext[i].alpha = this.blur*1.25;
                 this.mainmenutext[i].x = (30 * ((this.blur/this.maxblur))) - 25;

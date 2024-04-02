@@ -71,6 +71,8 @@ cartextures = [
     ["textures/cardarkblue.png", 2.3, 5], //3
     ["textures/carlightblue.png", 2.3, 5], //4 
     ["textures/cargray.png", 2.3, 5], //5
+    ["textures/sportcar.png", 2.1, 4.6], //6
+    ["textures/truck.png", 2.45, 6.7], //7
 ]
 
 //Loading Textures
@@ -188,14 +190,14 @@ maps = [
         new parkingspot(false, -5.75, -8.75, 90, 2, 4),
         new car(0, -6, -6.25, 90),
         new car(3, -6.1, -3.75, 90),
-        new car(0, -5.7, -1.25, 90),
+        new car(6, -5.7, -1.25, 90),
         new parkingspot(false, -5.75, 1.25, 90, 2, 4),
         new car(4, -6.3, 3.75, 90),
         new car(0, -6.1, 6.25, 90),
         new parkingspot(false, -5.75, 8.75, 90, 2, 4),
 
         new car(4, 6.1, -8.75, 270),
-        new car(5, 6.2, -6.25, 270),
+        new car(7, 6.2, -6.25, 270),
         new parkingspot(false, 5.75, -3.75, 90, 2, 4),
         new car(1, 5.6, -1.25, 270),
         new car(5, 6, 1.25, 270),
@@ -203,18 +205,18 @@ maps = [
         new car(4, 6.1, 6.25, 270),
         new parkingspot(false, 5.75, 8.75, 90, 2, 4),
 
-        new car(3, 15.25, -6.25, 180),
+        new car(7, 15.25, -7, 180),
         new parkingspot(false, 15.1, 0, 0, 2, 5),
         new car(2, 15, 6.25, 180),
 
         new car(0, 22.9, -8.5, 180),
         new parkingspot(false, 22.9, -2.9, 0, 2, 5),
-        new car(1, 23, 2.75, 180),
-        new car(4, 22.75, 8.5, 180),
+        new car(3, 23, 2.75, 180),
+        new car(6, 22.75, 8.5, 180),
 
         new car(5, -15.5, -5.5, 315),
         new car(1, -15, -1.25, 315),
-        new car(5, -15.25, 2, 315),
+        new car(6, -15.25, 2, 315),
         new car(4, -15.5, 5.5, 315),
 
         new car(0, -23, -5.5, 45),

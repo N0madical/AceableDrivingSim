@@ -498,7 +498,11 @@ function infospot(x, y, size, menu) {
             }
         }
 
-
+        if(renderlist[this.menu] == 2) {
+            if(esc_key) {
+                toolTipToggle(0)
+            }
+        }
     }
 }
 
@@ -519,7 +523,7 @@ function car(cartype, x, y, angle, speed=0, turn=0, logicID=0, layer=4, colision
         this.colmod = colisionmod;
         this.radius = ((Math.sqrt((this.width)**2 + (this.height)**2))/2)
         this.exclusiveactive = false
-        this.colmods = [[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2]]
+        this.colmods = [[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2],[-0.4,-0.2]]
     }
 
     this.printSelf = function() {
