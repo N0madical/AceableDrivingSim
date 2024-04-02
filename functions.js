@@ -141,7 +141,7 @@ function closePort(type) {
 
 function handleOrientation(event) {
     if(mobilecontrols == 2) {
-        if(event.beta < 90) {
+        if(event.beta < 90 && event.beta > -90) {
             orientOffset = event.beta%180
             player.turndeg = event.beta%180
         } else {
