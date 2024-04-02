@@ -145,8 +145,8 @@ function handleOrientation(event) {
             orientOffset = event.beta%180
             player.turndeg = event.beta%180
         } else {
-            orientOffset = (event.beta)%360
-            player.turndeg = (event.beta)%360
+            orientOffset = ((180 - Math.abs(event.beta)) * Math.sign(event.beta))%180
+            player.turndeg = ((180 - Math.abs(event.beta)) * Math.sign(event.beta))%180
         }
         console.debug(event.gamma, event.beta)
     } else {
